@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Produtos</title>
+    
+  
+     <!-- Google Fonts -->
+     <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,200,300,700,600' rel='stylesheet' type='text/css'>
+     <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300' rel='stylesheet' type='text/css'>
+     <link href='http://fonts.googleapis.com/css?family=Raleway:400,100' rel='stylesheet' type='text/css'>
+     
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/owl.carousel.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <!-- Estilo customizado -->
+    <link rel="stylesheet" type="text/css" href="css/estilo.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+   
+    
+    <div class="header-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="user-menu">
+                        <ul>
+                            <li><a href="#"><i class="fas fa-map-marker-alt"></i> CASCAVEL - PR</a></li>
+                            <li><a href="#"> Alterar endereço</a></li>
+                            <li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Minhas compras</a></li>
+                            <li ><a href="checkout.html"><i class="fas fa-shopping-bag"></i> Finalizar Compras</a></li>
+                            
+                        </ul>
+                       
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div> <!-- End header area -->
+    <div class="site-branding-area mainmenu-area navbar-expand"">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3 mb-2">
+                    <div class="logo mt-2 mb-4">
+                        <a href="index.html"><img src="img/FARMAOFERTA-0008.png"></a>
+                    </div>
+                </div>
+                <form class="col-sm-6 ">
+                    <div class="">
+                        <div class="input-group mt-3 mb-3">
+                            <input type="search" class="form-control" id="input_pesquisa" placeholder="Pesquisar produtos" aria-label="Recipient's username" aria-describedby="button-addon2">
+                            <div class="input-group-append">
+                            <button class="btn btn-outline-primary"  onclick="pesquisarProdutos()" type="button" id="button-addon2"><i class="fas fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="col-sm-3 mb-3">
+                    <div class="shopping-item">
+                        <a href="cart.html"> <span class="cart-amunt">R$ 800</span> <i class="fa fa-shopping-cart"></i> <span class="product-count">5</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mainmenu-area navbar-expand">
+            <div class="container">
+                <div class="row">
+                    <div class="navbar-header  ">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div> 
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            
+                            <li><a href="shop.html">Show de ofertas</a></li>
+                            <li class=""><a href="farmacias-cadastradas.html">Farmácias</a></li>
+                            <li><a href="cart.html">Carrinho</a></li>
+                            <li><a href="checkout.html">Finalizar Compras</a></li>
+                            
+                            
+                        
+                                        
+                        </ul>
+                        
+                    </div>  
+                </div>
+            </div>
+        </div> <!-- End mainmenu area -->
+    </div> <!-- End site branding area -->
+    
+   
+    
+    
+    <div class="single-product-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="single-sidebar">
+                        <h2 class="sidebar-title">Melhores ofertas</h2>
+                        <div class="text-align-right">
+                            <select class="mb-4">
+                                <option>Filtrar</option>
+                                <option>Mais barato</option>
+                                <option>Mais Rapido</option>
+                                <option>Mais Perto</option>
+                            </select>
+                        </div>
+                        <div class="single-wid-product panel">
+                                <a href="single-product.html"><img src="img/product-thumb-4.jpg" alt="" class="product-thumb"></a>
+                                <h3 class="desconto-2 text-center "><i class="fab fa-hotjar"></i> 60% Off </h3>
+                                <h2><a href="single-product.html">Ibupril 400mg c/10cps</a></h2>
+                                <p class="opacidade"><a href="single-product.html">Ibuprofeno 400mg cps gelatinosas</a></p>
+                                <span class="">1,2 Km </span><span>-</span><span> Entrega de</span><span> 40-75min</span>  
+                                <div class="product-carousel-price">
+                                </div> 
+                                <div class="product-wid-price">
+                                    <ins class="">De</ins> <del class="">R$ 25,00</del><ins class="ml-2"> Por</ins><ins class=""> R$ 15,00</ins> 
+                                </div> 
+                                
+                                <div class="quantity buttons_added">
+                                                                            
+                                    <input type="button" class="minus" value="-">
+                                    <input type="number" size="4" class="input-text qty text" title="Qty" value="1" min="0" step="1">
+                                    <input type="button" class="plus" value="+">
+                                </div>
+                                <button class="btn btn-primary mt-1 ml-5">ADD NO CARRINHO</button>                             
+                            </div>
+                        <div class="single-wid-product panel">
+                            <a href="single-product.html"><img src="img/product-thumb-4.jpg" alt="" class="product-thumb"></a>
+                            <h3 class="desconto-2 text-center "><i class="fab fa-hotjar"></i> 56% Off </h3>
+                            <h2><a href="single-product.html">Ibupril 400mg c/10cps</a></h2>
+                            <p class="opacidade"><a href="single-product.html">Ibuprofeno 400mg cps gelatinosas</a></p>
+                            <span class="">1,2 Km </span><span>-</span><span> Entrega de</span><span> 40-75min</span>  
+                            <div class="product-carousel-price">
+                            </div> 
+                            <div class="product-wid-price">
+                                <ins class="">De</ins> <del class="">R$ 25,00</del><ins class="ml-2"> Por</ins><ins class=""> R$ 15,00</ins> 
+                            </div> 
+                            
+                            <div class="quantity buttons_added">
+                                                                        
+                                <input type="button" class="minus" value="-">
+                                <input type="number" size="4" class="input-text qty text" title="Qty" value="1" min="0" step="1">
+                                <input type="button" class="plus" value="+">
+                            </div>
+                            <button class="btn btn-primary mt-1 ml-5">ADD NO CARRINHO</button>                             
+                        </div>
+                        <div class="single-wid-product panel">
+                            <a href="single-product.html"><img src="img/product-thumb-4.jpg" alt="" class="product-thumb"></a>
+                            <h3 class="desconto-2 text-center "><i class="fab fa-hotjar"></i> 56% Off </h3>
+                            <h2><a href="single-product.html">Ibupril 400mg c/10cps</a></h2>
+                            <p class="opacidade"><a href="single-product.html">Ibuprofeno 400mg cps gelatinosas</a></p>
+                            <span class="">1,2 Km </span><span>-</span><span> Entrega de</span><span> 40-75min</span>  
+                            <div class="product-carousel-price">
+                            </div> 
+                            <div class="product-wid-price">
+                                <ins class="">De</ins> <del class="">R$ 25,00</del><ins class="ml-2"> Por</ins><ins class=""> R$ 15,00</ins> 
+                            </div> 
+                            
+                            <div class="quantity buttons_added">
+                                                                        
+                                <input type="button" class="minus" value="-">
+                                <input type="number" size="4" class="input-text qty text" title="Qty" value="1" min="0" step="1">
+                                <input type="button" class="plus" value="+">
+                            </div>
+                            <button class="btn btn-primary mt-1 ml-5">ADD NO CARRINHO</button>                             
+                        </div>
+                        <div class="single-wid-product panel">
+                            <a href="single-product.html"><img src="img/product-thumb-4.jpg" alt="" class="product-thumb"></a>
+                            <h3 class="desconto-2 text-center "><i class="fab fa-hotjar"></i> 45% Off </h3>
+                            <h2><a href="single-product.html">Ibupril 400mg c/10cps</a></h2>
+                            <p class="opacidade"><a href="single-product.html">Ibuprofeno 400mg cps gelatinosas</a></p>
+                            <span class="">1,2 Km </span><span>-</span><span> Entrega de</span><span> 40-75min</span>  
+                            <div class="product-carousel-price">
+                            </div> 
+                            <div class="product-wid-price">
+                                <ins class="">De</ins> <del class="">R$ 25,00</del><ins class="ml-2"> Por</ins><ins class=""> R$ 15,00</ins> 
+                            </div> 
+                            
+                            <div class="quantity buttons_added">
+                                                                        
+                                <input type="button" class="minus" value="-">
+                                <input type="number" size="4" class="input-text qty text" title="Qty" value="1" min="0" step="1">
+                                <input type="button" class="plus" value="+">
+                            </div>
+                            <button class="btn btn-primary mt-1 ml-5">ADD NO CARRINHO</button>                             
+                        </div>
+                       
+                    </div>
+                   
+                   
+                </div>
+                
+                <div class="col-md-8">
+                    <div class="product-content-right">
+                        <div class="product-breadcroumb">
+                            <a href="">Home</a>
+                            <a href="">Categoria</a>
+                            <a href="">Rexona MotionSense</a>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="product-images">
+                                    <div class="product-main-img">
+                                              
+                                        <img src="img/product-thumb-4.jpg" alt="">
+                                        <h3 class="desconto text-center "><i class="fab fa-hotjar"></i> 56% Off </h3>
+                                    </div>
+                                    
+                                    <div class="product-gallery">
+                                        
+                                        <img src="img/farmautil.jpg" alt="">
+                                        <p>Produto entregue por:</p><h3>Farmácias Farmautil</h3>
+                                        <p>Entrega gratuita*</p>
+                                        <p>Tempo estimando para entrega <span class="text-bold">40min</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-6">
+                                <div class="product-inner">
+                                    <h2 class="product-name">Rexona MotionSense</h2>
+                                    
+                                    <div class="product-carousel-price mb-3">
+                                        <ins class="">De</ins> <del class="">R$ 25,00</del><ins class="ml-2"> Por</ins><ins class=""> R$ 15,00</ins>  
+                                    </div>    
+                                    
+                                    <form action="" class="cart">
+                                        <div class="quantity">
+                                            <input type="number" size="4" class="input-text qty text" title="Qty" value="1" name="quantity" min="1" step="1">
+                                        </div>
+                                        <button class="btn btn-primary" type="">Add no Carrinho</button>
+                                    </form>   
+                                    
+                                    <div class="product-inner-category">
+                                        <p>Categoria: <a href="">Fralda</a>. Tags: <a href="">Perfumaria</a>, <a href="">Mamaes e bebes</a><a href=""></a><a href=""></a>. </p>
+                                    </div> 
+                                    
+                                    <div role="tabpanel">
+                                        <ul class="product-tab" role="tablist">
+                                            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Descrição</a></li>
+                                            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Comentarios</a></li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div role="tabpanel" class="tab-pane fade in active" id="home">
+                                                <h2>Descrição</h2>  
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam tristique, diam in consequat iaculis, est purus iaculis mauris, imperdiet facilisis ante ligula at nulla. Quisque volutpat nulla risus, id maximus ex aliquet ut. Suspendisse potenti. Nulla varius lectus id turpis dignissim porta. Quisque magna arcu, blandit quis.</p>
+
+                                                <p>Mauris placerat vitae lorem gravida viverra. Mauris in fringilla ex. Nulla facilisi. Etiam scelerisque tincidunt quam facilisis lobortis. In malesuada pulvinar neque a consectetur. Nunc aliquam gravida purus, non malesuada sem accumsan in. Morbi vel sodales libero.</p>
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane fade" id="profile">
+                                                <h2>Avalie esta Oferta</h2>
+                                                <div class="submit-review">
+                                                    <p><label for="name">Nome</label> <input name="name" type="text"></p>
+                                                    <p><label for="email">Email</label> <input name="email" type="email"></p>
+                                                    <div class="rating-chooser">
+                                                        <p>Sua Avaliação</p>
+
+                                                        <div class="rating-wrap-post">
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                        </div>
+                                                    </div>
+                                                    <p><label for="review">Comentarios</label> <textarea name="review" id="" cols="30" rows="10"></textarea></p>
+                                                    <p><input type="submit" value="Submit"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="related-products-wrapper">
+                            <h2 class="related-products-title">Produtos Relacionados</h2>
+                            <div class="related-products-carousel">
+                                <div class="single-product">
+                                    <div class="product-f-image">
+                                        <img src="img/product-1.jpg" alt="">
+                                        <div class="product-hover">
+                                            <a href="" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                            <a href="" class="view-details-link"><i class="fa fa-link"></i> See details</a>
+                                        </div>
+                                    </div>
+
+                                    <h2><a href="">Sony Smart TV - 2015</a></h2>
+
+                                    <div class="product-carousel-price">
+                                        <ins>$700.00</ins> <del>$800.00</del>
+                                    </div> 
+                                </div>
+                                <div class="single-product">
+                                    <div class="product-f-image">
+                                        <img src="img/product-2.jpg" alt="">
+                                        <div class="product-hover">
+                                            <a href="" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                            <a href="" class="view-details-link"><i class="fa fa-link"></i> See details</a>
+                                        </div>
+                                    </div>
+
+                                    <h2><a href="">Apple new mac book 2015 March :P</a></h2>
+                                    <div class="product-carousel-price">
+                                        <ins>$899.00</ins> <del>$999.00</del>
+                                    </div> 
+                                </div>
+                                <div class="single-product">
+                                    <div class="product-f-image">
+                                        <img src="img/product-3.jpg" alt="">
+                                        <div class="product-hover">
+                                            <a href="" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                            <a href="" class="view-details-link"><i class="fa fa-link"></i> See details</a>
+                                        </div>
+                                    </div>
+
+                                    <h2><a href="">Apple new i phone 6</a></h2>
+
+                                    <div class="product-carousel-price">
+                                        <ins>$400.00</ins> <del>$425.00</del>
+                                    </div>                                 
+                                </div>
+                                <div class="single-product">
+                                    <div class="product-f-image">
+                                        <img src="img/product-4.jpg" alt="">
+                                        <div class="product-hover">
+                                            <a href="" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                            <a href="" class="view-details-link"><i class="fa fa-link"></i> See details</a>
+                                        </div>
+                                    </div>
+
+                                    <h2><a href="">Sony playstation microsoft</a></h2>
+
+                                    <div class="product-carousel-price">
+                                        <ins>$200.00</ins> <del>$225.00</del>
+                                    </div>                            
+                                </div>
+                                <div class="single-product">
+                                    <div class="product-f-image">
+                                        <img src="img/product-5.jpg" alt="">
+                                        <div class="product-hover">
+                                            <a href="" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                            <a href="" class="view-details-link"><i class="fa fa-link"></i> See details</a>
+                                        </div>
+                                    </div>
+
+                                    <h2><a href="">Sony Smart Air Condtion</a></h2>
+
+                                    <div class="product-carousel-price">
+                                        <ins>$1200.00</ins> <del>$1355.00</del>
+                                    </div>                                 
+                                </div>
+                                <div class="single-product">
+                                    <div class="product-f-image">
+                                        <img src="img/product-6.jpg" alt="">
+                                        <div class="product-hover">
+                                            <a href="" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                            <a href="" class="view-details-link"><i class="fa fa-link"></i> See details</a>
+                                        </div>
+                                    </div>
+
+                                    <h2><a href="">Samsung gallaxy note 4</a></h2>
+
+                                    <div class="product-carousel-price">
+                                        <ins>$400.00</ins>
+                                    </div>                            
+                                </div>                                    
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer-top-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-sm-6">
+                    <div class="footer-about-us">
+                        <h2>Farma<span>Oferta</span></h2>
+                        <p>Encontre os melhores precos de medicamentos e dermocosmenticos nas melhores farmacias de sua cidade. Assine a newsletter e receba em seu email as melhores ofertas!</p>
+                        <div class="footer-social">
+                            <a href="#" target="_blank"><i class="fa fa-facebook"></i></a>
+                            <a href="#" target="_blank"><i class="fa fa-twitter"></i></a>
+                            <a href="#" target="_blank"><i class="fa fa-youtube"></i></a>
+                            <a href="#" target="_blank"><i class="fa fa-linkedin"></i></a>
+                            <a href="#" target="_blank"><i class="fa fa-pinterest"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-sm-6">
+                    <div class="footer-menu">
+                        <h2 class="footer-wid-title">Navegação </h2>
+                        <ul>
+                            <li><a href="#">Minha Conta</a></li>
+                            <li><a href="#">Histórico de Pedidos</a></li>
+                            <li><a href="#">Lista de Desejos</a></li>
+                            <li><a href="#">Sala de Ofertas</a></li>
+                            <li><a href="#">Home</a></li>
+                        </ul>                        
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-sm-6">
+                    <div class="footer-menu">
+                        <h2 class="footer-wid-title">Categorias</h2>
+                        <ul>
+                            <li><a href="#">Medicamentos</a></li>
+                            <li><a href="#">dermocosmenticos</a></li>
+                            <li><a href="#">Higiene e Beleza</a></li>
+                            <li><a href="#">Anticoncepcionais</a></li>
+                            <li><a href="#">Hipertensivos</a></li>
+                        </ul>                        
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-sm-6">
+                    <div class="footer-newsletter">
+                        <h2 class="footer-wid-title">Newsletter</h2>
+                        <p>
+                            Inscreva-se em nossa newsletter e receba ofertas exclusivas que você não encontrará em nenhum outro lugar diretamente no seu E-mail!</p>
+                        <div class="newsletter-form">
+                            <form action="#">
+                                <input type="email" placeholder="Digite seu E-mail">
+                                <input type="submit" value="Inscrever">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End footer top area -->
+    
+    <div class="footer-bottom-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="copyright">
+                        <p>&copy; 2018 Farmaoferta.com.br Todos os Direitos reservados - by <a href="#" target="_blank">E Tech</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End footer bottom area -->
+   
+    <!-- Latest jQuery form server -->
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    
+    <!-- Bootstrap JS form CDN -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    
+    <!-- jQuery sticky menu -->
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.sticky.js"></script>
+    
+    <!-- jQuery easing -->
+    <script src="js/jquery.easing.1.3.min.js"></script>
+    
+    <!-- Main Script -->
+    <script src="js/main.js"></script>
+    <script src="js/botoes.js"></script>
+  </body>
+</html>
