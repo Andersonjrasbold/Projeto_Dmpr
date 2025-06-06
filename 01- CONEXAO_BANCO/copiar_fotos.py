@@ -4,7 +4,7 @@ import Acesso
 
 # Caminho de origem e destino
 origem = r"Z:\EPED\Fotos"
-destino = r"C:\Users\renat\OneDrive - dmparana.com.br\sITE\farmaoferta\static\fotos"
+destino = r"C:\Users\renat\OneDrive - dmparana.com.br\Projeto Anderson\Projeto_Dmpr\01- CONEXAO_BANCO\static\fotos"
 
 # Se destino não existir, cria
 if not os.path.exists(destino):
@@ -19,7 +19,8 @@ query = """
 SELECT COD_PRODUTO FROM PRODUTOS
 WHERE STATUS_PRODUTO = 1
 AND CATEGORIA_PRODUTO NOT IN ('26','13','29','14')
-AND COD_PRODUTO <= 10
+AND COD_PRODUTO <= 100
+AND ESTOQUE_PRODUTO > 0
 """
 
 cur.execute(query)
