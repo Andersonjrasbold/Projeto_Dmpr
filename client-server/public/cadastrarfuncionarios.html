@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
+
+    <!-- Google Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,200,300,700,600' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,100' rel='stylesheet' type='text/css'>
+        
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/owl.carousel.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <!-- Estilo customizado -->
+    <link rel="stylesheet" type="text/css" href="css/estilo.css">
+    <link rel="stylesheet" href="css/owl.carousel.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <title>Farma Oferta | Cadastrar Funcionários</title>
+   
+    
+
+    
+
+</head>
+
+<body>
+
+    <div class="header-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="staff-menu">
+                        <ul>
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- End header area -->
+    <div class="site-branding-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="logo mb-2">
+                        <a href="index.html"><img style="width:150px" class="circle" alt="Cinque Terre" src="./img/FARMAOFERTA-0008.png"></a>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div>
+                        <h3></h3>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="">
+                        <!-- <img src="img/cooperfarma.png" class="img-circle" alt="Cinque Terre"> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End site branding area -->
+
+    <div class="mainmenu-area navbar-expand">
+        <div class="container">
+            <div class="row">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="index.html">Painel</a></li>
+                        <li ><a href="cadastrarlojas.html">Redes/Lojas</a></li>
+                        <li class="active"><a href="cadastrarfuncionarios.html">Funcionários</a></li>
+                        <li><a href="cadastrarusuarios.html">Usuarios</a></li>
+                        <li><a href="cadastrarprodutos.html">Produtos</a></li>
+                        <li><a href="cadastrarofertas.html">Ofertas</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End mainmenu area -->
+
+    <div class="container-fluid text-center">    
+            <div class="row content">
+              <div class="col-sm-12 sidenav">
+                <div class="profile-nav">
+                  <div class="panel">
+                        <ul class="nav nav-tabs  nav-stacked">
+                            <li class="active"><a data-toggle="tab" href="#home">Seja Bem-Vindo</a></li>
+                            <li><a data-toggle="tab" href="#cadastrarloja">Cadastrar Funcionários</a></li>
+                            
+                            
+                        </ul>
+    
+                            <div class="tab-content">
+                                <div id="home" class="tab-pane fade in active">
+                                    <div class="row">
+                                        <div class="col-sm-2 offset-md-3 mt-5">
+                                            
+                                        <div class="panel panel-default text-center">
+                                          <div class="panel-heading " >
+                                            <h1 style="color:black">Funcionários</h1>
+                                            <p style="color:black">Cadastradas</p>
+                                          </div>
+                                          <div class="panel-body">
+                                            <h3 id="number-staffs">0</h3>
+                                            
+                                            
+                                          </div>
+                                          <div class="panel-footer">
+                                            
+                                            
+                                            <button class="btn btn-lg">Veja Mais</button>
+                                          </div>
+                                        </div> 
+                                      </div> 
+                                      <div class="col-sm-2 mt-5">
+                                        <div class="panel panel-default text-center">
+                                            <div class="panel-heading " >
+                                              <h1 style="color:black">Lojas</h1>
+                                              <p style="color:black">Cadastradas</p>
+                                            </div>
+                                            <div class="panel-body">
+                                              <h3 id="number-lojas">0</h3>
+                                              
+                                              
+                                            </div>
+                                            <div class="panel-footer">
+                                              
+                                              
+                                              <button class="btn btn-lg">Veja Mais</button>
+                                            </div>
+                                          </div>
+                                      </div> 
+                                     <div class="col-sm-2 mt-5">
+                                        <div class="panel panel-default text-center">
+                                            <div class="panel-heading " >
+                                              <h1 style="color:black">Usuários</h1>
+                                              <p style="color:black">Cadastrados</p>
+                                            </div>
+                                            <div class="panel-body">
+                                              <h3 id="number-staff">0</h3>
+                                              
+                                              
+                                            </div>
+                                            <div class="panel-footer">
+                                              
+                                              
+                                              <button class="btn btn-lg">Veja Mais</button>
+                                            </div>
+                                          </div>
+                                      </div> 
+                                      
+                                    </div>
+                                </div>
+                            
+                            
+                            
+                                <div id="cadastrarloja" class="tab-pane fade">
+                                <div class="container-fluid text-center">    
+                                    <div class="row content">
+                                                              
+                                                            <div class="col-sm-12 text-left box box-success" id="box-staff-create"> 
+                                                                   
+                                                                <div class="container">
+                                                                    <div class="row">
+                                                                        <div class="col-sm-12 "> 
+                                                                                <h1>Cadastrar Funcionarios</h1><button id="" class="btn-list btn btn-outline-default "><i class="fas fa-list"></i> Ver Funcionários Cadastrados</button>
+                                                                                
+                                                                                <hr>
+                                                                            <form class="form-group" id="form-staff-create">
+                                                                                   
+                                                                                <div class="form-row">
+                                                                                             <div class="col-md-2 mb-3">
+                                                                                                <div class="panel">
+                                                                                
+                                                                                                    <img type="photo" class="photo" name="photo" id="photo" src="./img/FARMAOFERTA-0008.png">
+                                                                                                    
+                                                                                                </div> 
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label >COD Cliente</label>
+                                                                                                <input type="text" placeholder="" class="form-control" name="id" id="id" > 
+                                                                                            </div>
+                                                                                           
+                                                                                            <div class="col-md-4 mb-3">
+                                                                                                    <label >Nome da Empresa/Rede</label>
+                                                                                                    <input type="text" placeholder="" class="form-control" name="nome_rede" id="nome_rede" > 
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                    <label >Filial</label>
+                                                                                                    <input type="text" placeholder="" class="form-control" name="filial" id="filial" > 
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                    <label >Matricula</label>
+                                                                                                    <input type="text" placeholder="" class="form-control" name="matricula" id="matricula" > 
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                    <label for="">Função</label>
+                                                                                                    <select class="form-control" id="funcao"  name="funcao">
+                                                                                                        <option value="">Selecione</option>
+                                                                                                        <option value="1">Atendente</option>
+                                                                                                        <option value="2">Aux de Compras</option>
+                                                                                                        <option value="3">Comprador</option>
+                                                                                                        <option value="4">Farmacêutico</option>
+                                                                                                        <option value="5">Supervisor</option>
+                                                                                                        <option value="6">Gerente</option>
+                                                                                                        <option value="7">Proprietário</option>
+                                                                                                        <option value="8">Outros</option>
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            
+                                                                                            <div class="col-md-1">
+                                                                                                    <label >Ativo</label>        
+                                                                                                        <select class="form-control" type="select" id="estado_ativo" name="estado_ativo">
+                                                                                                                
+                                                                                                                <option value="Sim">Sim</option>
+                                                                                                                <option value="Não">Não</option>
+                                                                                                               
+        
+                                                                                                        </select>
+                                                                                                        
+                                                                                                </div>
+                                                                                                                                                                              
+                                                                                            
+                                                                                        </div> 
+                                                                                 <hr>
+                                                                                 <div class="form-row">
+                                                                                        <div class="form-row">
+                                                                                                <div class="col-md-2 mb-3">
+                                                                                                    <label for="">CPF</label>
+                                                                                                    <input type="text"  class="form-control" id="cpf" placeholder="CPF" name="cpf">
+                                                                                                </div>
+                                                                                                <div class="col-md-2 mb-3">
+                                                                                                        <label for="">RG</label>
+                                                                                                        <input type="text"  class="form-control" id="rg" placeholder="" name="rg">
+                                                                                                    </div>
+                                                                                                <div class="col-md-2 mb-3">
+                                                                                                    <label for="">Nome</label>
+                                                                                                    <input type="text"  class="form-control" id="name" placeholder="Nome" name="name">
+                                                                                                </div>
+                                                                                                <div class="col-md-3 mb-3">
+                                                                                                    <label for="inputEmail4">Sebrenome</label>
+                                                                                                    <input type="text"  class="form-control" id="sobremone" placeholder="" name="sobrenome">
+                                                                                                </div>
+                                                                                                <div class="col-md-3 mb-3">
+                                                                                                        <label >Gênero</label>
+                                                                                                                
+                                                                                                            <select class="form-control"  id="horario_termino_acesso" name="horario_termino_acesso">
+                                                                                                                
+                                                                                                                <option id="exampleInputGenderM" value="M" name="gender">Masculino</option>
+                                                                                                                <option id="exampleInputGenderF" value="F" name="gender">Feminino</option>
+                                                                                                            
+                                        
+                                                                                                            </select>
+                                                                                                       
+                                                
+                                                                                                    </div>
+                                                                                                <div class="col-md-1 mb-3">
+                                                                                                        <label for="email">DDD</label>
+                                                                                                        <select class="form-control"  id="ddd" name="ddd">
+                                                                                                            <option value="">DDD</option>
+                                                                                                            <option value="41">41</option>
+                                                                                                            <option value="42">42</option>
+                                                                                                            <option value="43">43</option>
+                                                                                                            <option value="44">44</option>
+                                                                                                            <option value="45">45</option>
+                                                                                                            <option value="46">46</option>
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                
+                                                                                                <div class="col-md-2 mb-3">
+                                                                                                    <label for="">Celular</label>
+                                                                                                    <input type="text"  placeholder="" class="form-control" id="celular" name="celular">
+                                                                                                </div>
+                                                                                                <div class="col-md-1 mb-3">
+                                                                                                        <label for="email">DDD</label>
+                                                                                                        <select  class="form-control"  id="ddd_fixo" name="ddd_fixo">
+                                                                                                            <option value="">DDD</option>
+                                                                                                            <option value="41">41</option>
+                                                                                                            <option value="42">42</option>
+                                                                                                            <option value="43">43</option>
+                                                                                                            <option value="44">44</option>
+                                                                                                            <option value="45">45</option>
+                                                                                                            <option value="46">46</option>
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                
+                                                                                                <div class="col-md-2 mb-3">
+                                                                                                    <label for="">Telefone Fixo</label>
+                                                                                                    <input type="text"  placeholder="" class="form-control" id="telFixo" name="telFixo">
+                                                                                                </div>
+                                                                                                <div class="col-md-2 mb-3">
+                                                                                                        <label for="inputEmail4">Data de Nascimento</label>
+                                                                                                        <input type="date"  class="form-control" id="data_nascimento" placeholder="" name="data_nascimento">
+                                                                                                </div>
+                                                                                                <div class="col-md-2 mb-3">
+                                                                                                        <label for="inputEmail4">Data de Admissão</label>
+                                                                                                        <input type="date"  class="form-control" id="data_admissao" placeholder="" name="data_admissao">
+                                                                                                </div>
+                                                                                                <div class="col-md-2 mb-3">
+                                                                                                        <label for="inputEmail4">Data de Demissão</label>
+                                                                                                        <input type="date"  class="form-control" id="data_demissao" placeholder="" name="data_demissao">
+                                                                                                </div>
+                                                                                                <div class="col-md-4 mb-3">
+                                                                                                    <label for="inputEmail4">Email</label>
+                                                                                                    <input type="email"  class="form-control" id="inputEmail4" placeholder="Email" name="email">
+                                                                                                </div>
+                                                                                                <div class="col-md-2 mb-3">
+                                                                                                    <label for="inputPassword4">Senha</label>
+                                                                                                    <input type="password"  class="form-control" id="password" placeholder="Senha" name="password">
+                                                                                                </div>
+                                                                                                <div class="col-md-2 mb-3">
+                                                                                                        <label for="email">Tipo de Acesso</label>
+                                                                                                        <select class="form-control" id="permissoes"  name="permissoes">
+                                                                                                            <option value="">Selecione</option>
+                                                                                                            <option value="Cadastro de oferta">Cadastro de Ofertas</option>
+                                                                                                            <option value="Checkout">Checkout de Pedidos</option>
+                                                                                                            <option value="Total">Total</option>
+                                            
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                
+                                            
+                                                                                                <div class="col-md-2 mb-3">
+                                                                                                    <label for="">Inicio de acesso</label>
+                                                                                                    <select class="form-control"  id="horario_inicio_acesso" name="horario_inicio_acesso">
+                                                                                                        <option value="">Selecione</option>
+                                            
+                                                                                                        <option value="1">1:00</option>
+                                                                                                        <option value="2">2:00</option>
+                                                                                                        <option value="3">3:00</option>
+                                                                                                        <option value="4">4:00</option>
+                                                                                                        <option value="5">5:00</option>
+                                                                                                        <option value="6">6:00</option>
+                                                                                                        <option value="7">7:00</option>
+                                                                                                        <option value="8">8:00</option>
+                                                                                                        <option value="9">9:00</option>
+                                                                                                        <option value="10">10:00</option>
+                                                                                                        <option value="11">11:00</option>
+                                                                                                        <option value="12">12:00</option>
+                                                                                                        <option value="13">13:00</option>
+                                                                                                        <option value="14">14:00</option>
+                                                                                                        <option value="15">15:00</option>
+                                                                                                        <option value="16">16:00</option>
+                                                                                                        <option value="17">17:00</option>
+                                                                                                        <option value="18">18:00</option>
+                                                                                                        <option value="19">19:00</option>
+                                                                                                        <option value="20">20:00</option>
+                                                                                                        <option value="21">21:00</option>
+                                                                                                        <option value="22">22:00</option>
+                                                                                                        <option value="23">23:00</option>
+                                                                                                        <option value="24">0:00</option>
+                                                                                                        <option value="25">Total</option>
+                                            
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                                <div class="col-md-2 mb-3">
+                                                                                                    <label for="">Termino de acesso</label>
+                                                                                                    <select class="form-control"  id="horario_termino_acesso" name="horario_termino_acesso">
+                                                                                                        <option value="">Selecione</option>
+                                            
+                                                                                                        <option value="1">1:00</option>
+                                                                                                        <option value="2">2:00</option>
+                                                                                                        <option value="3">3:00</option>
+                                                                                                        <option value="4">4:00</option>
+                                                                                                        <option value="5">5:00</option>
+                                                                                                        <option value="6">6:00</option>
+                                                                                                        <option value="7">7:00</option>
+                                                                                                        <option value="8">8:00</option>
+                                                                                                        <option value="9">9:00</option>
+                                                                                                        <option value="10">10:00</option>
+                                                                                                        <option value="11">11:00</option>
+                                                                                                        <option value="12">12:00</option>
+                                                                                                        <option value="13">13:00</option>
+                                                                                                        <option value="14">14:00</option>
+                                                                                                        <option value="15">15:00</option>
+                                                                                                        <option value="16">16:00</option>
+                                                                                                        <option value="17">17:00</option>
+                                                                                                        <option value="18">18:00</option>
+                                                                                                        <option value="19">19:00</option>
+                                                                                                        <option value="20">20:00</option>
+                                                                                                        <option value="21">21:00</option>
+                                                                                                        <option value="22">22:00</option>
+                                                                                                        <option value="23">23:00</option>
+                                                                                                        <option value="24">0:00</option>
+                                                                                                        <option value="25">Total</option>
+                                            
+                                                                                                    </select>
+                                                                                                </div>
+                                            
+                                                                                               
+                                                                                                    
+                                                                                                   
+                                                                                            </div>
+                                                                                            
+                                                                                            
+                                                                                            
+                                                                                 </div>
+                                                                                 <hr>
+                                                                                 <div class="form-row">
+                                                                                        <div class="col-md-2 mb-3">
+                                                                                            <label for="">CEP </label>
+                                                                                            <input type="text" class="form-control" id="cep" name="cep">
+                                                                                            
+                                                                                        </div>
+                                                                                        <div class="col-md-5 mb-3">
+                                                                                                <label for="">Endereço</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="endereco" name="endereco">
+                                                                                        </div>
+                                                                                        <div class="col-md-2 mb-3">
+                                                                                            <label for="">Número</label>
+                                                                                            <input type="tex" placeholder="" class="form-control" id="numero" name="numero">
+                                                                                        </div>
+                                                                                        <div class="col-md-3 mb-3">
+                                                                                                <label for="">Complemento</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="complemento" name="complemento">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-row">
+                                                                                            <div class="col-md-3 mb-3">
+                                                                                                <label for="">Bairro</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="bairro" name="bairro">
+                                                                                        </div>
+                                                                                        <div class="col-md-4 mb-3">
+                                                                                                <label for="">Cidade</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="cidade" name="cidade">
+                                                                                        </div>
+                                                                                        <div class="col-md-3 mb-3">
+                                                                                                <label for="">Estado</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="estado" name="estado">
+                                                                                        </div>
+                                                                                        <div class="col-md-2 mb-3">
+                                                                                            <label for="">País</label>
+                                                                                            <input type="text" placeholder="" class="form-control" id="pais" name="pais">
+                                                                                        </div>
+                                                                                       
+                                                                                    </div>
+                                                                                    <hr>
+                                                                                 <div class="form-row">
+                                                                                    <div class="col-md-2 mb-3">
+                                                                                            <label >Local de trabalho (Cnpj)</label>
+                                                                                            <input type="text" placeholder="" class="form-control" id="cnpj" name="cnpj"> 
+                                                                                    </div>
+                                                                                    <div class="col-md-2 mb-3">
+                                                                                            <label >Incrição Estadual</label>
+                                                                                            <input type="text" placeholder="" class="form-control" id="ie" name="ie"> 
+                                                                                    </div>
+                                                                                    <div class="col-md-2 mb-3">
+                                                                                        <label >Incrição Municipal</label>
+                                                                                        <input type="text" placeholder="" class="form-control" id="imunicipal" name="imunicipal"> 
+                                                                                    </div>
+                                                                                    <div class="col-md-3 mb-3">
+                                                                                            <label >Razão Social </label>
+                                                                                            <input type="text" class="form-control" id="razaoSocial" name="razaoSocial">
+                                                                                            
+                                                                                    </div>
+                                                                                    
+                                                                                    <div class="col-md-3 mb-3">
+                                                                                            <label >Nome Fantasia </label>
+                                                                                            <input type="text" class="form-control" id="nomeFantasia" name="nomeFantasia">
+                                                                                            
+                                                                                    </div>
+                                                                                    
+                                                                                </div> 
+                                                                                <div class="form-row">
+                                                                                    <div class="col-md-1 mb-3">
+                                                                                        <label for="">DDD</label>
+                                                                                        <select class="form-control" type="select" id="ddd_farmacia" name="ddd_farmacia">
+                                                                                            <option value="">DDD</option>
+                                                                                            <option value="41">41</option>
+                                                                                            <option value="42">42</option>
+                                                                                            <option value="43">43</option>
+                                                                                            <option value="44">44</option>
+                                                                                            <option value="45">45</option>
+                                                                                            <option value="46">46</option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                
+                                                                                <div class="col-md-2 mb-3">
+                                                                                    <label for="">Celular Farmácia</label>
+                                                                                    <input type="text"  placeholder="" class="form-control" id="celular_farmacia" name="celular_farmacia">
+                                                                                </div>
+                                                                            
+                                                                                    
+                                                                                    <div class="col-md-1 mb-3">
+                                                                                        <label for="">DDD</label>
+                                                                                        <select  class="form-control" type="select" id="ddd_fixo_farmacia" name="ddd_fixo_farmacia">
+                                                                                            <option value="">DDD</option>
+                                                                                            <option value="41">41</option>
+                                                                                            <option value="42">42</option>
+                                                                                            <option value="43">43</option>
+                                                                                            <option value="44">44</option>
+                                                                                            <option value="45">45</option>
+                                                                                            <option value="46">46</option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                
+                                                                                    <div class="col-md-2 mb-3">
+                                                                                        <label for="">Telefone Fixo</label>
+                                                                                        <input type="text"  placeholder="" class="form-control" id="fone_fixo_farmacia" name="fone_fixo_farmacia">
+                                                                                    </div>
+                                                                                    <div class="col-md-3 mb-3">
+                                                                                        <label >Contato </label>
+                                                                                        <input type="text" class="form-control" id="contato" name="contato">
+                                                                                        
+                                                                                     </div>
+                                                                                     <div class="col-md-3 mb-3">
+                                                                                            <label for="">Função</label>
+                                                                                            <select class="form-control" id="funcao"  name="funcao">
+                                                                                                <option value="">Selecione</option>
+                                                                                                <option value="1">Atendente</option>
+                                                                                                <option value="2">Aux de Compras</option>
+                                                                                                <option value="3">Comprador</option>
+                                                                                                <option value="4">Farmacêutico</option>
+                                                                                                <option value="5">Supervisor</option>
+                                                                                                <option value="6">Gerente</option>
+                                                                                                <option value="7">Proprietário</option>
+                                                                                                <option value="8">Outros</option>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                     
+                                                                                </div>
+                                                                                   
+                                                                                        
+                                                                                        <hr>
+                                                                                        <div class="form-row">
+                                                                                                <div class="col-md-3 mb-3">
+                                                                                                    <label >Horarios de abertura</label>
+                                                                                                    <select class="form-control" type="select" id="horario_abertura_loja" name="horario_abertura_loja">
+                                                                                                            <option value="">Selecione</option>
+                                                                                                
+                                                                                                            <option value="1">1:00</option>
+                                                                                                            <option value="2">2:00</option>
+                                                                                                            <option value="3">3:00</option>
+                                                                                                            <option value="4">4:00</option>
+                                                                                                            <option value="5">5:00</option>
+                                                                                                            <option value="6">6:00</option>
+                                                                                                            <option value="7">7:00</option>
+                                                                                                            <option value="8">8:00</option>
+                                                                                                            <option value="9">9:00</option>
+                                                                                                            <option value="10">10:00</option>
+                                                                                                            <option value="11">11:00</option>
+                                                                                                            <option value="12">12:00</option>
+                                                                                                            <option value="13">13:00</option>
+                                                                                                            <option value="14">14:00</option>
+                                                                                                            <option value="15">15:00</option>
+                                                                                                            <option value="16">16:00</option>
+                                                                                                            <option value="17">17:00</option>
+                                                                                                            <option value="18">18:00</option>
+                                                                                                            <option value="19">19:00</option>
+                                                                                                            <option value="20">20:00</option>
+                                                                                                            <option value="21">21:00</option>
+                                                                                                            <option value="22">22:00</option>
+                                                                                                            <option value="23">23:00</option>
+                                                                                                            <option value="24">0:00</option>
+                                                                                                        
+                                                                                                    
+                                                                                                    </select>
+                                                                                                    
+                                                                                                </div>  
+                                                                                                                                                     
+                                                                                            <div class="col-md-3 mb-3">
+                                                                                                <label >Horarios de Fechamento</label>
+                                                                                                <select class="form-control" type="select" id="horario_fechamento_loja" name="horario_fechamento_loja">
+                                                                                                        <option value="">Selecione</option>
+                                                                                                
+                                                                                                        <option value="1">1:00</option>
+                                                                                                        <option value="2">2:00</option>
+                                                                                                        <option value="3">3:00</option>
+                                                                                                        <option value="4">4:00</option>
+                                                                                                        <option value="5">5:00</option>
+                                                                                                        <option value="6">6:00</option>
+                                                                                                        <option value="7">7:00</option>
+                                                                                                        <option value="8">8:00</option>
+                                                                                                        <option value="9">9:00</option>
+                                                                                                        <option value="10">10:00</option>
+                                                                                                        <option value="11">11:00</option>
+                                                                                                        <option value="12">12:00</option>
+                                                                                                        <option value="13">13:00</option>
+                                                                                                        <option value="14">14:00</option>
+                                                                                                        <option value="15">15:00</option>
+                                                                                                        <option value="16">16:00</option>
+                                                                                                        <option value="17">17:00</option>
+                                                                                                        <option value="18">18:00</option>
+                                                                                                        <option value="19">19:00</option>
+                                                                                                        <option value="20">20:00</option>
+                                                                                                        <option value="21">21:00</option>
+                                                                                                        <option value="22">22:00</option>
+                                                                                                        <option value="23">23:00</option>
+                                                                                                        <option value="24">0:00</option>
+                                                                                                        
+                                                                                                
+                                                                                                </select>
+                                                                                            </div>
+                                                                                            <div class="col-md-6 mb-3 ">
+                                                                                                    <label for="">Observações</label>
+                                                                                                    <input type="text"  placeholder="" class="form-control" id="observacoes" name="observacoes">
+                                                                                            </div>
+                                                                                            
+                                                                                    </div>
+                                                                                    <hr> 
+                                                                                 
+                                                                                <div class="form-row">
+                                                                                    <div class="col-md-7 mb-3">
+                                                                                        <label for="exampleInputFile">Foto</label>
+                                                                                        <input type="file" id="exampleInputFile" name="photo">
+                                                                                    </div>
+                                                                                </div>
+                                                                                 <hr>
+                                                                                    <button type="submit"   class="btn btn-primary ">Cadastrar Funcionário</button>
+                                                                               
+                                                                            </form> 
+                                                                               
+                                                                        </div>
+                                                                    
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-12 text-left box box-primary" id="box-staff-update" style="display:none;"> 
+                                                                   
+                                                                <div class="container">
+                                                                    <div class="row">
+                                                                        <div class="col-sm-12 "> 
+                                                                                <h1>Editar Funcionários </h1><button class="btn btn-outline-default"><i class="fas fa-list"></i> Ver Funcionarios Cadastrados</button>
+                                                                                
+                                                                                <hr>
+                                                                                <form class="form-group" id="form-staff-update">
+                                                                                   
+                                                                                        <div class="form-row">
+                                                                                                     <div class="col-md-2 mb-3">
+                                                                                                        <div class="panel">
+                                                                                        
+                                                                                                            <img type="photo" class="photo" name="photo" id="photo-update" src="./img/FARMAOFERTA-0008.png">
+                                                                                                            
+                                                                                                        </div> 
+                                                                                                    </div>
+                                                                                                    <div class="col-md-1 mb-3">
+                                                                                                        <label >COD Cliente</label>
+                                                                                                        <input type="text" placeholder="" class="form-control" name="id-update" id="id" > 
+                                                                                                    </div>
+                                                                                                   
+                                                                                                    <div class="col-md-4 mb-3">
+                                                                                                            <label >Nome da Empresa/Rede</label>
+                                                                                                            <input type="text" placeholder="" class="form-control" name="nome_rede" id="nome_rede-update" > 
+                                                                                                    </div>
+                                                                                                    <div class="col-md-1 mb-3">
+                                                                                                            <label >Filial</label>
+                                                                                                            <input type="text" placeholder="" class="form-control" name="filial" id="filial-update" > 
+                                                                                                    </div>
+                                                                                                    <div class="col-md-1 mb-3">
+                                                                                                            <label >Matricula</label>
+                                                                                                            <input type="text" placeholder="" class="form-control" name="matricula" id="matricula-update" > 
+                                                                                                    </div>
+                                                                                                    <div class="col-md-2 mb-3">
+                                                                                                            <label for="">Função</label>
+                                                                                                            <select class="form-control" id="funcao"  name="funcao-update">
+                                                                                                                <option value="">Selecione</option>
+                                                                                                                <option value="1">Atendente</option>
+                                                                                                                <option value="2">Aux de Compras</option>
+                                                                                                                <option value="3">Comprador</option>
+                                                                                                                <option value="4">Farmacêutico</option>
+                                                                                                                <option value="5">Supervisor</option>
+                                                                                                                <option value="6">Gerente</option>
+                                                                                                                <option value="7">Proprietário</option>
+                                                                                                                <option value="8">Outros</option>
+                                                                                                            </select>
+                                                                                                        </div>
+                                                                                                    
+                                                                                                    <div class="col-md-1">
+                                                                                                            <label >Ativo</label>        
+                                                                                                                <select class="form-control" type="select" id="estado_ativo-update" name="estado_ativo">
+                                                                                                                        
+                                                                                                                        <option value="Sim">Sim</option>
+                                                                                                                        <option value="Não">Não</option>
+                                                                                                                       
+                
+                                                                                                                </select>
+                                                                                                                
+                                                                                                        </div>
+                                                                                                                                                                                      
+                                                                                                    
+                                                                                                </div> 
+                                                                                         <hr>
+                                                                                         <div class="form-row">
+                                                                                                <div class="form-row">
+                                                                                                        <div class="col-md-2 mb-3">
+                                                                                                            <label for="">CPF</label>
+                                                                                                            <input type="text"  class="form-control" id="cpf-update" placeholder="CPF" name="cpf">
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2 mb-3">
+                                                                                                                <label for="">RG</label>
+                                                                                                                <input type="text"  class="form-control" id="rg-update" placeholder="" name="rg">
+                                                                                                            </div>
+                                                                                                        <div class="col-md-2 mb-3">
+                                                                                                            <label for="">Nome</label>
+                                                                                                            <input type="text"  class="form-control" id="name-update" placeholder="Nome" name="name">
+                                                                                                        </div>
+                                                                                                        <div class="col-md-3 mb-3">
+                                                                                                            <label for="inputEmail4">Sebrenome</label>
+                                                                                                            <input type="text"  class="form-control" id="sobrenome-update" placeholder="" name="sobrenome">
+                                                                                                        </div>
+                                                                                                        <div class="col-md-3 mb-3">
+                                                                                                                <label >Gênero</label>
+                                                                                                                        
+                                                                                                                    <select class="form-control"  id="gender" name="gender">
+                                                                                                                        
+                                                                                                                        <option id="exampleInputGenderM-update" value="M" name="gender">Masculino</option>
+                                                                                                                        <option id="exampleInputGenderF-update" value="F" name="gender">Feminino</option>
+                                                                                                                    
+                                                
+                                                                                                                    </select>
+                                                                                                               
+                                                        
+                                                                                                            </div>
+                                                                                                        <div class="col-md-1 mb-3">
+                                                                                                                <label for="email">DDD</label>
+                                                                                                                <select class="form-control"  id="ddd-update" name="ddd">
+                                                                                                                    <option value="">DDD</option>
+                                                                                                                    <option value="41">41</option>
+                                                                                                                    <option value="42">42</option>
+                                                                                                                    <option value="43">43</option>
+                                                                                                                    <option value="44">44</option>
+                                                                                                                    <option value="45">45</option>
+                                                                                                                    <option value="46">46</option>
+                                                                                                                </select>
+                                                                                                            </div>
+                                                                                                        
+                                                                                                        <div class="col-md-2 mb-3">
+                                                                                                            <label for="">Celular</label>
+                                                                                                            <input type="text"  placeholder="" class="form-control" id="celular-update" name="celular">
+                                                                                                        </div>
+                                                                                                        <div class="col-md-1 mb-3">
+                                                                                                                <label for="email">DDD</label>
+                                                                                                                <select  class="form-control"  id="ddd_fixo-update" name="ddd_fixo">
+                                                                                                                    <option value="">DDD</option>
+                                                                                                                    <option value="41">41</option>
+                                                                                                                    <option value="42">42</option>
+                                                                                                                    <option value="43">43</option>
+                                                                                                                    <option value="44">44</option>
+                                                                                                                    <option value="45">45</option>
+                                                                                                                    <option value="46">46</option>
+                                                                                                                </select>
+                                                                                                            </div>
+                                                                                                        
+                                                                                                        <div class="col-md-2 mb-3">
+                                                                                                            <label for="">Telefone Fixo</label>
+                                                                                                            <input type="text"  placeholder="" class="form-control" id="telFixo-update" name="telFixo">
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2 mb-3">
+                                                                                                                <label for="">Data de Nascimento</label>
+                                                                                                                <input type="date"  class="form-control" id="data_nascimento-update" placeholder="" name="data_nascimento">
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2 mb-3">
+                                                                                                                <label for="">Data de Admissão</label>
+                                                                                                                <input type="date"  class="form-control" id="data_admissao-update" placeholder="" name="data_admissao">
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2 mb-3">
+                                                                                                                <label for="">Data de Demissão</label>
+                                                                                                                <input type="date"  class="form-control" id="data_demissao-update" placeholder="" name="data_demissao">
+                                                                                                        </div>
+                                                                                                        <div class="col-md-4 mb-3">
+                                                                                                            <label for="">Email</label>
+                                                                                                            <input type="email"  class="form-control" id="email-update" placeholder="Email" name="email">
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2 mb-3">
+                                                                                                            <label for="password-update">Senha</label>
+                                                                                                            <input type="password"  class="form-control" id="password-update" placeholder="Senha" name="password">
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2 mb-3">
+                                                                                                                <label for="">Tipo de Acesso</label>
+                                                                                                                <select class="form-control" id="permissoes-update"  name="permissoes">
+                                                                                                                    <option value="">Selecione</option>
+                                                                                                                    <option value="Cadastro de oferta">Cadastro de Ofertas</option>
+                                                                                                                    <option value="Checkout">Checkout de Pedidos</option>
+                                                                                                                    <option value="Total">Total</option>
+                                                    
+                                                                                                                </select>
+                                                                                                            </div>
+                                                                                                        
+                                                    
+                                                                                                        <div class="col-md-2 mb-3">
+                                                                                                            <label for="">Inicio de acesso</label>
+                                                                                                            <select class="form-control"  id="horario_inicio_acesso-update" name="horario_inicio_acesso">
+                                                                                                                <option value="">Selecione</option>
+                                                    
+                                                                                                                <option value="1">1:00</option>
+                                                                                                                <option value="2">2:00</option>
+                                                                                                                <option value="3">3:00</option>
+                                                                                                                <option value="4">4:00</option>
+                                                                                                                <option value="5">5:00</option>
+                                                                                                                <option value="6">6:00</option>
+                                                                                                                <option value="7">7:00</option>
+                                                                                                                <option value="8">8:00</option>
+                                                                                                                <option value="9">9:00</option>
+                                                                                                                <option value="10">10:00</option>
+                                                                                                                <option value="11">11:00</option>
+                                                                                                                <option value="12">12:00</option>
+                                                                                                                <option value="13">13:00</option>
+                                                                                                                <option value="14">14:00</option>
+                                                                                                                <option value="15">15:00</option>
+                                                                                                                <option value="16">16:00</option>
+                                                                                                                <option value="17">17:00</option>
+                                                                                                                <option value="18">18:00</option>
+                                                                                                                <option value="19">19:00</option>
+                                                                                                                <option value="20">20:00</option>
+                                                                                                                <option value="21">21:00</option>
+                                                                                                                <option value="22">22:00</option>
+                                                                                                                <option value="23">23:00</option>
+                                                                                                                <option value="24">0:00</option>
+                                                                                                                <option value="25">Total</option>
+                                                    
+                                                                                                            </select>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2 mb-3">
+                                                                                                            <label for="">Termino de acesso</label>
+                                                                                                            <select class="form-control"  id="horario_termino_acesso-update" name="horario_termino_acesso">
+                                                                                                                <option value="">Selecione</option>
+                                                    
+                                                                                                                <option value="1">1:00</option>
+                                                                                                                <option value="2">2:00</option>
+                                                                                                                <option value="3">3:00</option>
+                                                                                                                <option value="4">4:00</option>
+                                                                                                                <option value="5">5:00</option>
+                                                                                                                <option value="6">6:00</option>
+                                                                                                                <option value="7">7:00</option>
+                                                                                                                <option value="8">8:00</option>
+                                                                                                                <option value="9">9:00</option>
+                                                                                                                <option value="10">10:00</option>
+                                                                                                                <option value="11">11:00</option>
+                                                                                                                <option value="12">12:00</option>
+                                                                                                                <option value="13">13:00</option>
+                                                                                                                <option value="14">14:00</option>
+                                                                                                                <option value="15">15:00</option>
+                                                                                                                <option value="16">16:00</option>
+                                                                                                                <option value="17">17:00</option>
+                                                                                                                <option value="18">18:00</option>
+                                                                                                                <option value="19">19:00</option>
+                                                                                                                <option value="20">20:00</option>
+                                                                                                                <option value="21">21:00</option>
+                                                                                                                <option value="22">22:00</option>
+                                                                                                                <option value="23">23:00</option>
+                                                                                                                <option value="24">0:00</option>
+                                                                                                                <option value="25">Total</option>
+                                                    
+                                                                                                            </select>
+                                                                                                        </div>
+                                                    
+                                                                                                       
+                                                                                                            
+                                                                                                           
+                                                                                                    </div>
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                         </div>
+                                                                                         <hr>
+                                                                                         <div class="form-row">
+                                                                                                <div class="col-md-2 mb-3">
+                                                                                                    <label for="">CEP </label>
+                                                                                                    <input type="text" class="form-control" id="cep-update" name="cep">
+                                                                                                    
+                                                                                                </div>
+                                                                                                <div class="col-md-5 mb-3">
+                                                                                                        <label for="">Endereço</label>
+                                                                                                        <input type="text" placeholder="" class="form-control" id="endereco-update" name="endereco">
+                                                                                                </div>
+                                                                                                <div class="col-md-2 mb-3">
+                                                                                                    <label for="">Número</label>
+                                                                                                    <input type="tex" placeholder="" class="form-control" id="numero-update" name="numero">
+                                                                                                </div>
+                                                                                                <div class="col-md-3 mb-3">
+                                                                                                        <label for="">Complemento</label>
+                                                                                                        <input type="text" placeholder="" class="form-control" id="complemento-update" name="complemento">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-row">
+                                                                                                    <div class="col-md-3 mb-3">
+                                                                                                        <label for="">Bairro</label>
+                                                                                                        <input type="text" placeholder="" class="form-control" id="bairro-update" name="bairro">
+                                                                                                </div>
+                                                                                                <div class="col-md-4 mb-3">
+                                                                                                        <label for="">Cidade</label>
+                                                                                                        <input type="text" placeholder="" class="form-control" id="cidade-update" name="cidade">
+                                                                                                </div>
+                                                                                                <div class="col-md-3 mb-3">
+                                                                                                        <label for="">Estado</label>
+                                                                                                        <input type="text" placeholder="" class="form-control" id="estado-update" name="estado">
+                                                                                                </div>
+                                                                                                <div class="col-md-2 mb-3">
+                                                                                                    <label for="">País</label>
+                                                                                                    <input type="text" placeholder="" class="form-control" id="pais-update" name="pais">
+                                                                                                </div>
+                                                                                               
+                                                                                            </div>
+                                                                                            <hr>
+                                                                                         <div class="form-row">
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                    <label >Local de trabalho (Cnpj)</label>
+                                                                                                    <input type="text" placeholder="" class="form-control" id="cnpj-update" name="cnpj"> 
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                    <label >Incrição Estadual</label>
+                                                                                                    <input type="text" placeholder="" class="form-control" id="ie-update" name="ie"> 
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label >Incrição Municipal</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="imunicipal-update" name="imunicipal"> 
+                                                                                            </div>
+                                                                                            <div class="col-md-3 mb-3">
+                                                                                                    <label >Razão Social </label>
+                                                                                                    <input type="text" class="form-control" id="razaoSocial-update" name="razaoSocial">
+                                                                                                    
+                                                                                            </div>
+                                                                                            
+                                                                                            <div class="col-md-3 mb-3">
+                                                                                                    <label >Nome Fantasia </label>
+                                                                                                    <input type="text" class="form-control" id="nomeFantasia-update" name="nomeFantasia">
+                                                                                                    
+                                                                                            </div>
+                                                                                            
+                                                                                        </div> 
+                                                                                        <div class="form-row">
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">DDD</label>
+                                                                                                <select class="form-control" type="select" id="ddd_farmacia-update" name="ddd_farmacia">
+                                                                                                    <option value="">DDD</option>
+                                                                                                    <option value="41">41</option>
+                                                                                                    <option value="42">42</option>
+                                                                                                    <option value="43">43</option>
+                                                                                                    <option value="44">44</option>
+                                                                                                    <option value="45">45</option>
+                                                                                                    <option value="46">46</option>
+                                                                                                </select>
+                                                                                            </div>
+                                                                                        
+                                                                                        <div class="col-md-2 mb-3">
+                                                                                            <label for="">Celular Farmácia</label>
+                                                                                            <input type="text"  placeholder="" class="form-control" id="celular_farmacia-update" name="celular_farmacia">
+                                                                                        </div>
+                                                                                    
+                                                                                            
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">DDD</label>
+                                                                                                <select  class="form-control" type="select" id="ddd_fixo_farmacia-update" name="ddd_fixo_farmacia">
+                                                                                                    <option value="">DDD</option>
+                                                                                                    <option value="41">41</option>
+                                                                                                    <option value="42">42</option>
+                                                                                                    <option value="43">43</option>
+                                                                                                    <option value="44">44</option>
+                                                                                                    <option value="45">45</option>
+                                                                                                    <option value="46">46</option>
+                                                                                                </select>
+                                                                                            </div>
+                                                                                        
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Telefone Fixo</label>
+                                                                                                <input type="text"  placeholder="" class="form-control" id="fone_fixo_farmacia-update" name="fone_fixo_farmacia">
+                                                                                            </div>
+                                                                                            <div class="col-md-3 mb-3">
+                                                                                                <label >Contato </label>
+                                                                                                <input type="text" class="form-control" id="contato-update" name="contato">
+                                                                                                
+                                                                                             </div>
+                                                                                             <div class="col-md-3 mb-3">
+                                                                                                    <label for="">Função</label>
+                                                                                                    <select class="form-control" id="funcao_contato-update"  name="funcao_contato">
+                                                                                                        <option value="">Selecione</option>
+                                                                                                        <option value="1">Atendente</option>
+                                                                                                        <option value="2">Aux de Compras</option>
+                                                                                                        <option value="3">Comprador</option>
+                                                                                                        <option value="4">Farmacêutico</option>
+                                                                                                        <option value="5">Supervisor</option>
+                                                                                                        <option value="6">Gerente</option>
+                                                                                                        <option value="7">Proprietário</option>
+                                                                                                        <option value="8">Outros</option>
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                             
+                                                                                        </div>
+                                                                                           
+                                                                                                
+                                                                                                <hr>
+                                                                                                <div class="form-row">
+                                                                                                        <div class="col-md-3 mb-3">
+                                                                                                            <label >Horarios de abertura</label>
+                                                                                                            <select class="form-control" type="select" id="horario_abertura_loja-update" name="horario_abertura_loja">
+                                                                                                                    <option value="">Selecione</option>
+                                                                                                        
+                                                                                                                    <option value="1">1:00</option>
+                                                                                                                    <option value="2">2:00</option>
+                                                                                                                    <option value="3">3:00</option>
+                                                                                                                    <option value="4">4:00</option>
+                                                                                                                    <option value="5">5:00</option>
+                                                                                                                    <option value="6">6:00</option>
+                                                                                                                    <option value="7">7:00</option>
+                                                                                                                    <option value="8">8:00</option>
+                                                                                                                    <option value="9">9:00</option>
+                                                                                                                    <option value="10">10:00</option>
+                                                                                                                    <option value="11">11:00</option>
+                                                                                                                    <option value="12">12:00</option>
+                                                                                                                    <option value="13">13:00</option>
+                                                                                                                    <option value="14">14:00</option>
+                                                                                                                    <option value="15">15:00</option>
+                                                                                                                    <option value="16">16:00</option>
+                                                                                                                    <option value="17">17:00</option>
+                                                                                                                    <option value="18">18:00</option>
+                                                                                                                    <option value="19">19:00</option>
+                                                                                                                    <option value="20">20:00</option>
+                                                                                                                    <option value="21">21:00</option>
+                                                                                                                    <option value="22">22:00</option>
+                                                                                                                    <option value="23">23:00</option>
+                                                                                                                    <option value="24">0:00</option>
+                                                                                                                
+                                                                                                            
+                                                                                                            </select>
+                                                                                                            
+                                                                                                        </div>  
+                                                                                                                                                             
+                                                                                                    <div class="col-md-3 mb-3">
+                                                                                                        <label >Horarios de Fechamento</label>
+                                                                                                        <select class="form-control" type="select" id="horario_fechamento_loja-update" name="horario_fechamento_loja">
+                                                                                                                <option value="">Selecione</option>
+                                                                                                        
+                                                                                                                <option value="1">1:00</option>
+                                                                                                                <option value="2">2:00</option>
+                                                                                                                <option value="3">3:00</option>
+                                                                                                                <option value="4">4:00</option>
+                                                                                                                <option value="5">5:00</option>
+                                                                                                                <option value="6">6:00</option>
+                                                                                                                <option value="7">7:00</option>
+                                                                                                                <option value="8">8:00</option>
+                                                                                                                <option value="9">9:00</option>
+                                                                                                                <option value="10">10:00</option>
+                                                                                                                <option value="11">11:00</option>
+                                                                                                                <option value="12">12:00</option>
+                                                                                                                <option value="13">13:00</option>
+                                                                                                                <option value="14">14:00</option>
+                                                                                                                <option value="15">15:00</option>
+                                                                                                                <option value="16">16:00</option>
+                                                                                                                <option value="17">17:00</option>
+                                                                                                                <option value="18">18:00</option>
+                                                                                                                <option value="19">19:00</option>
+                                                                                                                <option value="20">20:00</option>
+                                                                                                                <option value="21">21:00</option>
+                                                                                                                <option value="22">22:00</option>
+                                                                                                                <option value="23">23:00</option>
+                                                                                                                <option value="24">0:00</option>
+                                                                                                                
+                                                                                                        
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                    <div class="col-md-6 mb-3 ">
+                                                                                                            <label for="">Observações</label>
+                                                                                                            <input type="text"  placeholder="" class="form-control" id="observacoes-update" name="observacoes">
+                                                                                                    </div>
+                                                                                                    
+                                                                                            </div>
+                                                                                            <hr> 
+                                                                                         
+                                                                                        <div class="form-row">
+                                                                                            <div class="col-md-7 mb-3">
+                                                                                                <label for="exampleInputFile-update">Foto</label>
+                                                                                                <input type="file" id="exampleInputFile-update" name="photo">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                         <hr>
+                                                                                         <button type="submit"   class="btn btn-primary ">Salvar</button>
+                                                                                         <button type="button"   class="btn btn-danger btn-cancel">Cancelar</button>
+                                                                                       
+                                                                                    </form> 
+                                                                               
+                                                                               
+                                                                        </div>
+                                                                    
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+    
+                                                            <div class="container-fluid text-center" id="box-staff-list" style="display:block;">
+                                                                <div class="container">
+                                                                    <div class="row">
+                                                                        <div class="col-sm-12">
+                                                                            <h1>Funcionários Cadastradas</h1>
+                                                                            <p>Você pode procurar suas ofertas digitando o cod de barras, nome ou principio ativo:</p>
+                                                                            <hr>
+                                                                            <div class="container">
+                                                                                <div class="row">
+                                                                                    <div class="col-xs-6">
+                                                                                        <input class="form-control input-lg" id="inputlg" type="text">
+                                                                                    </div>
+                                                                                    <button class="btn" id="">Pesquisar</button>
+                                                                                    <div class="col-sm-2">
+                            
+                                                                                    </div>
+                                                                                    <div class="col-sm-3">
+                                                                                        <div class="form-group ml-5">
+                                                                                            <select class="form-control" id="sel1">
+                                                                                                <option>Filtar Por</option>
+                                                                                                <option>Mais vendidos</option>
+                                                                                                <option>Ativos</option>
+                                                                                                <option>Pausados</option>
+                                                                                                <option>Encerrados</option>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                            
+                                                                            <table class="table" > 
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th scope="col">Foto</th>
+                                                                                        <th scope="col">Nome</th>
+                                                                                        <th scope="col">Telefone</th>
+                                                                                        <th scope="col">E-mail</th>
+                                                                                        <th scope="col">Farmácia</th>
+                                                                                        <th scope="col">Cidade</th>
+                                                                                        <th scope="col">UF</th>
+                                                                                        <th scope="col">Ativo</th>
+                                                                                        <th scope="col">Criado em:</th>
+                                                                                        <th scope="col">Açôes</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody id="table-staffs">
+                            
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+    
+                                    </div>
+                                            
+                                </div>
+                                </div>
+                                
+                            </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+        </div>
+          
+        
+          
+            
+            
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+            <script src="js/classes/Utils.js"></script>
+            <script src="js/models/staff.js"></script>
+            <script src="js/controller/StaffController.js"></script>
+            <script src="js/adm/staff/index.js"></script>
+</body>
+
+</html>

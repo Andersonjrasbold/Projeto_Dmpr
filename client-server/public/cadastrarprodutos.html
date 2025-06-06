@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
+
+    <!-- Google Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,200,300,700,600' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,100' rel='stylesheet' type='text/css'>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/owl.carousel.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <!-- Estilo customizado -->
+    <link rel="stylesheet" type="text/css" href="css/estilo.css">
+    <link rel="stylesheet" href="css/owl.carousel.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <title>Farma Oferta | Cadastrar Produtos</title>
+  
+ 
+</head>
+
+<body>
+
+    <div class="header-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="user-menu">
+                        <ul>
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- End header area -->
+    <div class="site-branding-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="logo mb-2">
+                            <a href="index.html"><img style="width:150px" class="circle" alt="Cinque Terre"  src="./img/FARMAOFERTA-0008.png"></a>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div>
+                        <h3></h3>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="">
+                         <!-- <img src="img/cooperfarma.png" class="img-circle" alt="Cinque Terre"> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End site branding area -->
+
+    <div class="mainmenu-area navbar-expand">
+        <div class="container">
+            <div class="row">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="index.html">Painel</a></li>
+                        <li ><a href="cadastrarlojas.html">Redes/Lojas</a></li>
+                        <li ><a href="cadastrarfuncionarios.html">Funcionários</a></li>
+                        <li><a href="cadastrarusuarios.html">Usuarios</a></li>
+                        <li class="active"><a href="cadastrarprodutos.html">Produtos</a></li>
+                        <li><a href="cadastrarofertas.html">Ofertas</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End mainmenu area -->
+
+    <div class="container-fluid text-center">    
+            <div class="row content">
+              <div class="col-sm-12 sidenav">
+                <div class="profile-nav">
+                  <div class="panel">
+                        <ul class="nav nav-tabs  nav-stacked">
+                            <li class="active"><a data-toggle="tab" href="#home">Seja Bem-Vindo</a></li>
+                            <li><a data-toggle="tab" href="#cadastrarloja">Cadastrar Produtos</a></li>
+                            
+                            
+                        </ul>
+    
+                            <div class="tab-content">
+                                <div id="home" class="tab-pane fade in active">
+                                    <div class="row">
+                                        <div class="col-sm-2 offset-md-3 mt-5">
+                                            
+                                        <div class="panel panel-default text-center">
+                                          <div class="panel-heading " >
+                                            <h1 style="color:black">Produtos</h1>
+                                            <p style="color:black">Cadastrados</p>
+                                          </div>
+                                          <div class="panel-body">
+                                            <h3 id="number-product">0</h3>
+                                            
+                                            
+                                          </div>
+                                          <div class="panel-footer">
+                                            
+                                            
+                                            <button class="btn btn-lg">Veja Mais</button>
+                                          </div>
+                                        </div> 
+                                      </div> 
+                                      <div class="col-sm-2 mt-5">
+                                        <div class="panel panel-default text-center">
+                                            <div class="panel-heading " >
+                                              <h1 style="color:black">Ativos</h1>
+                                              <p style="color:black">Produtos</p>
+                                            </div>
+                                            <div class="panel-body">
+                                              <h3 id="number-lojas">0</h3>
+                                              
+                                              
+                                            </div>
+                                            <div class="panel-footer">
+                                              
+                                              
+                                              <button class="btn btn-lg">Veja Mais</button>
+                                            </div>
+                                          </div>
+                                      </div> 
+                                     <div class="col-sm-2 mt-5">
+                                        <div class="panel panel-default text-center">
+                                            <div class="panel-heading " >
+                                              <h1 style="color:black">Inativos</h1>
+                                              <p style="color:black">Produtos</p>
+                                            </div>
+                                            <div class="panel-body">
+                                              <h3 id="number-user">0</h3>
+                                              
+                                              
+                                            </div>
+                                            <div class="panel-footer">
+                                              
+                                              
+                                              <button class="btn btn-lg">Veja Mais</button>
+                                            </div>
+                                          </div>
+                                      </div> 
+                                      
+                                    </div>
+                                </div>
+                            
+                            
+                            
+                                <div id="cadastrarloja" class="tab-pane fade">
+                                <div class="container-fluid text-center">    
+                                    <div class="row content">
+                                                              
+                                                            <div class="col-sm-12 text-left box box-success" id="box-product-create"> 
+                                                                   
+                                                                <div class="container">
+                                                                    <div class="row">
+                                                                        <div class="col-sm-12 "> 
+                                                                                <h1>Cadastrar Produtos</h1>
+                                                                                
+                                                                                <hr>
+                                                                                <form class="form-group" id="form-product-create">
+
+                                                                                        <div class="form-row">
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <div class="panel">
+                                                                                    
+                                                                                                    <img type="photo" class="photo" name="photo" id="photo" src="./img/FARMAOFERTA-0008.png">
+                                                                                    
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">Cod </label>
+                                                                                                <input type="text" class="form-control" id="codigo_produto" name="codigo_produto">
+                                                                                    
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Codigo de barras </label>
+                                                                                                <input type="text" class="form-control" id="codigo_barras" name="codigo_barras">
+                                                                                    
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Nome do comercial</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="nome_comercial" name="nome_comercial">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">Dosagem</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="dosagem" name="dosagem">
+                                                                                                
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="text">Unidade</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="unidade_medida" name="unidade_medida">
+                                                                                                
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="number">Conteúdo</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="conteudo" name="conteudo">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="text">Tipo</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="tipo" name="tipo">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1">
+                                                                                                <label>Ativo</label>
+                                                                                                <select class="form-control" type="select" id="estado_ativo" name="estado_ativo">
+                                                                                    
+                                                                                                    <option value="1">Sim</option>
+                                                                                                    <option value="2">Não</option>
+                                                                                    
+                                                                                                </select>
+                                                                                    
+                                                                                            </div>
+                                                                                    
+                                                                                        </div>
+                                                                                        <hr>
+                                                                                        <div class="form-row">
+                                                                                            <div class="col-md-3 mb-3">
+                                                                                                <label for="">Principio ativo</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="principio_ativo" name="principio_ativo">
+                                                                                    
+                                                                                                
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Fabricante</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="fabricante" name="fabricante">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">Cx Padrão</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="caixa_padrao" name="caixa_padrao">
+                                                                                                
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">NCM</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="ncm" name="ncm">
+                                                                                                
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">IPI</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="ipi" name="ipi">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">ICMS</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="icms" name="icms">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">PIS/COFINS</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="pis_cofins" name="pis_cofins">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">PF</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="pf" name="pf">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">PMC</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="pmc" name="pmc">
+                                                                                                
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <hr>
+                                                                                        <div class="form-row">
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Categorias</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="categoria" name="categoria">
+                                                                                    
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Subcategorias</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="subcategorias" name="subcategorias">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Classe terapêutica</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="classe_terapeutica" name="classe_terapeutica">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Indicaçao </label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="indicacao" name="indicacao">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Tipo de desconto</label>
+                                                                                                <select class="form-control" type="select" id="tipo_desconto" name="tipo_desconto">
+                                                                                                    <option value="">Selecione</option>
+                                                                                                    <option value="1">Restrito</option>
+                                                                                                    <option value="2">Oneroso</option>
+                                                                                                    <option value="3">Combate</option>
+                                                                                    
+                                                                                                </select>
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">CONTROLADO</label>
+                                                                                                <select class="form-control" type="select" id="controlado" name="controlado">
+                                                                                                    <option value="1">Não</option>
+                                                                                                    <option value="2">Sim</option>
+                                                                                    
+                                                                                                </select>
+                                                                                            </div>
+                                                                                    
+                                                                                        </div>
+                                                                                        <div class="form-row">
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">Desconto</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="desconto" name="desconto">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">Lucro</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="lucro" name="lucro">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="text">Tipo do item</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="tipo_item" name="tipo_item">
+                                                                                                
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="text">Estoque</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="estoque" name="estoque">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Lote</label>
+                                                                                                <input type="" placeholder="" class="form-control" id="lote" name="lote">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="text">Comissão</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="comissão" name="comissão">
+                                                                                                
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="date">Validade:</label>
+                                                                                                <input type="date" placeholder="" class="form-control" id="validade" name="validade">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="date">Ultima Venda:</label>
+                                                                                                <input type="date" placeholder="" class="form-control" id="ultima_venda" name="ultima_venda">
+                                                                                                
+                                                                                            </div>
+                                                                                    
+                                                                                        </div>
+                                                                                        <hr>
+                                                                                        <div class="form-row">
+                                                                                                <div class="col-md-12 mb-3 ">
+                                                                                                        <label for="">Descrição</label>
+                                                                                                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                                                                                                      </div>
+                                                                                        </div>
+                                                                                        <div class="form-row">
+                                                                                    
+                                                                                            <div class="col-md-12 mb-3 ">
+                                                                                                <label for="">Observações</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="observacoes" name="observacoes">
+                                                                                            </div>
+                                                                                    
+                                                                                        </div>
+                                                                                        <hr>
+                                                                                    
+                                                                                        <div class="form-row">
+                                                                                            <div class="col-md-7 mb-3">
+                                                                                                <label for="exampleInputFile">Foto</label>
+                                                                                                <input type="file" id="exampleInputFile" name="photo">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <hr>
+                                                                                        <button type="submit" class="btn btn-primary ">Cadastrar Produto</button>
+                                                                                    
+                                                                                </form>
+                                                                               
+                                                                        </div>
+                                                                    
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-12 text-left box box-primary" id="box-product-update" style="display:none;"> 
+                                                                   
+                                                                <div class="container">
+                                                                    <div class="row">
+                                                                        <div class="col-sm-12 "> 
+                                                                                <h1>Editar Produtos </h1>
+                                                                                
+                                                                                <hr>
+                                                                                <form class="form-group" id="form-product-update">
+
+                                                                                        <div class="form-row">
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <div class="panel">
+                                                                                    
+                                                                                                    <img type="photo" class="photo" name="photo" id="photo-update" src="./img/FARMAOFERTA-0008.png">
+                                                                                    
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">Cod </label>
+                                                                                                <input type="text" class="form-control" id="codigo_produto-update" name="codigo_produto">
+                                                                                    
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Codigo de barras </label>
+                                                                                                <input type="text" class="form-control" id="codigo_barras-update" name="codigo_barras">
+                                                                                    
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Nome do comercial</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="nome_comercial-update" name="nome_comercial">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">Dosagem</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="dosagem-update" name="dosagem">
+                                                                                                
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="text">Unidade</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="unidade_medida-update" name="unidade_medida">
+                                                                                                
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="number">Conteúdo</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="conteudo-update" name="conteudo">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="text">Tipo</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="tipo-update" name="tipo">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1">
+                                                                                                <label>Ativo</label>
+                                                                                                <select class="form-control" type="select" id="estado_ativo-update" name="estado_ativo">
+                                                                                    
+                                                                                                    <option value="1">Sim</option>
+                                                                                                    <option value="2">Não</option>
+                                                                                    
+                                                                                                </select>
+                                                                                    
+                                                                                            </div>
+                                                                                    
+                                                                                        </div>
+                                                                                        <hr>
+                                                                                        <div class="form-row">
+                                                                                            <div class="col-md-3 mb-3">
+                                                                                                <label for="">Principio ativo</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="principio_ativo-update" name="principio_ativo">
+                                                                                    
+                                                                                                
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Fabricante</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="fabricante-update" name="fabricante">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">Cx Padrão</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="caixa_padrao-update" name="caixa_padrao">
+                                                                                                
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">NCM</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="ncm-update" name="ncm">
+                                                                                                
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">IPI</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="ipi-update" name="ipi">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">ICMS</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="icms-update" name="icms">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">PIS/COFINS</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="pis_cofins-update" name="pis_cofins">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">PF</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="pf-update" name="pf">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">PMC</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="pmc-update" name="pmc">
+                                                                                                
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <hr>
+                                                                                        <div class="form-row">
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Categorias</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="categoria-update" name="categoria">
+                                                                                    
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Subcategorias</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="subcategorias-update" name="subcategorias">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Classe terapêutica</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="classe_terapeutica-update" name="classe_terapeutica">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Indicaçao </label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="indicacao-update" name="indicacao">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Tipo de desconto</label>
+                                                                                                <select class="form-control" type="select" id="tipo_desconto-update" name="tipo_desconto">
+                                                                                                    <option value="">Selecione</option>
+                                                                                                    <option value="1">Restrito</option>
+                                                                                                    <option value="2">Oneroso</option>
+                                                                                                    <option value="3">Combate</option>
+                                                                                    
+                                                                                                </select>
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">CONTROLADO</label>
+                                                                                                <select class="form-control" type="select" id="controlado-update" name="controlado">
+                                                                                                    <option value="1">Não</option>
+                                                                                                    <option value="2">Sim</option>
+                                                                                    
+                                                                                                </select>
+                                                                                            </div>
+                                                                                    
+                                                                                        </div>
+                                                                                        <div class="form-row">
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">Desconto</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="desconto-update" name="desconto">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="">Lucro</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="lucro-update" name="lucro">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="text">Tipo do item</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="tipo_item-update" name="tipo_item">
+                                                                                                
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="text">Estoque</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="estoque-update" name="estoque">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="">Lote</label>
+                                                                                                <input type="" placeholder="" class="form-control" id="lote-update" name="lote">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-1 mb-3">
+                                                                                                <label for="text">Comissão</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="comissão-update" name="comissão">
+                                                                                                
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="date">Validade:</label>
+                                                                                                <input type="date" placeholder="" class="form-control" id="validade-update" name="validade">
+                                                                                               
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-3">
+                                                                                                <label for="date">Ultima Venda:</label>
+                                                                                                <input type="date" placeholder="" class="form-control" id="ultima_venda-update" name="ultima_venda">
+                                                                                                
+                                                                                            </div>
+                                                                                    
+                                                                                        </div>
+                                                                                        <hr>
+                                                                                        <div class="form-row">
+                                                                                            <div class="col-md-12 mb-3 ">
+                                                                                                    <label for="">Descrição</label>
+                                                                                                    <textarea class="form-control" id="description" name="description-update" rows="3"></textarea>
+                                                                                                  </div>
+                                                                                        </div>
+                                                                                        <div class="form-row">
+                                                                                    
+                                                                                            <div class="col-md-12 mb-3 ">
+                                                                                                <label for="">Observações</label>
+                                                                                                <input type="text" placeholder="" class="form-control" id="observacoes-update" name="observacoes">
+                                                                                            </div>
+                                                                                    
+                                                                                        </div>
+                                                                                        <hr>
+                                                                                    
+                                                                                        <div class="form-row">
+                                                                                            <div class="col-md-7 mb-3">
+                                                                                                <label for="exampleInputFile-update">Foto</label>
+                                                                                                <input type="file" id="exampleInputFile" name="photo">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <hr>
+                                                                                        <button type="submit"   class="btn btn-primary ">Salvar</button>
+                                                                                        <button type="button"   class="btn btn-danger btn-cancel">Cancelar</button> 
+                                                                                    
+                                                                                </form>
+                                                                               
+                                                                                  
+                                                                        </div>
+                                                                    
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+    
+                                                            <div class="container-fluid text-center" id="box-user-list" style="display:block;">
+                                                                <div class="container">
+                                                                    <div class="row">
+                                                                        <div class="col-sm-12">
+                                                                            <h1>Produtos Cadastrados</h1>
+                                                                            <p>Você pode procurar suas ofertas digitando o cod de barras, nome ou principio ativo:</p>
+                                                                            <hr>
+                                                                            <div class="container">
+                                                                                <div class="row">
+                                                                                    <div class="col-xs-6">
+                                                                                        <input class="form-control input-lg" id="inputlg" type="text">
+                                                                                    </div>
+                                                                                    <button class="btn" id="">Pesquisar</button>
+                                                                                    <div class="col-sm-2">
+                            
+                                                                                    </div>
+                                                                                    <div class="col-sm-3">
+                                                                                        <div class="form-group ml-5">
+                                                                                            <select class="form-control" id="sel1">
+                                                                                                <option>Filtar Por</option>
+                                                                                                <option>Mais vendidos</option>
+                                                                                                <option>Ativos</option>
+                                                                                                <option>Pausados</option>
+                                                                                                <option>Encerrados</option>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                            
+                                                                            <table class="table" > 
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th scope="col">Foto</th>
+                                                                                        <th scope="col">Nome Comercial</th>
+                                                                                        
+                                                                                        <th scope="col">PF</th>
+                                                                                        <th scope="col">PMC</th>
+                                                                                        <th scope="col">Lucro</th>
+                                                                                        <th scope="col">Criado em:</th>
+                                                                                        <th scope="col">Status</th>
+                                                                                        <th scope="col">Açôes</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody id="table-products">
+                            
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+    
+                                    </div>
+                                            
+                                </div>
+                                </div>
+                                
+                            </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+        </div>
+          
+        
+          
+            
+            
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+            <script src="js/classes/Utils.js"></script>
+            <script src="js/models/Products.js"></script>
+            <script src="js/controller/ProductController.js"></script>
+            <script src="js/adm/Products/index.js"></script>
+   
+    
+ </body> 
+ </html>

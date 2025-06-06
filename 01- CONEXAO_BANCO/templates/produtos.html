@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Produtos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">Produtos em Oferta</h1>
+        <div class="row">
+            {% for produto in produtos %}
+            <div class="col-md-3 col-sm-6">
+                <div class="single-shop-product border p-2 mb-4">
+                    <h5 class="text-center">{{ produto.NOME_PRODUTO }}</h5>
+                    <div class="product-upper text-center">
+                        <img src="{{ url_for('static', filename='fotos/' + produto.COD_PRODUTO|string + '.jpg') }}" alt="Imagem Produto" style="width: 200px; height: 200px; object-fit: contain;">
+
+                    </div>
+                    <div class="product-carousel-price text-center my-1">
+                        <ins>De:</ins>
+                        <ins>R$ {{ "%.2f"|format(produto.PRVENDA_PRODUTO) }}</ins>
+                    </div>
+                    <div class="product-carousel-price text-center my-1">
+                        <ins>Por:</ins>
+                        <ins>R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}</ins>
+                    </div>
+                    <div class="product-option-shop">
+                        <button type="button" class="btn btn-primary btn-block">Comprar</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
