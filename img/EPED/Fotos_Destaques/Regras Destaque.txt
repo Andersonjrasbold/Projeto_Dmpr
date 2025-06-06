@@ -1,0 +1,3 @@
+arquivos seguem ordem de destaque ex 001.jpg - 002.jpg -003.jpg
+
+Para Vincular um produto a Imagem de destaque deve ser inserido o _ após a ordem de destaque> ex 001_1235.jpg

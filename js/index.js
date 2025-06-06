@@ -1,0 +1,33 @@
+
+
+let userController = new UserController("form-user-create", "form-user-update", "table-users");
+
+var valor = document.querySelector
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
