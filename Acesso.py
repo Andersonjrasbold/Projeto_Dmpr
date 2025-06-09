@@ -7,7 +7,7 @@ fdb.load_api(r'C:\Users\renat\OneDrive - dmparana.com.br\BI - DM Paraná\Arquivo
 # Função de conexão ao banco
 def get_connection():
     con = fdb.connect(
-        dsn=r'10.251.0.128/3051:C:\MEDICON\DB\DATABASE.FDB',
+        dsn=r'10.251.100.2/3051:C:\MEDICON\DB\DATABASE.FDB',
         user='USER_READ',
         password='USRREAD',
         charset='NONE'
