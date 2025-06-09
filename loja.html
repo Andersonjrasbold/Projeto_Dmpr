@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/style.css" />
   <script src="https://kit.fontawesome.com/e8a55f7da4.js" crossorigin="anonymous"></script>
   <script src="cart.js"></script>
+  <script src="js/input.js"></script>
 </head>
 
 <body>
@@ -84,7 +85,7 @@
             <div class="row justify-content-right">
               <div class="col-12 col-md-6">
                 <form role="search">
-                  <input type="search" class="form-control" placeholder="Buscar..." aria-label="Buscar" />
+                  <input onkeyup="search()" type="search" id="search-item" class="form-control" placeholder="Buscar..." aria-label="Buscar" />
                 </form>
               </div>
               <!-- Dropdown - 4 colunas -->
@@ -263,40 +264,50 @@
     <div class="container py-5">
       <!--<h2 class="mb-4 text-center">Nossos Produtos</h2>-->
 
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4" id="product-list">
         <!-- Produto 1 -->
-        <div class="col">
+        <div class="col product">
           <div class="card h-100">
             <img src="img/1.jpg" class="card-img-top" alt="Produto 1" />
             <div class="card-body">
               <h5 class="card-title">Danone</h5>
-              <p class="card-text">Descrição breve e atraente do produto.</p>
+              <p class="card-text">Composto Lácteo Milnutri Premium 400g</p>
               <div class="text-end">
+                <strong class="text-primary">R$ 99,90</strong>
+              </div>
+              <div class="text-start">
                 <strong class="text-primary">R$ 99,90</strong>
               </div>
             </div>
             <!-- Preço -->
             <div class="card-footer d-flex justify-content-between align-items-center">
-              <div class="d-flex align-items-center gap-3">
-                
-                <!-- Input de quantidade com botões + e - -->
-                <div class="d-flex align-items-center border rounded px-2 py-1">
-                  <button type="button" class="btn btn-sm btn-outline-secondary px-3"
+              <div class="d-flex align-items-center justify-content-between gap-3">
+
+                <!-- Botão Veja Mais -->
+                <button class="btn btn-sm btn-outline-dark">Mais+</button>
+              
+                <!-- Campo de quantidade com botões + e - -->
+                <div class="d-flex align-items-center border rounded">
+                  <button type="button" class="btn btn-sm btn-outline-dark px-2"
                           onclick="alterarQuantidade(-1, this)">−</button>            
-                  <input type="number" class="form-control text-center mx-2 border-0"
+              
+                  <input type="" class="form-control text-center border-0"
                          name="quantidade" min="0" value="0" step="1" style="width: 60px;">          
-                  <button type="button" class="btn btn-sm btn-outline-secondary px-3"
+              
+                  <button type="button" class="btn btn-sm btn-outline-secondary px-2"
                           onclick="alterarQuantidade(1, this)">+</button>
-                </div>           
-                <!-- Botão Comprar alinhado ao lado -->
-                <button class="btn btn-sm btn-primary">Comprar</button>           
+                </div>
+              
+                <!-- Botão Comprar -->
+                <button class="btn btn-sm btn-outline-danger">Comprar</button>
               </div>
+              
             </div>
           </div>
         </div>
 
         <!-- Produto 2 -->
-        <div class="col">
+        <div class="col product">
           <div class="card h-100">
             <img src="img/2.jpg" class="card-img-top" alt="Produto 2" />
             <div class="card-body">
@@ -311,7 +322,7 @@
         </div>
 
         <!-- Produto 3 -->
-        <div class="col">
+        <div class="col product">
           <div class="card h-100">
             <img src="img/2.jpg" class="card-img-top" alt="Produto 3" />
             <div class="card-body">
@@ -326,7 +337,7 @@
         </div>
 
         <!-- Produto 4 -->
-        <div class="col">
+        <div class="col product">
           <div class="card h-100">
             <img src="img/5.jpg" class="card-img-top" alt="Produto 4" />
             <div class="card-body">
@@ -341,7 +352,7 @@
         </div>
       </div>
     </div>
-    <div class="d-flex justify-content-center align-items-center" style="height: ;">
+    <div class="d-flex justify-content-center align-items-center" style="height: 5px;">
       <nav aria-label="Page navigation">
         <ul class="pagination">
           <li class="page-item">
