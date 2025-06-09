@@ -162,3 +162,7 @@ footer p a {
 .credit-card-box .panel-heading img {
     min-width: 180px;
 }
+
+.no-wrap {
+  white-space: nowrap;
+}

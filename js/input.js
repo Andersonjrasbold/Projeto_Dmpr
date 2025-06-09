@@ -1,21 +1,34 @@
 const search = () => {
     const searchbox = document.getElementById("search-item").value.toUpperCase().trim();
-    const storeitems = document.getElementById("product-list");
-    const product = document.querySelectorAll(".product");
-    const pname = storeitems.getElementsByTagName("p");
+    const products = document.querySelectorAll("#product-list .product");
+    const carouselContainer = document.getElementById("carouselExampleDark");
+    const noResultsMessage = document.getElementById("no-results");
 
-    for (let i = 0; i < pname.length; i++) {
-        let match = product[i].getElementsByTagName('p')[0];
+    let anyVisible = false;
 
-        if (match) {
-            let textValue = match.textContent || match.innerHTML;
+    products.forEach(product => {
+        const pname = product.querySelector("p");
+        const h5name = product.querySelector("h5");
 
-            if (textValue.toUpperCase().indexOf(searchbox) > -1) {
-                product[i].style.display = "";
-            } else {
-                product[i].style.display = "none";
-            }
+        let textValue = "";
+        if (pname) textValue += pname.textContent + " ";
+        if (h5name) textValue += h5name.textContent;
+
+        if (textValue.toUpperCase().includes(searchbox)) {
+            product.style.display = "";
+            anyVisible = true;
+        } else {
+            product.style.display = "none";
         }
-    }
-}
+    });
 
+    // Mostrar ou esconder o carrossel
+    if (carouselContainer) {
+        carouselContainer.style.display = anyVisible ? "none" : "";
+    }
+
+    // Mostrar ou esconder a mensagem de "nenhum resultado"
+    if (noResultsMessage) {
+        noResultsMessage.style.display = anyVisible ? "none" : "block";
+    }
+};
