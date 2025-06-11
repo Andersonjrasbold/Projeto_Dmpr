@@ -9,9 +9,9 @@
     integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous" />
   <link rel="stylesheet" href="css/style.css" />
   <script src="https://kit.fontawesome.com/e8a55f7da4.js" crossorigin="anonymous"></script>
-  <script src="PainelDoCliente/public/js/cart.js"></script>
-  <script src="PainelDoCliente/public/js/input.js"></script>
-  <script src="PainelDoCliente/public/js/loja.js"></script>
+  <script src="cart.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/loja.js"></script>
   <script src="css/bw.css"></script>
 
 </head>
@@ -24,7 +24,7 @@
         <div class="py-1 border-bottom">
           <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-              <a href="/loja.html"
+              <a href="/PainelDoCliente/public/loja.html"
                 class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-bg-white text-decoration-none">
                 <img src="img/logo-dmpr.png" alt="Logo_DMParaná" width="250" height="50">
               </a>
@@ -149,7 +149,8 @@
 
               <!-- Carrinho de compras - 2 colunas -->
               <div class="col-md-2 py-2 text-end">
-                <a href="#" class="text-decoration-none position-relative"> <Span id="cart-total" class="cart-total"> 
+                <a href="#" class="text-decoration-none position-relative"> <Span id="cart-total" class="cart-total" onclick="substituirMultiplos(['carousel', 'cardProduct'], 'cart')"
+                    bold><strong>R$ 0,00</strong> 
                   </Span>
                   <i class="fas fa-shopping-cart fa-lg"></i>
                   <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -168,16 +169,11 @@
       <div class="container">
         <div class="nav justify-content-lg-start">
           <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center">
-            <li><button type="button" class="btn btn-outline-dark me-2"><svg xmlns="http://www.w3.org/2000/svg"
+            <li><a href="/PainelDoCliente/public/loja.html" type="button" class="btn btn-outline-dark me-2"><svg xmlns="http://www.w3.org/2000/svg"
                   width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
                   <path
                     d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
-                </svg></a></button></li>
-            <li><button type="button" class="btn btn-outline-dark me-2"><svg xmlns="http://www.w3.org/2000/svg"
-                  width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
-                  <path
-                    d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
-                </svg></a></button></li>
+                </svg></a></a></li>
             <li><button type="button" class="btn btn-outline-dark me-2"><svg xmlns="http://www.w3.org/2000/svg"
                   width="16" height="16" fill="currentColor" class="bi bi-piggy-bank" viewBox="0 0 16 16">
                   <path
@@ -307,7 +303,7 @@
     </header>
     <!-- header 2 end-->
     <!-- carrousel -->
-    <div class="container">
+    <div class="container" id="carousel">
       <div id="carouselExampleDark" class="carousel carousel-dark slide">
         <div class="carousel-indicators">
           <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active"
@@ -357,7 +353,7 @@
     <div class="container py-5">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-sm-4 g-2" id="product-list">
         <!-- Produto 1 -->
-        <div class="col">
+        <div class="col" id="cardProduct">
           <div class="product">
             <div class="card card-body p-2">
               <img src="img/1.jpg" class="card-img-top" alt="Produto 1" />
@@ -424,8 +420,8 @@
           </div>
         </div>
       </div>
-
-      <div id="carrinho-container" style="display: none;" class="mt-5">
+      <!-- Carrinho -->
+      <div id="cart" style="display: none;" class="mt-5">
         <h3 class="mb-3">Carrinho de Compras</h3>
         <div class="table-responsive">
           <table class="table table-bordered align-middle text-center">
@@ -443,130 +439,17 @@
           </table>
         </div>
         <div class="d-flex justify-content-between align-items-center mt-3">
-          <strong>Total: <span class="cart-total">R$ 0,00</span></strong>
+          <strong>Total: <span id="cart-total" class="cart-total">R$ 0,00</span></strong>
           <div>
+            <a href="/PainelDoCliente/public/loja.html" class="btn btn-outline-dark me-2">Continuar comprando</a>
             <button class="btn btn-outline-danger me-2" onclick="limparCarrinho()">Limpar Carrinho</button>
             <button class="btn btn-success">Finalizar Compra</button>
           </div>
         </div>
-        <div class="mt-4 text-end">
-          <strong>Total Final: <span class="cart-total">R$ 0,00</span></strong>
-        </div>
       </div>
-    </div>
-    <!-- Carrinho -->
-    <div class="mt-5">
-      <h3 class="mb-3">Carrinho de Compras</h3>
-      <div class="table-responsive">
-        <table class="table table-bordered align-middle text-center">
-          <thead class="table-light">
-            <tr>
-              <th>Imagem</th>
-              <th>Produto</th>
-              <th>Preço Unitário</th>
-              <th>Quantidade</th>
-              <th>Total</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="cart-table-body"></tbody>
-        </table>
-      </div>
-      <div class="d-flex justify-content-between align-items-center mt-3">
-        <strong>Total: <span id="cart-total" class="cart-total">R$ 0,00</span></strong>
-        <div>
-          <button class="btn btn-outline-danger me-2" onclick="limparCarrinho()">Limpar Carrinho</button>
-          <button class="btn btn-success">Finalizar Compra</button>
-        </div>
-      </div>
-    </div>
     </div>
 
-    <!-- Carrinho 
-    <div class="container mt-5">
-      <h2 class="mb-4">Seu Carrinho de Compras</h2>
-      <div class="row">
-        <div class="col-lg-8">
-          <div class="card shadow-sm mb-4">
-            <div class="card-header bg-light">Itens no Carrinho</div>
-            <div class="card-body p-0">
-              <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                  <thead>
-                    <tr>
-                      <th>Produto</th>
-                      <th>Preço Unitário</th>
-                      <th class="text-center">Quantidade</th>
-                      <th class="text-end">Total</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody id="cart-items-body">
-                    <tr data-product-id="prod001">
-                      <td>
-                        <div class="d-flex align-items-center">
-                          <img src="img/1.jpg" alt="Danone" class="img-fluid rounded me-3"
-                            style="width: 50px; height: 50px; object-fit: cover;">
-                          <span>Danone - Composto Lácteo Milnutri Premium 400g</span>
-                        </div>
-                      </td>
-                      <td>R$ 99,90</td>
-                      <td>
-                        <div class="d-flex justify-content-center align-items-center">
-                          <button type="button" class="btn btn-sm btn-outline-secondary"
-                            onclick="updateCartQuantity('prod001', -1)">-</button>
-                          <input type="" class="form-control text-center mx-1" value="1" min="1"
-                            style="width: 60px;" onchange="manualCartQuantityUpdate('prod001', this.value)">
-                          <button type="button" class="btn btn-sm btn-outline-secondary"
-                            onclick="updateCartQuantity('prod001', 1)">+</button>
-                        </div>
-                      </td>
-                      <td class="text-end" id="cart-total"></td>
-                      <td>
-                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeCartItem('prod001')">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-trash" viewBox="0 0 16 16">
-                            <path
-                              d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
-                            <path
-                              d="M14.5 3a1 1 0 0 1-1 1H13V9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H9.5a1 1 0 0 1 1 1zm-1-2H1.5A.5.5 0 0 0 1 2.5v1A.5.5 0 0 0 1.5 4h13A.5.5 0 0 0 15 3.5v-1A.5.5 0 0 0 14.5 2z" />
-                          </svg>
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          <div class="d-flex justify-content-between">
-            <a href="#" class="btn btn-outline-secondary">Continuar Comprando</a>
-            <button class="btn btn-outline-danger" onclick="clearCart()">Limpar Carrinho</button>
-          </div>
-        </div>
-        <div class="col-lg-4">
-          <div class="card shadow-sm">
-            <div class="card-header bg-light">Resumo do Pedido</div>
-            <div class="card-body">
-              <div class="d-flex justify-content-between mb-2">
-                <span>Subtotal:</span>
-                <span id="cart-subtotal">R$ 99,90</span>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                <span>Frete:</span>
-                <span id="cart-shipping">R$ 0,00</span>
-              </div>
-              <hr>
-              <div class="d-flex justify-content-between fs-5 fw-bold mb-3">
-                <span>Total:</span>
-                <span id="cart-total">R$ 99,90</span>
-              </div>
-              <button class="btn btn-success w-100 btn-lg">Finalizar Compra</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>-->
+ 
     <!--Page Navegation-->
     <div class="d-flex justify-content-center align-items-center" style="height: 5px;">
       <nav aria-label="Page navigation">
