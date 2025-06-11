@@ -102,18 +102,17 @@ function limparCarrinho() {
   }
 }
 
-function substituirMultiplos(ocultarIds, mostrarId) {
-  ocultarIds.forEach(id => {
-    const elemento = document.getElementById(id);
-    if (elemento) {
-      elemento.style.display = 'none';
+  function substituirMultiplos(ocultarIds, mostrarId) {
+    ocultarIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.add('d-none');  // Oculta usando classe Bootstrap
+      }
+    });
+
+    const mostrar = document.getElementById(mostrarId);
+    if (mostrar) {
+      mostrar.classList.remove('d-none');  // Mostra o elemento
     }
-  });
-
-  const mostrar = document.getElementById(mostrarId);
-  if (mostrar) {
-    mostrar.style.display = 'block';
   }
-}
-
 

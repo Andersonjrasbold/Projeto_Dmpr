@@ -215,16 +215,20 @@
           </ul>
           <div class="row align-items-center">
             <div class="text-end">
-            <button
-                onclick="substituirMultiplos(['carousel', 'search-list', 'cart', 'page', 'photoList'], 'cardProduct')"
-                type="button" class="btn btn-outline-dark me-2"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+              <!-- Grade -->
+              <button onclick="substituirMultiplos(['photoList', 'carousel', 'textList'], 'cardProduct')" type="button"
+                class="btn btn-outline-dark me-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16"
                   height="16" fill="currentColor" class="bi bi-grid-3x3-gap-fill" viewBox="0 0 16 16">
                   <path
                     d="M1 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zM1 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zM1 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z" />
-                </svg> </button>
-              <button
-                onclick="substituirMultiplos(['carousel', 'search-list', 'cart', 'page', 'cardProduct'], 'photoList')"
-                type="button" class="btn btn-outline-dark me-2"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                </svg>
+              </button>
+
+              <!-- Lista com imagem -->
+              <button onclick="substituirMultiplos(['cardProduct', 'carousel',  'textList'], 'photoList')" type="button"
+                class="btn btn-outline-dark me-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16"
                   height="16" fill="currentColor" class="bi bi-list-task" viewBox="0 0 16 16">
                   <path fill-rule="evenodd"
                     d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5zM3 3H2v1h1z" />
@@ -232,12 +236,19 @@
                     d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1z" />
                   <path fill-rule="evenodd"
                     d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5zM2 7h1v1H2zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm1 .5H2v1h1z" />
-                </svg> </button>
-              <button onclick="substituirMultiplos(['carousel', 'search-list', 'cart', 'page', 'photoList' 'cardProduct'], 'textList')" type="button" class="btn btn-outline-dark me-2"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                </svg>
+              </button>
+
+              <!-- Lista sem imagem -->
+              <button onclick="substituirMultiplos(['cardProduct', 'carousel',  'photoList'], 'textList')" type="button"
+                class="btn btn-outline-dark me-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16"
                   height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
                   <path fill-rule="evenodd"
                     d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
-                </svg></button>
+                </svg>
+              </button>
+
               <button type="button" class="btn btn-outline-dark me-2"><svg xmlns="http://www.w3.org/2000/svg" width="16"
                   height="16" fill="currentColor" class="bi bi-claude" viewBox="0 0 16 16">
                   <path
@@ -352,54 +363,40 @@
     <div id="no-results" style="display: none; text-align: center; margin-top: 20px; font-weight: bold;">
       Nenhum produto encontrado.
     </div>
-    <div class="container visual-view view-grid" style="margin-top: 20px; display: block;" id="cardProduct">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-sm-4 g-2">
+    <!-- Grid de cartões (padrão) -->
+    <div class="container visual-view" id="cardProduct" style="display: block; margin-top: 20px;">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-2">
         {% for produto in produtos %}
-        <div class="col" id="search-list">
-          <div class="product">
-            <div class="card card-body p-2">
-              <img src="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}"
-                class="card-img-top" alt="{{ produto.NOME_PRODUTO }}" style="height: 200px; object-fit: contain;" />
-
-              <div class="card-body p-2">
-                <h5 class="card-title fs-6 mb-1">{{ produto.NOME_PRODUTO }}</h5>
-                <p class="card-text small mb-2">{{ produto.NOME_CATEGORIA }}</p>
-
-                <div class="d-flex justify-content-between small mb-1">
-                  <p class="text-body-secondary mb-0">{{ produto.CODBARRA_PRODUTO }}</p>
-                  <p class="text-body-secondary mb-0">
-                    Preço R$ {{ "%.2f"|format(produto.PRVENDA_PRODUTO) }}
-                  </p>
-                </div>
-
-                <div class="d-flex justify-content-between align-items-center">
-                  <p class="text-body-secondary mb-0 small">ST R$ 9,90</p>
-                  <strong class="text-dark fs-6 mb-0">
-                    Final R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}
-                  </strong>
-                </div>
+        <div class="col">
+          <div class="product card h-100">
+            <img src="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}"
+              class="card-img-top" alt="Imagem do produto {{ produto.NOME_PRODUTO }}"
+              style="height: 200px; object-fit: contain;" />
+            <div class="card-body p-2">
+              <h5 class="card-title fs-6 mb-1">{{ produto.NOME_PRODUTO }}</h5>
+              <p class="card-text small mb-2">{{ produto.NOME_CATEGORIA }}</p>
+              <div class="d-flex justify-content-between small mb-1">
+                <p class="text-body-secondary mb-0">{{ produto.CODBARRA_PRODUTO }}</p>
+                <p class="text-body-secondary mb-0">Preço R$ {{ "%.2f"|format(produto.PRVENDA_PRODUTO) }}</p>
               </div>
-
-              <div class="card-footer d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center gap-3">
-                  <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal"
-                    data-bs-target="#productModal">
-                    Info
-                  </button>
-
-                  <div class="d-flex align-items-center border rounded">
-                    <button type="button" class="btn btn-sm btn-outline-dark px-2"
-                      onclick="alterarQuantidade(-1, this)">−</button>
-                    <input type="number" class="form-control text-center border-0" name="quantidade" min="0" value="0"
-                      step="1" style="width: 60px;">
-                    <button type="button" class="btn btn-sm btn-outline-dark px-2"
-                      onclick="alterarQuantidade(1, this)">+</button>
-                  </div>
-
-                  <button class="btn btn-sm btn-outline-dark" onclick="adicionarAoCarrinho(this)">
-                    Comprar
-                  </button>
+              <div class="d-flex justify-content-between align-items-center">
+                <p class="text-body-secondary mb-0 small">ST R$ 9,90</p>
+                <strong class="text-dark fs-6 mb-0">Final R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}</strong>
+              </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal"
+                  data-bs-target="#productModal">Info</button>
+                <div class="d-flex align-items-center border rounded">
+                  <button type="button" class="btn btn-sm btn-outline-dark px-2"
+                    onclick="alterarQuantidade(-1, this)">−</button>
+                  <input type="number" class="form-control text-center border-0" name="quantidade" min="0" value="0"
+                    step="1" style="width: 60px;">
+                  <button type="button" class="btn btn-sm btn-outline-dark px-2"
+                    onclick="alterarQuantidade(1, this)">+</button>
                 </div>
+                <button class="btn btn-sm btn-outline-dark" onclick="adicionarAoCarrinho(this)">Comprar</button>
               </div>
             </div>
           </div>
@@ -407,36 +404,25 @@
         {% endfor %}
       </div>
     </div>
-    <div class="container visual-view view-grid" style="display: block;" id="photoList">
+
+    <!-- Lista com imagem -->
+    <div class="container visual-view" id="photoList" style="display: none;">
       {% if produtos %}
-      <!-- Contêiner com ID usado pelo JS -->
-      <div class="list-group"  style="display: none;">
+      <div class="list-group">
         {% for produto in produtos %}
         <div class="product list-group-item d-flex flex-column flex-md-row align-items-md-center gap-3">
-
-          <!-- Imagem -->
           <img src="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}"
-            class="img-thumbnail" alt="{{ produto.NOME_PRODUTO }}"
+            class="img-thumbnail" alt="Imagem do produto {{ produto.NOME_PRODUTO }}"
             style="height: 150px; width: 150px; object-fit: contain;" />
-
-          <!-- Informações -->
           <div class="flex-grow-1">
             <h5 class="mb-1">{{ produto.NOME_PRODUTO }}</h5>
             <p class="mb-1 text-muted">Cód. Barra: {{ produto.CODBARRA_PRODUTO }}</p>
-            <p class="mb-1 text-muted">
-              Classe: {{ produto.NOME_CLASSE }} / Categoria: {{ produto.NOME_CATEGORIA }}
-            </p>
+            <p class="mb-1 text-muted">Classe: {{ produto.NOME_CLASSE }} / Categoria: {{ produto.NOME_CATEGORIA }}</p>
             <div class="d-flex justify-content-between">
-              <span class="text-muted">
-                Preço: R$ {{ "%.2f"|format(produto.PRVENDA_PRODUTO) }}
-              </span>
-              <strong class="text-primary">
-                Com desconto: R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}
-              </strong>
+              <span class="text-muted">Preço: R$ {{ "%.2f"|format(produto.PRVENDA_PRODUTO) }}</span>
+              <strong class="text-primary">Com desconto: R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}</strong>
             </div>
           </div>
-
-          <!-- Botões -->
           <div class="d-flex flex-wrap gap-2">
             <button class="btn btn-sm btn-outline-dark">Info</button>
             <button class="btn btn-sm btn-primary">Comprar</button>
@@ -444,19 +430,14 @@
         </div>
         {% endfor %}
       </div>
-
-      <!-- Mensagem de "nenhum resultado encontrado" oculta inicialmente -->
-      <div id="no-results" class="alert alert-warning mt-3 text-center" style="display: none;">
-        Nenhum produto encontrado.
-      </div>
-
       {% else %}
       <p class="text-muted">Nenhum produto encontrado no banco.</p>
       {% endif %}
     </div>
-    <div class="container visual-view view-list" style="display: none;" id="textList">
+
+    <!-- Lista simples sem imagem -->
+    <div class="container visual-view" id="textList" style="display: none;">
       {% if produtos %}
-      <!-- Lista sem imagem (visível) -->
       <ul class="list-group">
         {% for produto in produtos %}
         <li class="product list-group-item">
@@ -464,34 +445,20 @@
             <div>
               <h5 class="mb-1">{{ produto.NOME_PRODUTO }}</h5>
               <p class="mb-1 text-muted">Cód. Barra: {{ produto.CODBARRA_PRODUTO }}</p>
-              <p class="mb-1 text-muted">
-                Classe: {{ produto.NOME_CLASSE }} / Categoria: {{ produto.NOME_CATEGORIA }}
-              </p>
+              <p class="mb-1 text-muted">Classe: {{ produto.NOME_CLASSE }} / Categoria: {{ produto.NOME_CATEGORIA }}</p>
             </div>
             <div class="text-end">
-              <span class="text-muted d-block">
-                Preço: R$ {{ "%.2f"|format(produto.PRVENDA_PRODUTO) }}
-              </span>
-              <strong class="text-primary">
-                Com desconto: R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}
-              </strong>
+              <span class="text-muted d-block">Preço: R$ {{ "%.2f"|format(produto.PRVENDA_PRODUTO) }}</span>
+              <strong class="text-primary">Com desconto: R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}</strong>
             </div>
           </div>
         </li>
         {% endfor %}
       </ul>
-
-      <!-- Mensagem de nenhum resultado -->
-      <div id="no-results" class="alert alert-warning mt-3 text-center" style="display: none;">
-        Nenhum produto encontrado.
-      </div>
-
       {% else %}
       <p class="text-muted">Nenhum produto encontrado no banco.</p>
       {% endif %}
     </div>
-
-
     <!-- Carrinho -->
     <div id="cart" style="display: none;" class="container">
       <h3 class="mb-3">Carrinho de Compras</h3>
