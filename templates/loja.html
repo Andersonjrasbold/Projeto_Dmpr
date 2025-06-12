@@ -11,7 +11,12 @@
   <script src="https://kit.fontawesome.com/e8a55f7da4.js" crossorigin="anonymous"></script>
   <script src="/static/js/cart.js"></script>
   <script src="/static/js/loja.js"></script>
+  <script src="/static/js/text-search-list.js"></script>
+  <script src="/static/js/card-search-list.js"></script>
+  <script src="/static/js/search.js"></script>
+  <script src="/static/js/pagination.js"></script>
   <script src="/static/css/bw.css"></script>
+
 
 </head>
 
@@ -19,7 +24,11 @@
   <!-- header-->
   <main>
     <header>
-      <div style="padding-top: 30px; background-color: rgb(16, 0, 87);">
+      <div style="padding: auto; background-color: rgb(16, 0, 87);">
+        <div class="container">
+          <p class="text-end fs-6 text-small" style="margin-bottom: auto; color: whitesmoke;">M. A. Borges Comercio de
+            Medicamentos Ltda - Cnpj 09.085.717/0001-58</p>
+        </div>
       </div>
       <div class="border-bottom" style="background-color: rgb(241, 241, 241);">
         <div class="container">
@@ -133,20 +142,14 @@
             <div class="py-2">
               <div class="container py-3">
                 <div class="row justify-content-right">
-                  <!-- Dropdown - 4 colunas 
-              <div class="col-md-2 mb-md-0 justify-content-between">
-                
-                <span class="">CNPJ 09.085.717/0001-58</span>
-              </div>-->
 
                   <!-- Campo de busca -->
                   <div class="col-12 col-md-8 mx-auto">
                     <form role="search">
-                      <input onkeyup="search()" type="search" id="search-item" class="form-control"
-                        placeholder="Buscar..." aria-label="Buscar" />
+                      <input type="search" id="search-item" onkeyup="search()" class="form-control"
+                        placeholder="Buscar...">
                     </form>
                   </div>
-
 
                   <!-- Carrinho de compras - 2 colunas -->
                   <div class="col-md-4 py-2 text-end">
@@ -230,7 +233,7 @@
                     </svg>
                   </button>
 
-                  <!-- Lista com imagem -->
+                  <!-- Lista com imagem 
                   <button
                     onclick="substituirMultiplos(['card-search-list', 'carousel',  'text-search-list'], 'photo-search-list')"
                     type="button" class="btn btn-outline-dark me-2">
@@ -243,11 +246,11 @@
                       <path fill-rule="evenodd"
                         d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5zM2 7h1v1H2zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm1 .5H2v1h1z" />
                     </svg>
-                  </button>
+                  </button>-->
 
                   <!-- Lista sem imagem -->
                   <button
-                    onclick="substituirMultiplos(['card-search-list', 'carousel',  'photo-search-list'], 'text-search-list')"
+                    onclick="substituirMultiplos(['card-search-list', 'carouselExampleDark', 'photo-search-list'], 'text-search-list')"
                     type="button" class="btn btn-outline-dark me-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                       class="bi bi-list" viewBox="0 0 16 16">
@@ -255,6 +258,7 @@
                         d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
                     </svg>
                   </button>
+
 
                   <button type="button" class="btn btn-outline-dark me-2"><svg xmlns="http://www.w3.org/2000/svg"
                       width="16" height="16" fill="currentColor" class="bi bi-claude" viewBox="0 0 16 16">
@@ -325,6 +329,7 @@
       </div>
     </header>
     <!-- headerend-->
+
     <!-- carrousel -->
     <div class="container carrousel" id="carousel">
       <div id="carouselExampleDark" class="carousel carousel-dark slide">
@@ -372,13 +377,14 @@
     <!-- carrousel end-->
 
     <!--  Produtos-->
-    <div>
+
+    <div class="search-list" id="search-list">
       <!-- Grid de cartões (padrão) -->
-      <div class="container search-list visual-view" id="card-search-list" style="display: block; margin-top: 20px;">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-2" id="search-list">
+      <div class="container visual-view" id="card-search-list" style="display: block; margin-top: 20px;">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-2">
           {% for produto in produtos %}
-          <div class="col meu-elemento">
-            <div class="product card h-100">
+          <div class="col product">
+            <div class="card h-100">
               <img src="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}"
                 class="card-img-top" alt="Imagem do produto {{ produto.NOME_PRODUTO }}"
                 style="height: 200px; object-fit: contain;" />
@@ -395,7 +401,7 @@
                 </div>
               </div>
               <div class="card-footer d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 w-100">
                   <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal"
                     data-bs-target="#productModal">Info</button>
                   <div class="d-flex align-items-center border rounded">
@@ -414,43 +420,47 @@
           {% endfor %}
         </div>
       </div>
-      <!-- Lista com imagem -->
-      <div class="container search-list visual-view" id="photo-search-list" style="display: none; margin-top: 20px;">
-        {% if produtos %}
-        <div class="list-group search-list">
-          {% for produto in produtos %}
-          <div class="product list-group-item d-flex flex-column flex-md-row align-items-md-center gap-3">
-            <img src="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}"
-              class="img-thumbnail" alt="Imagem do produto {{ produto.NOME_PRODUTO }}"
-              style="height: 150px; width: 150px; object-fit: contain;" />
-            <div class="flex-grow-1">
-              <h5 class="mb-1">{{ produto.NOME_PRODUTO }}</h5>
-              <p class="mb-1 text-muted">Cód. Barra: {{ produto.CODBARRA_PRODUTO }}</p>
-              <p class="mb-1 text-muted">Classe: {{ produto.NOME_CLASSE }} / Categoria: {{ produto.NOME_CATEGORIA }}</p>
-              <div class="d-flex justify-content-between">
-                <span class="text-muted">Preço: R$ {{ "%.2f"|format(produto.PRVENDA_PRODUTO) }}</span>
-                <strong class="text-primary">Com desconto: R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}</strong>
-              </div>
-            </div>
-            <div class="d-flex flex-wrap gap-2">
-              <button class="btn btn-sm btn-outline-dark">Info</button>
-              <button class="btn btn-sm btn-primary">Comprar</button>
-            </div>
+
+      <!-- Lista com imagem 
+  <div class="container search-list visual-view" id="photo-search-list" style="display: none; margin-top: 20px;">
+    {% if produtos %}
+    <div class="list-group search-list">
+      {% for produto in produtos %}
+      <div class="product list-group-item d-flex flex-column flex-md-row align-items-md-center gap-3">
+        <img src="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}" class="img-thumbnail" alt="Imagem do produto {{ produto.NOME_PRODUTO }}" style="height: 150px; width: 150px; object-fit: contain;" />
+        <div class="flex-grow-1">
+          <h5 class="mb-1">{{ produto.NOME_PRODUTO }}</h5>
+          <p class="mb-1 text-muted">Cód. Barra: {{ produto.CODBARRA_PRODUTO }}</p>
+          <p class="mb-1 text-muted">Classe: {{ produto.NOME_CLASSE }} / Categoria: {{ produto.NOME_CATEGORIA }}</p>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted">Preço: R$ {{ "%.2f"|format(produto.PRVENDA_PRODUTO) }}</span>
           </div>
-          {% endfor %}
         </div>
-        {% else %}
-        <p class="text-muted">Nenhum produto encontrado no banco.</p>
-        {% endif %}
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 w-100">
+            <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal" data-bs-target="#productModal">Info</button>
+            <div class="d-flex align-items-center border rounded">
+              <button type="button" class="btn btn-sm btn-outline-dark px-2" onclick="alterarQuantidade(-1, this)">−</button>
+              <input type="number" class="form-control text-center border-0" name="quantidade" min="0" value="0" step="1" style="width: 60px;">
+              <button type="button" class="btn btn-sm btn-outline-dark px-2" onclick="alterarQuantidade(1, this)">+</button>
+            </div>
+            <button class="btn btn-sm btn-outline-dark" onclick="adicionarAoCarrinho(this)">Comprar</button>
+          </div>
+        </div>
       </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted">Nenhum produto encontrado no banco.</p>
+    {% endif %}
+  </div>-->
 
       <!-- Lista simples sem imagem -->
       <div class="container search-list visual-view" id="text-search-list" style="display: none; margin-top: 20px;">
         {% if produtos %}
-        <div class="list-group search-list">
-          {% for produto in produtos %}
+        <div class="table-responsive">
           <table class="table table-bordered table-hover table-sm align-middle text-center">
-            <thead class="table-dark align-middle">
+            <thead class="table-dark">
               <tr>
                 <th>Código</th>
                 <th>Cód. Barras</th>
@@ -465,55 +475,44 @@
             </thead>
             <tbody>
               {% for produto in produtos %}
-              <tr>
-                <td>{{ produto.COD_PRODUTO }} </td>
+              <tr class="product">
+                <td>{{ produto.COD_PRODUTO }}</td>
                 <td>{{ produto.CODBARRA_PRODUTO }}</td>
                 <td>{{ produto.NOME_PRODUTO }}</td>
                 <td>Geolab</td>
-                <td>10,00</td>
                 <td>125</td>
-                <td>1,00</td>
+                <td>R$ 10,90</td>
+                <td>R$ 1,00</td>
                 <td>R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}</td>
                 <td>
-                  <div class="card-footer d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center gap-2">
-                      <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal"
-                        data-bs-target="#productModal">Info</button>
-                      <div class="d-flex align-items-center border rounded">
-                        <button type="button" class="btn btn-sm btn-outline-dark px-2"
-                          onclick="alterarQuantidade(-1, this)">−</button>
-                        <input type="int" class="form-control text-center border-0" name="quantidade" min="0" value="0"
-                          step="1" style="width: 60px;">
-                        <button type="button" class="btn btn-sm btn-outline-dark px-2"
-                          onclick="alterarQuantidade(1, this)">+</button>
-                      </div>
-                      <button class="btn btn-sm btn-outline-dark" onclick="adicionarAoCarrinho(this)">Comprar</button>
+                  <div class="d-flex align-items-center gap-2">
+                    <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal"
+                      data-bs-target="#productModal">Info</button>
+                    <div class="d-flex align-items-center border rounded">
+                      <button type="button" class="btn btn-sm btn-outline-dark px-2"
+                        onclick="alterarQuantidade(-1, this)">−</button>
+                      <input type="number" class="form-control text-center border-0" name="quantidade" min="0" value="0"
+                        step="1" style="width: 60px;">
+                      <button type="button" class="btn btn-sm btn-outline-dark px-2"
+                        onclick="alterarQuantidade(1, this)">+</button>
                     </div>
+                    <button class="btn btn-sm btn-outline-dark" onclick="adicionarAoCarrinho(this)">Comprar</button>
                   </div>
                 </td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
-          <!--<div class="product list-group-item d-flex flex-column flex-md-row align-items-md-center gap-3">
-            <div class="flex-grow-1">
-              <h5 class="mb-1">{{ produto.NOME_PRODUTO }}</h5>
-              <p class="mb-1 text-muted">Cód. Barra: {{ produto.CODBARRA_PRODUTO }}</p>
-              <p class="mb-1 text-muted">Classe: {{ produto.NOME_CLASSE }} / Categoria: {{ produto.NOME_CATEGORIA }}</p>
-              <div class="d-flex justify-content-between">
-                <span class="text-muted">Preço: R$ {{ "%.2f"|format(produto.PRVENDA_PRODUTO) }}</span>
-                <strong class="text-primary">Com desconto: R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}</strong>
-              </div>
-            </div>
-           
-          </div>-->
-          {% endfor %}
         </div>
         {% else %}
         <p class="text-muted">Nenhum produto encontrado no banco.</p>
         {% endif %}
       </div>
     </div>
+
+
+
+
     <!--  Produtos-->
 
     <!-- Carrinho -->
