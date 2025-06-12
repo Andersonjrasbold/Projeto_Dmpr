@@ -1,23 +1,39 @@
+.bw-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  /* degrade vermelho/rosa */
+  color: white;
+  font-weight: 900;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(255, 75, 43, 0.6);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  user-select: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-  .bw-icon {
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, #ff416c, #ff4b2b); /* degrade vermelho/rosa */
-    color: white;
-    font-weight: 900;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    box-shadow: 0 4px 15px rgba(255, 75, 43, 0.6);
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-    user-select: none;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .bw-icon:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(255, 75, 43, 0.9);
-  }
+.bw-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(255, 75, 43, 0.9);
+}
+
+.meu-elemento {
+  /* Estilo padrão */
+  background-color: lightblue;
+  color: black;
+  padding: 10px;
+}
+
+.meu-elemento:hover {
+  /* Estilo ao passar o mouse */
+  background-color: lightgreen;
+  color: white;
+  cursor: pointer;
+  /* Mostra que o elemento é clicável */
+}
