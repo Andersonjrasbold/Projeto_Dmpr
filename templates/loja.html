@@ -9,13 +9,14 @@
     integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous" />
   <link rel="stylesheet" href="/static/css/style.css" />
   <script src="https://kit.fontawesome.com/e8a55f7da4.js" crossorigin="anonymous"></script>
-  <script src="/static/js/cart.js"></script>
-  <script src="/static/js/loja.js"></script>
-  <script src="/static/js/text-search-list.js"></script>
+  <script src="/static/js/carrinho.js"></script>
+  <script src="/static/js/quantidadeBotoes.js"></script>
+
   <script src="/static/js/card-search-list.js"></script>
   <script src="/static/js/search.js"></script>
-  <script src="/static/js/pagination.js"></script>
-  <script src="/static/css/bw.css"></script>
+  
+  
+  <script src="/static/js/esconder.js"></script>
 
 
 </head>
@@ -30,8 +31,9 @@
             Medicamentos Ltda - Cnpj 09.085.717/0001-58</p>
         </div>
       </div>
-      <div class="border-bottom" style="background-color: rgb(241, 241, 241);">
-        <div class="container">
+      <div class="border-bottom container shadow p-3 mb-2 bg-white rounded"
+        style="background-color: rgb(241, 241, 241);">
+        <div class="container ">
           <div>
             <div class="py-1 border-bottom">
               <div class="container">
@@ -233,7 +235,7 @@
                     </svg>
                   </button>
 
-                  <!-- Lista com imagem 
+                  <!--Lista com imagem 
                   <button
                     onclick="substituirMultiplos(['card-search-list', 'carousel',  'text-search-list'], 'photo-search-list')"
                     type="button" class="btn btn-outline-dark me-2">
@@ -421,39 +423,45 @@
         </div>
       </div>
 
-      <!-- Lista com imagem 
-  <div class="container search-list visual-view" id="photo-search-list" style="display: none; margin-top: 20px;">
-    {% if produtos %}
-    <div class="list-group search-list">
-      {% for produto in produtos %}
-      <div class="product list-group-item d-flex flex-column flex-md-row align-items-md-center gap-3">
-        <img src="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}" class="img-thumbnail" alt="Imagem do produto {{ produto.NOME_PRODUTO }}" style="height: 150px; width: 150px; object-fit: contain;" />
-        <div class="flex-grow-1">
-          <h5 class="mb-1">{{ produto.NOME_PRODUTO }}</h5>
-          <p class="mb-1 text-muted">Cód. Barra: {{ produto.CODBARRA_PRODUTO }}</p>
-          <p class="mb-1 text-muted">Classe: {{ produto.NOME_CLASSE }} / Categoria: {{ produto.NOME_CATEGORIA }}</p>
-          <div class="d-flex justify-content-between">
-            <span class="text-muted">Preço: R$ {{ "%.2f"|format(produto.PRVENDA_PRODUTO) }}</span>
-          </div>
-        </div>
-        <div class="card-footer d-flex justify-content-between align-items-center">
-          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 w-100">
-            <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal" data-bs-target="#productModal">Info</button>
-            <div class="d-flex align-items-center border rounded">
-              <button type="button" class="btn btn-sm btn-outline-dark px-2" onclick="alterarQuantidade(-1, this)">−</button>
-              <input type="number" class="form-control text-center border-0" name="quantidade" min="0" value="0" step="1" style="width: 60px;">
-              <button type="button" class="btn btn-sm btn-outline-dark px-2" onclick="alterarQuantidade(1, this)">+</button>
+      <!-- Lista com imagem -->
+      <div class="container search-list visual-view" id="photo-search-list" style="display: none; margin-top: 20px;">
+        {% if produtos %}
+        <div class="list-group search-list">
+          {% for produto in produtos %}
+          <div class="product list-group-item d-flex flex-column flex-md-row align-items-md-center gap-3">
+            <img src="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}"
+              class="img-thumbnail" alt="Imagem do produto {{ produto.NOME_PRODUTO }}"
+              style="height: 150px; width: 150px; object-fit: contain;" />
+            <div class="flex-grow-1">
+              <h5 class="mb-1">{{ produto.NOME_PRODUTO }}</h5>
+              <p class="mb-1 text-muted">Cód. Barra: {{ produto.CODBARRA_PRODUTO }}</p>
+              <p class="mb-1 text-muted">Classe: {{ produto.NOME_CLASSE }} / Categoria: {{ produto.NOME_CATEGORIA }}</p>
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Preço: R$ {{ "%.2f"|format(produto.PRVENDA_PRODUTO) }}</span>
+              </div>
             </div>
-            <button class="btn btn-sm btn-outline-dark" onclick="adicionarAoCarrinho(this)">Comprar</button>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 w-100">
+                <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal"
+                  data-bs-target="#productModal">Info</button>
+                <div class="d-flex align-items-center border rounded">
+                  <button type="button" class="btn btn-sm btn-outline-dark px-2"
+                    onclick="alterarQuantidade(-1, this)">−</button>
+                  <input type="number" class="form-control text-center border-0" name="quantidade" min="0" value="0"
+                    step="1" style="width: 60px;">
+                  <button type="button" class="btn btn-sm btn-outline-dark px-2"
+                    onclick="alterarQuantidade(1, this)">+</button>
+                </div>
+                <button class="btn btn-sm btn-outline-dark" onclick="adicionarAoCarrinho(this)">Comprar</button>
+              </div>
+            </div>
           </div>
+          {% endfor %}
         </div>
+        {% else %}
+        <p class="text-muted">Nenhum produto encontrado no banco.</p>
+        {% endif %}
       </div>
-      {% endfor %}
-    </div>
-    {% else %}
-    <p class="text-muted">Nenhum produto encontrado no banco.</p>
-    {% endif %}
-  </div>-->
 
       <!-- Lista simples sem imagem -->
       <div class="container search-list visual-view" id="text-search-list" style="display: none; margin-top: 20px;">
@@ -516,25 +524,48 @@
     <!--  Produtos-->
 
     <!-- Carrinho -->
-    <div id="cart" style="display: none;" class="container">
+    <div id="cart"  style="display: none;" class="container shadow p-3 mb-2 bg-white rounded">
       <h3 class="mb-3">Carrinho de Compras</h3>
+
+      <div class="row align-items-end justify-content-between mb-3">
+        <!-- CNPJ à esquerda (6 colunas) -->
+        <div class="col-12 col-md-6">
+          <p class="mb-0">CNPJ: 09.085.717/0001-58</p>
+        </div>
+
+        <!-- Select de prazo à direita (4 colunas) -->
+        <div class="col-12 col-md-4">
+          <label for="prazo" class="form-label"></label>
+          <select class="form-select" id="prazo" name="prazo">
+            <option value="" disabled selected>Selecione o prazo</option>
+            <option value="avista">À vista</option>
+            <option value="7">7 dias</option>
+            <option value="14">14 dias</option>
+            <option value="21">21 dias</option>
+            <option value="30">30 dias</option>
+            <option value="45">45 dias</option>
+            <option value="60">60 dias</option>
+            <option value="90">90 dias</option>
+          </select>
+        </div>
+      </div>
       <div class="table-responsive">
         <table class="table table-bordered align-middle text-center">
           <thead class="table-light">
             <tr>
               <th>Imagem</th>
               <th>Produto</th>
-              <th>Preço Unitário</th>
+              <th>Preço Final</th>
               <th>Quantidade</th>
               <th>Total</th>
-              <th>Ações</th>
+              <th>Remover</th>
             </tr>
           </thead>
           <tbody id="cart-table-body"></tbody>
         </table>
       </div>
       <div class="d-flex justify-content-between align-items-center mt-3">
-        <strong>Total: <span id="cart-total" class="cart-total">R$ 0,00</span></strong>
+        <strong></strong>
         <div>
           <a href="/loja" class="btn btn-outline-dark me-2">Continuar comprando</a>
           <button class="btn btn-outline-danger me-2" onclick="limparCarrinho()">Limpar Carrinho</button>
