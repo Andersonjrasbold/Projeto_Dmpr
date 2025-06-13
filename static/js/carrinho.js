@@ -52,7 +52,7 @@ function atualizarCarrinho() {
         <td>
           <div class="d-flex justify-content-center align-items-center">
             <button class="btn btn-sm btn-outline-secondary" onclick="alterarQuantidadeCarrinho(${index}, -1)">-</button>
-            <input type="number" min="1" value="${item.quantidade}" class="form-control mx-2 text-center" style="width: 60px;" onchange="atualizarQuantidadeDireta(${index}, this.value)">
+            <input type="" min="1" value="${item.quantidade}" class="form-control mx-2 text-center" style="width: 60px;" onchange="atualizarQuantidadeDireta(${index}, this.value)">
             <button class="btn btn-sm btn-outline-secondary" onclick="alterarQuantidadeCarrinho(${index}, 1)">+</button>
           </div>
         </td>
@@ -65,35 +65,61 @@ function atualizarCarrinho() {
   salvarCarrinho();
 }
 
-// Adicionar produto ao carrinho
 function adicionarAoCarrinho(botao) {
-  if (!Array.isArray(carrinho)) carrinho = [];
-
+  // Verifica se veio de um CARD
   const card = botao.closest(".card");
-  if (!card) return;
+  if (card) {
+    const nome = card.querySelector(".card-title")?.innerText;
+    const imagem = card.querySelector("img")?.getAttribute("src");
+    const precoTexto = card.querySelector(".text-dark")?.innerText.replace("Final R$ ", "").replace(",", ".");
+    const preco = parseFloat(precoTexto);
+    const input = card.querySelector("input[name='quantidade']");
+    const quantidade = parseInt(input?.value);
 
-  const nome = card.querySelector(".card-title")?.innerText;
-  const imagem = card.querySelector("img")?.getAttribute("src");
-  const precoTexto = card.querySelector(".text-dark")?.innerText.replace("Final R$ ", "").replace(",", ".");
-  const preco = parseFloat(precoTexto);
-  const input = card.querySelector("input[name='quantidade']");
-  const quantidade = parseInt(input?.value);
+    if (!quantidade || quantidade <= 0 || isNaN(preco)) {
+      alert("Escolha uma quantidade e preço válidos.");
+      return;
+    }
 
-  if (!quantidade || quantidade <= 0 || isNaN(preco)) {
-    alert("Escolha uma quantidade e preço válidos.");
+    adicionarProdutoCarrinho(nome, preco, quantidade, imagem);
+    input.value = 0;
     return;
   }
 
+  // Verifica se veio de uma linha de TABELA
+  const row = botao.closest("tr");
+  if (row) {
+    const tds = row.querySelectorAll("td");
+    const nome = tds[2]?.innerText;
+    const precoTexto = tds[7]?.innerText.replace("R$ ", "").replace(",", ".");
+    const preco = parseFloat(precoTexto);
+    const input = row.querySelector("input[name='quantidade']");
+    const quantidade = parseInt(input?.value);
+    const imagem = "/static/fotos/sem-imagem.jpg"; // ou alguma imagem padrão
+
+    if (!quantidade || quantidade <= 0 || isNaN(preco)) {
+      alert("Escolha uma quantidade e preço válidos.");
+      return;
+    }
+
+    adicionarProdutoCarrinho(nome, preco, quantidade, imagem);
+    input.value = 0;
+    return;
+  }
+
+  alert("Não foi possível adicionar o produto.");
+}
+
+function adicionarProdutoCarrinho(nome, preco, quantidade, imagem) {
   const existente = carrinho.find(item => item.nome === nome);
   if (existente) {
     existente.quantidade += quantidade;
   } else {
     carrinho.push({ nome, preco, quantidade, imagem });
   }
-
   atualizarCarrinho();
-  if (input) input.value = 0;
 }
+
 
 // Alterar quantidade com botão +/-
 function alterarQuantidadeCarrinho(index, delta) {

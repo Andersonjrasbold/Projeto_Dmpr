@@ -11,12 +11,19 @@
   <script src="https://kit.fontawesome.com/e8a55f7da4.js" crossorigin="anonymous"></script>
   <script src="/static/js/carrinho.js"></script>
   <script src="/static/js/quantidadeBotoes.js"></script>
-
+  <script src></script>
   <script src="/static/js/card-search-list.js"></script>
   <script src="/static/js/search.js"></script>
-  
-  
   <script src="/static/js/esconder.js"></script>
+  <style>
+    .card {
+      transition: all 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+  </style>
 
 
 </head>
@@ -31,8 +38,7 @@
             Medicamentos Ltda - Cnpj 09.085.717/0001-58</p>
         </div>
       </div>
-      <div class="border-bottom container shadow p-3 mb-2 bg-white rounded"
-        style="background-color: rgb(241, 241, 241);">
+      <div class="border-bottom container shadow  mb-2 bg-white rounded" style="background-color: rgb(241, 241, 241);">
         <div class="container ">
           <div>
             <div class="py-1 border-bottom">
@@ -49,7 +55,7 @@
                       <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle text-dark d-flex flex-column align-items-center"
                           id="financeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          <svg class="bi mb-1" width="24" height="8" aria-hidden="true">
+                          <svg class="bi mb-1" width="24" height="2" aria-hidden="true">
                             <use xlink:href="#speedometer2"></use>
                           </svg>
                           Entregas
@@ -66,7 +72,7 @@
                       <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle text-dark d-flex flex-column align-items-center"
                           id="financeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          <svg class="bi mb-1" width="24" height="8" aria-hidden="true">
+                          <svg class="bi mb-1" width="24" height="2" aria-hidden="true">
                             <use xlink:href="#speedometer2"></use>
                           </svg>
                           Devoluções
@@ -84,7 +90,7 @@
                       <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle text-dark d-flex flex-column align-items-center"
                           id="financeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          <svg class="bi mb-1" width="24" height="8" aria-hidden="true">
+                          <svg class="bi mb-1" width="24" height="2" aria-hidden="true">
                             <use xlink:href="#speedometer2"></use>
                           </svg>
                           Financeiro
@@ -102,7 +108,7 @@
                       <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle text-dark d-flex flex-column align-items-center"
                           id="ordersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          <svg class="bi mb-1" width="24" height="8" aria-hidden="true">
+                          <svg class="bi mb-1" width="24" height="2" aria-hidden="true">
                             <use xlink:href="#table"></use>
                           </svg>
                           Meus Pedidos
@@ -121,7 +127,7 @@
                       <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle text-dark d-flex flex-column align-items-center"
                           id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          <svg class="bi mb-1" width="24" height="8" aria-hidden="true">
+                          <svg class="bi mb-1" width="24" height="2" aria-hidden="true">
                             <use xlink:href="#grid"></use>
                           </svg>
                           Minha Conta
@@ -383,13 +389,14 @@
     <div class="search-list" id="search-list">
       <!-- Grid de cartões (padrão) -->
       <div class="container visual-view" id="card-search-list" style="display: block; margin-top: 20px;">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-2">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
           {% for produto in produtos %}
           <div class="col product">
             <div class="card h-100">
               <img src="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}"
                 class="card-img-top" alt="Imagem do produto {{ produto.NOME_PRODUTO }}"
                 style="height: 200px; object-fit: contain;" />
+
               <div class="card-body p-2">
                 <h5 class="card-title fs-6 mb-1">{{ produto.NOME_PRODUTO }}</h5>
                 <p class="card-text small mb-2">{{ produto.NOME_CATEGORIA }}</p>
@@ -398,14 +405,20 @@
                   <p class="text-body-secondary mb-0">Preço R$ {{ "%.2f"|format(produto.PRVENDA_PRODUTO) }}</p>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
-                  <p class="text-body-secondary mb-0 small">ST R$ </p>
+                  <p class="text-body-secondary mb-0 small">ST R$</p>
                   <strong class="text-dark fs-6 mb-0">Final R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}</strong>
                 </div>
               </div>
+
               <div class="card-footer d-flex justify-content-between align-items-center">
                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 w-100">
                   <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal"
-                    data-bs-target="#productModal">Info</button>
+                    data-bs-target="#productModal" data-nome="{{ produto.NOME_PRODUTO }}"
+                    data-categoria="{{ produto.NOME_CATEGORIA }}" data-barra="{{ produto.CODBARRA_PRODUTO }}"
+                    data-preco="{{ " %.2f"|format(produto.PRECO_DESCONTO) }}" onclick="abrirModal(this)">
+                    Info
+                  </button>
+
                   <div class="d-flex align-items-center border rounded">
                     <button type="button" class="btn btn-sm btn-outline-dark px-2"
                       onclick="alterarQuantidade(-1, this)">−</button>
@@ -414,6 +427,7 @@
                     <button type="button" class="btn btn-sm btn-outline-dark px-2"
                       onclick="alterarQuantidade(1, this)">+</button>
                   </div>
+
                   <button class="btn btn-sm btn-outline-dark" onclick="adicionarAoCarrinho(this)">Comprar</button>
                 </div>
               </div>
@@ -422,6 +436,35 @@
           {% endfor %}
         </div>
       </div>
+
+      <!-- Modal FORA do loop -->
+      <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="productModalLabel">Detalhes do Produto</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+              <p><strong>Nome:</strong> <span id="modalNome"></span></p>
+              <p><strong>Categoria:</strong> <span id="modalCategoria"></span></p>
+              <p><strong>Cód. de Barras:</strong> <span id="modalBarra"></span></p>
+              <p><strong>Preço Final:</strong> R$ <span id="modalPreco"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Script para preencher o modal -->
+      <script>
+        function abrirModal(botao) {
+          document.getElementById("modalNome").textContent = botao.dataset.nome;
+          document.getElementById("modalCategoria").textContent = botao.dataset.categoria;
+          document.getElementById("modalBarra").textContent = botao.dataset.barra;
+          document.getElementById("modalPreco").textContent = botao.dataset.preco;
+        }
+      </script>
+
 
       <!-- Lista com imagem -->
       <div class="container search-list visual-view" id="photo-search-list" style="display: none; margin-top: 20px;">
@@ -464,7 +507,7 @@
       </div>
 
       <!-- Lista simples sem imagem -->
-      <div class="container search-list visual-view" id="text-search-list" style="display: none; margin-top: 20px;">
+      <div class=" search-list visual-view" id="text-search-list" style="display: none; margin-top: 20px; margin-left: 200px; margin-right: 200px;">
         {% if produtos %}
         <div class="table-responsive">
           <table class="table table-bordered table-hover table-sm align-middle text-center">
@@ -499,7 +542,7 @@
                     <div class="d-flex align-items-center border rounded">
                       <button type="button" class="btn btn-sm btn-outline-dark px-2"
                         onclick="alterarQuantidade(-1, this)">−</button>
-                      <input type="number" class="form-control text-center border-0" name="quantidade" min="0" value="0"
+                      <input type="" class="form-control text-center border-0" name="quantidade" min="0" value="0"
                         step="1" style="width: 60px;">
                       <button type="button" class="btn btn-sm btn-outline-dark px-2"
                         onclick="alterarQuantidade(1, this)">+</button>
@@ -524,7 +567,7 @@
     <!--  Produtos-->
 
     <!-- Carrinho -->
-    <div id="cart"  style="display: none;" class="container shadow p-3 mb-2 bg-white rounded">
+    <div id="cart" style="display: none;" class="container shadow p-3 mb-2 bg-white rounded">
       <h3 class="mb-3">Carrinho de Compras</h3>
 
       <div class="row align-items-end justify-content-between mb-3">
