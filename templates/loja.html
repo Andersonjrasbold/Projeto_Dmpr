@@ -416,7 +416,7 @@
                     data-bs-target="#productModal" data-nome="{{ produto.NOME_PRODUTO }}"
                     data-categoria="{{ produto.NOME_CATEGORIA }}" data-barra="{{ produto.CODBARRA_PRODUTO }}"
                     data-preco="{{ " %.2f"|format(produto.PRECO_DESCONTO) }}" onclick="abrirModal(this)">
-                    Info
+                    MultiLoja
                   </button>
 
                   <div class="d-flex align-items-center border rounded">
@@ -456,14 +456,7 @@
       </div>
 
       <!-- Script para preencher o modal -->
-      <script>
-        function abrirModal(botao) {
-          document.getElementById("modalNome").textContent = botao.dataset.nome;
-          document.getElementById("modalCategoria").textContent = botao.dataset.categoria;
-          document.getElementById("modalBarra").textContent = botao.dataset.barra;
-          document.getElementById("modalPreco").textContent = botao.dataset.preco;
-        }
-      </script>
+    
 
 
       <!-- Lista com imagem -->
@@ -509,7 +502,7 @@
       <!-- Lista simples sem imagem -->
       <div class=" search-list visual-view" id="text-search-list" style="display: none; margin-top: 20px; margin-left: 200px; margin-right: 200px;">
         {% if produtos %}
-        <div class="table-responsive">
+        <div class="table-responsive rounded">
           <table class="table table-bordered table-hover table-sm align-middle text-center">
             <thead class="table-dark">
               <tr>
@@ -560,9 +553,6 @@
         {% endif %}
       </div>
     </div>
-
-
-
 
     <!--  Produtos-->
 
@@ -650,6 +640,14 @@
       </footer>
     </div>
     <!--footer end-->
+      <script>
+        function abrirModal(botao) {
+          document.getElementById("modalNome").textContent = botao.dataset.nome;
+          document.getElementById("modalCategoria").textContent = botao.dataset.categoria;
+          document.getElementById("modalBarra").textContent = botao.dataset.barra;
+          document.getElementById("modalPreco").textContent = botao.dataset.preco;
+        }
+      </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
       crossorigin="anonymous"></script>
