@@ -1,4 +1,3 @@
-
 // Estado do carrinho com persistência no localStorage
 let carrinho = [];
 let itensPorPagina = 12;
@@ -19,15 +18,6 @@ function carregarCarrinho() {
     console.error("Erro ao carregar carrinho:", e);
     carrinho = [];
   }
-}
-
-// Mostrar/Ocultar carrinho
-function toggleCarrinho() {
-  const carrinhoContainer = document.getElementById("cart");
-  const botao = document.getElementById("btn-carrinho");
-  const visivel = carrinhoContainer.style.display === "block";
-  carrinhoContainer.style.display = visivel ? "none" : "block";
-  if (botao) botao.textContent = visivel ? "Ver Carrinho" : "Ocultar Carrinho";
 }
 
 // Atualizar carrinho na tela
@@ -65,8 +55,49 @@ function atualizarCarrinho() {
   salvarCarrinho();
 }
 
+function adicionarProdutoCarrinho(nome, preco, quantidade, imagem) {
+  const existente = carrinho.find(item => item.nome === nome);
+  if (existente) {
+    existente.quantidade += quantidade;
+  } else {
+    carrinho.push({ nome, preco, quantidade, imagem });
+  }
+  atualizarCarrinho();
+}
+
+function alterarQuantidadeCarrinho(index, delta) {
+  carrinho[index].quantidade += delta;
+  if (carrinho[index].quantidade <= 0) {
+    carrinho.splice(index, 1);
+  }
+  atualizarCarrinho();
+}
+
+function atualizarQuantidadeDireta(index, valor) {
+  const novaQtd = parseInt(valor);
+  if (novaQtd > 0) {
+    carrinho[index].quantidade = novaQtd;
+  } else {
+    carrinho.splice(index, 1);
+  }
+  atualizarCarrinho();
+}
+
+function removerItem(index) {
+  carrinho.splice(index, 1);
+  atualizarCarrinho();
+}
+
+function limparCarrinho() {
+  if (confirm("Deseja limpar o carrinho?")) {
+    carrinho = [];
+    atualizarCarrinho();
+  }
+}
+
+// ✅ Adicionar produtos de cards OU de tabelas
 function adicionarAoCarrinho(botao) {
-  // Verifica se veio de um CARD
+  // Se veio de um card
   const card = botao.closest(".card");
   if (card) {
     const nome = card.querySelector(".card-title")?.innerText;
@@ -86,18 +117,17 @@ function adicionarAoCarrinho(botao) {
     return;
   }
 
-  // Verifica se veio de uma linha de TABELA
+  // Se veio de uma tabela (linha <tr>)
   const row = botao.closest("tr");
   if (row) {
-    const tds = row.querySelectorAll("td");
-    const nome = tds[2]?.innerText;
-    const precoTexto = tds[7]?.innerText.replace("R$ ", "").replace(",", ".");
+    const nome = row.querySelector(".nome-produto")?.innerText;
+    const precoTexto = row.querySelector(".preco-produto")?.innerText.replace("R$ ", "").replace(",", ".");
     const preco = parseFloat(precoTexto);
+    const imagem = row.querySelector("img")?.getAttribute("src") || "/static/fotos/sem-imagem.jpg";
     const input = row.querySelector("input[name='quantidade']");
     const quantidade = parseInt(input?.value);
-    const imagem = "/static/fotos/sem-imagem.jpg"; // ou alguma imagem padrão
 
-    if (!quantidade || quantidade <= 0 || isNaN(preco)) {
+    if (!quantidade || quantidade <= 0 || isNaN(preco) || !nome) {
       alert("Escolha uma quantidade e preço válidos.");
       return;
     }
@@ -110,55 +140,58 @@ function adicionarAoCarrinho(botao) {
   alert("Não foi possível adicionar o produto.");
 }
 
-function adicionarProdutoCarrinho(nome, preco, quantidade, imagem) {
-  const existente = carrinho.find(item => item.nome === nome);
-  if (existente) {
-    existente.quantidade += quantidade;
-  } else {
-    carrinho.push({ nome, preco, quantidade, imagem });
-  }
-  atualizarCarrinho();
+// ✅ Adicionar produtos recebidos do backend via Excel
+function adicionarProdutosPorCatalogo(catalogoBackEnd, listaDeProdutos) {
+  listaDeProdutos.forEach(produto => {
+    const info = catalogoBackEnd.find(item => item.ean === produto.ean);
+    if (info) {
+      adicionarProdutoCarrinho(info.nome, info.preco, produto.quantidade, info.imagem);
+    } else {
+      console.warn(`Produto com EAN ${produto.ean} não encontrado no catálogo do backend.`);
+    }
+  });
 }
 
-
-// Alterar quantidade com botão +/-
-function alterarQuantidadeCarrinho(index, delta) {
-  carrinho[index].quantidade += delta;
-  if (carrinho[index].quantidade <= 0) {
-    carrinho.splice(index, 1);
-  }
-  atualizarCarrinho();
-}
-
-// Alterar quantidade digitando
-function atualizarQuantidadeDireta(index, valor) {
-  const novaQtd = parseInt(valor);
-  if (novaQtd > 0) {
-    carrinho[index].quantidade = novaQtd;
-  } else {
-    carrinho.splice(index, 1);
-  }
-  atualizarCarrinho();
-}
-
-// Remover item
-function removerItem(index) {
-  carrinho.splice(index, 1);
-  atualizarCarrinho();
-}
-
-// Limpar carrinho
-function limparCarrinho() {
-  if (confirm("Deseja limpar o carrinho?")) {
-    carrinho = [];
-    atualizarCarrinho();
-  }
-}
-
-// Carregar carrinho ao abrir a página
-window.addEventListener("DOMContentLoaded", () => {
+// ✅ Inicialização ao carregar a página
+document.addEventListener("DOMContentLoaded", function() {
   carregarCarrinho();
   atualizarCarrinho();
+
+  const uploadForm = document.getElementById('uploadForm');
+  if (uploadForm) {
+    uploadForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const fileInput = document.getElementById('fileUpload');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert("Selecione um arquivo Excel para importar.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      fetch('/importar-produtos', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "ok" && Array.isArray(data.catalogo) && Array.isArray(data.lista_de_produtos)) {
+          adicionarProdutosPorCatalogo(data.catalogo, data.lista_de_produtos);
+          alert("Produtos importados com sucesso!");
+          const uploadModal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
+          uploadModal.hide();
+        } else {
+          alert("Erro ao importar: " + (data.mensagem || "Erro desconhecido."));
+        }
+      })
+      .catch(error => {
+        console.error("Erro:", error);
+        alert("Falha na importação.");
+      });
+    });
+  }
 });
-
-
