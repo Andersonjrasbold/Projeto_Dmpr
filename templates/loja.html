@@ -577,34 +577,50 @@
 
     <!-- Carrinho -->
     <div id="cart" style="display: none;" class="container shadow p-3 mb-2 bg-white rounded">
-      <h3 class="mb-3">Carrinho de Compras</h3>
+      <h3 class="mb-1">Carrinho de Compras</h3>
+      <h6 class="mb-3">{% if session.get('cliente_nome') %} 
+          CNPJ: {{ session['cliente_cnpj'] }}
+        {% endif %}</h6>
+  <div class="row align-items-end justify-content-between mb-3">
+  <!-- Select de prazo à esquerda -->
+  <div class="col-md-6 text-start">
+    <label for="prazo" class="form-label">Prazo de Pagamento:</label>
+    <select class="form-select" id="prazo" name="prazo">
+      <option value="" disabled selected>Selecione o prazo</option>
+      <option value="avista">À vista</option>
+      <option value="7">7 dias</option>
+      <option value="14">14 dias</option>
+      <option value="21">21 dias</option>
+      <option value="30">30 dias</option>
+      <option value="45">45 dias</option>
+      <option value="60">60 dias</option>
+      <option value="90">90 dias</option>
+    </select>
+  </div>
 
-      <div class="row align-items-end justify-content-between mb-3">
-        <!-- CNPJ à esquerda (6 colunas) -->
-        <div class="col-12 col-md-6">
-          <p class="mb-0">          {% if session.get('cliente_nome') %}
-<p class="text-end fs-6 text-small" style="margin-bottom: auto; ">
- CNPJ: {{ session['cliente_cnpj'] }}
-</p>
-{% endif %}</p>
-        </div>
+  <!-- Totais à direita como um card -->
+<div class="col-md-3">
+  <div class="">
+    <div class=" p-2" style="text-align: justify;">
+      <p class="mb-1">
+        <strong class="float-start">Total Líquido:</strong>
+        <span class="float-end">R$ 200,00</span>
+      </p>
+      <p class="mb-1 border-bottom">
+        <strong class="float-start">Total Impostos:</strong>
+        <span class="float-end">R$ 24,00</span>
+      </p>
+      <p class="mb-0">
+        <strong class="float-start">Valor Total Final:</strong>
+        <span class="float-end">R$ 350,00</span>
+      </p>
+    </div>
+  </div>
+</div>
 
-        <!-- Select de prazo à direita (4 colunas) -->
-        <div class="col-12 col-md-4">
-          <label for="prazo" class="form-label"></label>
-          <select class="form-select" id="prazo" name="prazo">
-            <option value="" disabled selected>Selecione o prazo</option>
-            <option value="avista">À vista</option>
-            <option value="7">7 dias</option>
-            <option value="14">14 dias</option>
-            <option value="21">21 dias</option>
-            <option value="30">30 dias</option>
-            <option value="45">45 dias</option>
-            <option value="60">60 dias</option>
-            <option value="90">90 dias</option>
-          </select>
-        </div>
-      </div>
+
+</div>
+
       <div class="table-responsive">
         <table class="table table-bordered align-middle text-center">
           <thead class="table-light">

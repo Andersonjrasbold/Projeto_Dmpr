@@ -1,16 +1,23 @@
-// Estado do carrinho com persistência no localStorage
 let carrinho = [];
 let itensPorPagina = 12;
 let paginaAtual = 1;
 
+// Função para obter a chave do carrinho por cliente
+function getChaveCarrinho() {
+  const cnpj = sessionStorage.getItem('cliente_cnpj');
+  return cnpj ? `carrinho_${cnpj}` : 'carrinho';
+}
+
 // Salvar carrinho no localStorage
 function salvarCarrinho() {
-  localStorage.setItem("carrinho", JSON.stringify(carrinho));
+  const chave = getChaveCarrinho();
+  localStorage.setItem(chave, JSON.stringify(carrinho));
 }
 
 // Carregar carrinho do localStorage
 function carregarCarrinho() {
-  const dados = localStorage.getItem("carrinho");
+  const chave = getChaveCarrinho();
+  const dados = localStorage.getItem(chave);
   try {
     carrinho = dados ? JSON.parse(dados) : [];
     if (!Array.isArray(carrinho)) carrinho = [];
@@ -42,7 +49,7 @@ function atualizarCarrinho() {
         <td>
           <div class="d-flex justify-content-center align-items-center">
             <button class="btn btn-sm btn-outline-secondary" onclick="alterarQuantidadeCarrinho(${index}, -1)">-</button>
-            <input type="" min="1" value="${item.quantidade}" class="form-control mx-2 text-center" style="width: 60px;" onchange="atualizarQuantidadeDireta(${index}, this.value)">
+            <input type="number" min="1" value="${item.quantidade}" class="form-control mx-2 text-center" style="width: 60px;" onchange="atualizarQuantidadeDireta(${index}, this.value)">
             <button class="btn btn-sm btn-outline-secondary" onclick="alterarQuantidadeCarrinho(${index}, 1)">+</button>
           </div>
         </td>
@@ -95,9 +102,8 @@ function limparCarrinho() {
   }
 }
 
-// ✅ Adicionar produtos de cards OU de tabelas
 function adicionarAoCarrinho(botao) {
-  // Se veio de um card
+  // De card
   const card = botao.closest(".card");
   if (card) {
     const nome = card.querySelector(".card-title")?.innerText;
@@ -117,7 +123,7 @@ function adicionarAoCarrinho(botao) {
     return;
   }
 
-  // Se veio de uma tabela (linha <tr>)
+  // De tabela
   const row = botao.closest("tr");
   if (row) {
     const nome = row.querySelector(".nome-produto")?.innerText;
@@ -140,7 +146,6 @@ function adicionarAoCarrinho(botao) {
   alert("Não foi possível adicionar o produto.");
 }
 
-// ✅ Adicionar produtos recebidos do backend via Excel
 function adicionarProdutosPorCatalogo(catalogoBackEnd, listaDeProdutos) {
   listaDeProdutos.forEach(produto => {
     const info = catalogoBackEnd.find(item => item.ean === produto.ean);
@@ -152,7 +157,6 @@ function adicionarProdutosPorCatalogo(catalogoBackEnd, listaDeProdutos) {
   });
 }
 
-// ✅ Inicialização ao carregar a página
 document.addEventListener("DOMContentLoaded", function() {
   carregarCarrinho();
   atualizarCarrinho();

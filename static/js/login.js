@@ -23,8 +23,17 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(response => response.json())
       .then(data => {
         if (data.status === 'ok') {
-          // Limpa o carrinho do cliente anterior ao trocar de login
-          localStorage.removeItem('carrinho');
+          const novoCnpj = data.cnpj;
+          const cnpjAnterior = sessionStorage.getItem('cliente_cnpj');
+
+          // Se o cliente trocou de CNPJ, limpa o carrinho
+          if (cnpjAnterior && cnpjAnterior !== novoCnpj) {
+            const chaveAntiga = `carrinho_${cnpjAnterior}`;
+            localStorage.removeItem(chaveAntiga);
+          }
+
+          // Salva o novo CNPJ
+          sessionStorage.setItem('cliente_cnpj', novoCnpj);
 
           alert('Login realizado com sucesso!');
           window.location.href = '/loja';

@@ -45,36 +45,9 @@ def login_post():
     if cliente:
         session['cliente_id'] = cliente[0]
         session['cliente_nome'] = cliente[1]
-        session['cliente_cnpj'] = cliente[2]   # <- Aqui salva o CNPJ certo
-        return jsonify(status='ok')
-    else:
-        return jsonify(status='erro', mensagem='Credenciais inválidas')
-
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-
-    con = Acesso.get_connection()
-    cur = con.cursor()
-
-    query = """
-    SELECT COD_CLIENTE, NOME_CLIENTE, CGC_CLIENTE
-    FROM CLIENTES
-    WHERE CGC_CLIENTE = ? AND SENHAEPED_CLIENTE = ?
-    """
-
-    cur.execute(query, (username, password))
-    cliente = cur.fetchone()
-
-    cur.close()
-    con.close()
-
-    if cliente:
-        session['cliente_id'] = cliente[0]
-        session['cliente_nome'] = cliente[1]
         session['cliente_cnpj'] = cliente[2]
-        print(f"Login OK: {session['cliente_nome']} - CNPJ: {session['cliente_cnpj']}")
-        return jsonify(status='ok')
+
+        return jsonify(status='ok', cnpj=cliente[2])  # <-- Enviando o CNPJ ao JavaScript
     else:
         return jsonify(status='erro', mensagem='Credenciais inválidas')
 
