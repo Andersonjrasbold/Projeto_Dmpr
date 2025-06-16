@@ -6,9 +6,9 @@ from io import BytesIO
 import Acesso
 
 app = Flask(__name__)
-app.secret_key = 'sua_chave_secreta_segura'
+app.secret_key = 'sua_chave_secreta_segura'  # Importante para a session
 
-# Rota inicial
+# Página inicial
 @app.route('/')
 def index():
     return redirect(url_for('loja'))
@@ -20,7 +20,7 @@ def pagina_login():
     print(f"Total de clientes carregados: {len(lista_clientes)}")
     return render_template('login.html', clientes=lista_clientes)
 
-# Processa o login (POST)
+# Processamento do login (POST)
 @app.route('/login', methods=['POST'])
 def login_post():
     data = request.get_json()
@@ -31,9 +31,11 @@ def login_post():
     cur = con.cursor()
 
     query = """
-    SELECT COD_CLIENTE, NOME_CLIENTE FROM CLIENTES
+    SELECT COD_CLIENTE, NOME_CLIENTE, CGC_CLIENTE
+    FROM CLIENTES
     WHERE CGC_CLIENTE = ? AND SENHAEPED_CLIENTE = ?
     """
+
     cur.execute(query, (username, password))
     cliente = cur.fetchone()
 
@@ -43,11 +45,40 @@ def login_post():
     if cliente:
         session['cliente_id'] = cliente[0]
         session['cliente_nome'] = cliente[1]
+        session['cliente_cnpj'] = cliente[2]   # <- Aqui salva o CNPJ certo
         return jsonify(status='ok')
     else:
         return jsonify(status='erro', mensagem='Credenciais inválidas')
 
-# Rota protegida: Loja
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    con = Acesso.get_connection()
+    cur = con.cursor()
+
+    query = """
+    SELECT COD_CLIENTE, NOME_CLIENTE, CGC_CLIENTE
+    FROM CLIENTES
+    WHERE CGC_CLIENTE = ? AND SENHAEPED_CLIENTE = ?
+    """
+
+    cur.execute(query, (username, password))
+    cliente = cur.fetchone()
+
+    cur.close()
+    con.close()
+
+    if cliente:
+        session['cliente_id'] = cliente[0]
+        session['cliente_nome'] = cliente[1]
+        session['cliente_cnpj'] = cliente[2]
+        print(f"Login OK: {session['cliente_nome']} - CNPJ: {session['cliente_cnpj']}")
+        return jsonify(status='ok')
+    else:
+        return jsonify(status='erro', mensagem='Credenciais inválidas')
+
+# Protegendo a loja (só entra logado)
 @app.route('/loja')
 def loja():
     if 'cliente_id' not in session:
@@ -57,7 +88,7 @@ def loja():
     print(f"Total de produtos carregados: {len(lista_produtos)}")
     return render_template('loja.html', produtos=lista_produtos)
 
-# Listagem de produtos (opcional)
+# Protegendo também a lista de produtos
 @app.route('/produtos')
 def produtos():
     if 'cliente_id' not in session:
@@ -72,7 +103,7 @@ def logout():
     session.clear()
     return redirect(url_for('pagina_login'))
 
-# Importação de produtos via Excel
+# Importar produtos via Excel
 @app.route('/importar-produtos', methods=['POST'])
 def importar_produtos():
     try:
@@ -111,14 +142,14 @@ def importar_produtos():
         })
 
     except Exception as e:
-        print("ERRO:", e)
+        print("Erro na importação:", e)
         return jsonify({"status": "erro", "mensagem": str(e)}), 500
 
 def buscar_produtos_por_eans(lista_eans):
     con = Acesso.get_connection()
     cur = con.cursor()
 
-    formato_in = ",".join(["?" for _ in lista_eans])
+    placeholders = ",".join(["?" for _ in lista_eans])
 
     query = f"""
     SELECT 
@@ -131,7 +162,7 @@ def buscar_produtos_por_eans(lista_eans):
             ELSE PRVENDA_PRODUTO * (1 - DESCPROMOCAO_PRODUTO / 100)
         END AS PRECO_DESCONTO
     FROM PRODUTOS
-    WHERE CODBARRA_PRODUTO IN ({formato_in})
+    WHERE CODBARRA_PRODUTO IN ({placeholders})
     """
 
     cur.execute(query, lista_eans)

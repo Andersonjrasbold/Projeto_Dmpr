@@ -30,14 +30,18 @@
 
 </head>
 
+
 <body>
   <!-- header-->
   <main>
     <header>
       <div style="padding: auto; background-color: rgb(16, 0, 87);">
         <div class="container">
-          <p class="text-end fs-6 text-small" style="margin-bottom: auto; color: whitesmoke;">M. A. Borges Comercio de
-            Medicamentos Ltda - Cnpj 09.085.717/0001-58</p>
+          {% if session.get('cliente_nome') %}
+<p class="text-end fs-6 text-small" style="margin-bottom: auto; color: whitesmoke;">
+  {{ session['cliente_nome'] }} - CNPJ: {{ session['cliente_cnpj'] }}
+</p>
+{% endif %}
         </div>
       </div>
       <div class="border-bottom container shadow  mb-2 bg-white rounded" style="background-color: rgb(241, 241, 241);">
@@ -135,12 +139,12 @@
                           Minha Conta
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="accountDropdown">
-                          <li><a class="dropdown-item" href="#">Perfil</a></li>
+                          <li><a class="dropdown-item" href="#"> Meus dados </a></li>
                           <li><a class="dropdown-item" href="#">Configurações</a></li>
                           <li>
                             <hr class="dropdown-divider" />
                           </li>
-                          <li><a class="dropdown-item" href="#">Sair</a></li>
+                          {% if session.get('cliente_nome') %} <li><a class="dropdown-item" href="{{ url_for('logout') }}">Sair</a></li>{% endif %}
                         </ul>
                       </li>
                     </ul>
@@ -578,7 +582,11 @@
       <div class="row align-items-end justify-content-between mb-3">
         <!-- CNPJ à esquerda (6 colunas) -->
         <div class="col-12 col-md-6">
-          <p class="mb-0">CNPJ: 09.085.717/0001-58</p>
+          <p class="mb-0">          {% if session.get('cliente_nome') %}
+<p class="text-end fs-6 text-small" style="margin-bottom: auto; ">
+ CNPJ: {{ session['cliente_cnpj'] }}
+</p>
+{% endif %}</p>
         </div>
 
         <!-- Select de prazo à direita (4 colunas) -->
