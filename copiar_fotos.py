@@ -3,8 +3,8 @@ import shutil
 import Acesso
 
 # Caminho de origem e destino
-origem = r"Z:\EPED\Fotos"
-destino = r"C:\Users\renat\OneDrive - dmparana.com.br\Projeto Anderson\Projeto_Dmpr\static\img"
+origem = r"\\10.251.100.2\medicon$\EPED\Fotos"
+destino = r"C:\Users\Usuario\OneDrive\Área de Trabalho\Projeto site\static\fotos"
 
 # Se destino não existir, cria
 if not os.path.exists(destino):
@@ -19,7 +19,7 @@ query = """
 SELECT COD_PRODUTO FROM PRODUTOS
 WHERE STATUS_PRODUTO = 1
 AND CATEGORIA_PRODUTO NOT IN ('26','13','29','14')
-AND COD_PRODUTO <= 100
+--AND COD_PRODUTO <= 100
 AND ESTOQUE_PRODUTO > 0
 """
 

@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loginForm.addEventListener('submit', function(e) {
       e.preventDefault();
 
-      const username = document.getElementById('username').value.trim();
+      const username = document.getElementById('username').value.replace(/\D/g, '').trim();
       const password = document.getElementById('password').value.trim();
 
       if (!username || !password) {

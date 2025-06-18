@@ -1,23 +1,25 @@
-function substituirMultiplos(idsOcultar = [], idMostrar) {
-  // Oculta todos os elementos passados
-  idsOcultar.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
+function substituirMultiplos(listaParaOcultar, idParaMostrar) {
+  // Sempre garantir que o carrossel seja ocultado
+  const carousel = document.getElementById('carouselExampleDark');
+  if (carousel) carousel.style.display = 'none';
+
+  // Oculta todos os elementos da lista recebida
+  listaParaOcultar.forEach(id => {
+    const elemento = document.getElementById(id);
+    if (elemento) {
+      elemento.style.display = "none";
+    }
   });
 
-  // Mostra o novo container
-  const mostrar = document.getElementById(idMostrar);
-  if (mostrar) {
-    mostrar.style.display = 'block';
-
-    // Força reflow para corrigir possíveis quebras de layout (como em tabelas)
-    void mostrar.offsetWidth;
-
-    // Reinicia a paginação para a nova visualização
-    paginaAtual = 1;
-    paginarProdutos(idMostrar);
-
-    // Reexecuta a busca para garantir layout e visibilidade corretos
-    search();
+  // Mostra apenas o que foi solicitado
+  const destino = document.getElementById(idParaMostrar);
+  if (destino) {
+    // Se for uma div de lista ou o carrinho, usa block
+    if (idParaMostrar.includes('list') || idParaMostrar === 'cart') {
+      destino.style.display = 'block';
+    } else {
+      destino.style.display = 'flex';
+    }
   }
 }
+

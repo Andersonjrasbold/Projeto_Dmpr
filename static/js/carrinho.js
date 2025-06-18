@@ -8,10 +8,26 @@ function getChaveCarrinho() {
   return cnpj ? `carrinho_${cnpj}` : 'carrinho';
 }
 
+// Atualiza a badge de quantidade de itens no carrinho
+function atualizarBadgeCarrinho() {
+  const badge = document.getElementById('cart-badge');
+  const totalItens = carrinho.reduce((soma, item) => soma + item.quantidade, 0);
+
+  if (badge) {
+    if (totalItens > 0) {
+      badge.textContent = totalItens;
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+}
+
 // Salvar carrinho no localStorage
 function salvarCarrinho() {
   const chave = getChaveCarrinho();
   localStorage.setItem(chave, JSON.stringify(carrinho));
+  atualizarBadgeCarrinho();
 }
 
 // Carregar carrinho do localStorage
@@ -25,14 +41,17 @@ function carregarCarrinho() {
     console.error("Erro ao carregar carrinho:", e);
     carrinho = [];
   }
+  atualizarBadgeCarrinho();
 }
 
+// Atualizar carrinho na tela
 // Atualizar carrinho na tela
 function atualizarCarrinho() {
   const tbody = document.getElementById("cart-table-body");
   const totalSpan = document.getElementById("cart-total");
+  const totalPaymentSpan = document.getElementById("cart-total-payment");
 
-  if (!tbody || !totalSpan) return;
+  if (!tbody || !totalSpan || !totalPaymentSpan) return;
 
   tbody.innerHTML = "";
   let total = 0;
@@ -59,9 +78,12 @@ function atualizarCarrinho() {
   });
 
   totalSpan.textContent = `R$ ${total.toFixed(2).replace(".", ",")}`;
+  totalPaymentSpan.textContent = `R$ ${total.toFixed(2).replace(".", ",")}`;
   salvarCarrinho();
 }
 
+
+// Adicionar produto ao carrinho
 function adicionarProdutoCarrinho(nome, preco, quantidade, imagem) {
   const existente = carrinho.find(item => item.nome === nome);
   if (existente) {
@@ -72,6 +94,7 @@ function adicionarProdutoCarrinho(nome, preco, quantidade, imagem) {
   atualizarCarrinho();
 }
 
+// Alterar quantidade (incremento/decremento)
 function alterarQuantidadeCarrinho(index, delta) {
   carrinho[index].quantidade += delta;
   if (carrinho[index].quantidade <= 0) {
@@ -80,6 +103,7 @@ function alterarQuantidadeCarrinho(index, delta) {
   atualizarCarrinho();
 }
 
+// Atualizar quantidade digitada direto no input
 function atualizarQuantidadeDireta(index, valor) {
   const novaQtd = parseInt(valor);
   if (novaQtd > 0) {
@@ -90,11 +114,13 @@ function atualizarQuantidadeDireta(index, valor) {
   atualizarCarrinho();
 }
 
+// Remover item do carrinho
 function removerItem(index) {
   carrinho.splice(index, 1);
   atualizarCarrinho();
 }
 
+// Limpar carrinho inteiro
 function limparCarrinho() {
   if (confirm("Deseja limpar o carrinho?")) {
     carrinho = [];
@@ -102,8 +128,8 @@ function limparCarrinho() {
   }
 }
 
+// Adicionar produto de Card ou Tabela
 function adicionarAoCarrinho(botao) {
-  // De card
   const card = botao.closest(".card");
   if (card) {
     const nome = card.querySelector(".card-title")?.innerText;
@@ -123,7 +149,6 @@ function adicionarAoCarrinho(botao) {
     return;
   }
 
-  // De tabela
   const row = botao.closest("tr");
   if (row) {
     const nome = row.querySelector(".nome-produto")?.innerText;
@@ -146,6 +171,7 @@ function adicionarAoCarrinho(botao) {
   alert("Não foi possível adicionar o produto.");
 }
 
+// Importação de catálogo via backend (Excel)
 function adicionarProdutosPorCatalogo(catalogoBackEnd, listaDeProdutos) {
   listaDeProdutos.forEach(produto => {
     const info = catalogoBackEnd.find(item => item.ean === produto.ean);
@@ -157,9 +183,11 @@ function adicionarProdutosPorCatalogo(catalogoBackEnd, listaDeProdutos) {
   });
 }
 
+// Ao carregar a página
 document.addEventListener("DOMContentLoaded", function() {
   carregarCarrinho();
   atualizarCarrinho();
+  atualizarBadgeCarrinho();
 
   const uploadForm = document.getElementById('uploadForm');
   if (uploadForm) {

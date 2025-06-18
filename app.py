@@ -1,26 +1,25 @@
 from flask import Flask, render_template, redirect, url_for, request, jsonify, session
 import Lista_Produtos
+from Lista_Produtos import get_produtos_promocao, get_laboratorios
 import clientes
+from clientes import get_cliente_por_id
 import pandas as pd
 from io import BytesIO
 import Acesso
 
 app = Flask(__name__)
-app.secret_key = 'sua_chave_secreta_segura'  # Importante para a session
+app.secret_key = 'sua_chave_secreta_segura'
 
-# Página inicial
 @app.route('/')
 def index():
-    return redirect(url_for('loja'))
+    return render_template('index.html')
 
-# Página de login (formulário GET)
 @app.route('/login')
 def pagina_login():
     lista_clientes = clientes.get_clientes()
     print(f"Total de clientes carregados: {len(lista_clientes)}")
     return render_template('login.html', clientes=lista_clientes)
 
-# Processamento do login (POST)
 @app.route('/login', methods=['POST'])
 def login_post():
     data = request.get_json()
@@ -46,12 +45,11 @@ def login_post():
         session['cliente_id'] = cliente[0]
         session['cliente_nome'] = cliente[1]
         session['cliente_cnpj'] = cliente[2]
-
-        return jsonify(status='ok', cnpj=cliente[2])  # <-- Enviando o CNPJ ao JavaScript
+        print("Cliente ID salvo na sessão:", session['cliente_id'])
+        return jsonify(status='ok', cnpj=cliente[2])
     else:
         return jsonify(status='erro', mensagem='Credenciais inválidas')
 
-# Protegendo a loja (só entra logado)
 @app.route('/loja')
 def loja():
     if 'cliente_id' not in session:
@@ -61,22 +59,38 @@ def loja():
     print(f"Total de produtos carregados: {len(lista_produtos)}")
     return render_template('loja.html', produtos=lista_produtos)
 
-# Protegendo também a lista de produtos
 @app.route('/produtos')
 def produtos():
     if 'cliente_id' not in session:
         return redirect(url_for('pagina_login'))
 
-    lista_produtos = Lista_Produtos.get_produtos()
-    return render_template('produtos.html', produtos=lista_produtos)
+    filtro = request.args.get('laboratorio')
+    lista_produtos = Lista_Produtos.get_produtos(filtro_laboratorio=filtro)
+    laboratorios = get_laboratorios()
 
-# Rota de logout
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('pagina_login'))
+    return render_template('produtos.html', produtos=lista_produtos, laboratorios=laboratorios)
 
-# Importar produtos via Excel
+@app.route('/promocoes')
+def promocoes():
+    produtos = get_produtos_promocao()
+    return render_template('promocoes.html', produtos=produtos)
+
+@app.route('/conta')
+def conta():
+    cliente_id = session.get('cliente_id')
+
+    if not cliente_id:
+        return redirect(url_for('pagina_login'))
+
+    cliente = get_cliente_por_id(cliente_id)
+
+    if not cliente:
+        return "Cliente não encontrado", 404
+
+    return render_template('conta.html', cliente=cliente)
+
+
+
 @app.route('/importar-produtos', methods=['POST'])
 def importar_produtos():
     try:
@@ -146,6 +160,16 @@ def buscar_produtos_por_eans(lista_eans):
     con.close()
 
     return produtos
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('pagina_login'))
+
+@app.route('/debug_session')
+def debug_session():
+    return jsonify(dict(session))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
