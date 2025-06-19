@@ -3,9 +3,12 @@ import Lista_Produtos
 from Lista_Produtos import get_produtos_promocao, get_laboratorios
 import clientes
 from clientes import get_cliente_por_id
+from pedidos import get_pedidos_por_cliente
 import pandas as pd
 from io import BytesIO
 import Acesso
+from flask import send_from_directory
+
 
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta_segura'
@@ -49,6 +52,18 @@ def login_post():
         return jsonify(status='ok', cnpj=cliente[2])
     else:
         return jsonify(status='erro', mensagem='Credenciais inválidas')
+    
+@app.route('/historico')
+def historico_pedidos():
+    if 'cliente_id' not in session:
+        return redirect(url_for('pagina_login'))
+
+    cliente_id = session['cliente_id']
+    pedidos = get_pedidos_por_cliente(cliente_id)
+
+    print(f"Total de pedidos carregados: {len(pedidos)}")  # Debug
+
+    return render_template('historico.html', pedidos=pedidos)
 
 @app.route('/loja')
 def loja():
@@ -78,18 +93,14 @@ def promocoes():
 @app.route('/conta')
 def conta():
     cliente_id = session.get('cliente_id')
-
     if not cliente_id:
         return redirect(url_for('pagina_login'))
 
     cliente = get_cliente_por_id(cliente_id)
-
     if not cliente:
         return "Cliente não encontrado", 404
 
     return render_template('conta.html', cliente=cliente)
-
-
 
 @app.route('/importar-produtos', methods=['POST'])
 def importar_produtos():
@@ -99,7 +110,6 @@ def importar_produtos():
             return jsonify({"status": "erro", "mensagem": "Nenhum arquivo enviado"}), 400
 
         df = pd.read_excel(BytesIO(file.read()))
-
         if 'EAN' not in df.columns or 'Quantidade' not in df.columns:
             return jsonify({"status": "erro", "mensagem": "Arquivo inválido. Precisa de colunas: EAN e Quantidade"}), 400
 
@@ -135,7 +145,6 @@ def importar_produtos():
 def buscar_produtos_por_eans(lista_eans):
     con = Acesso.get_connection()
     cur = con.cursor()
-
     placeholders = ",".join(["?" for _ in lista_eans])
 
     query = f"""
@@ -155,10 +164,8 @@ def buscar_produtos_por_eans(lista_eans):
     cur.execute(query, lista_eans)
     colunas = [desc[0] for desc in cur.description]
     produtos = [dict(zip(colunas, linha)) for linha in cur.fetchall()]
-
     cur.close()
     con.close()
-
     return produtos
 
 @app.route('/logout')
@@ -169,6 +176,16 @@ def logout():
 @app.route('/debug_session')
 def debug_session():
     return jsonify(dict(session))
+
+
+
+
+@app.route('/pdf/<nome_arquivo>')
+def visualizar_pdf(nome_arquivo):
+    try:
+        return send_from_directory('static/pdf', nome_arquivo, mimetype='application/pdf')
+    except Exception as e:
+        return f"Erro ao carregar o PDF: {e}", 404
 
 
 if __name__ == '__main__':

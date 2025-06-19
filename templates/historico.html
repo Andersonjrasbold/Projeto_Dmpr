@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dm Paraná</title>
+  <link rel="icon" href="/static/img/favicon.ico" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <script src="https://kit.fontawesome.com/e8a55f7da4.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="/static/js/carrinho.js"></script>
+  <script src="/static/js/quantidadeBotoes.js"></script>
+  <script src></script>
+  <script src="/static/js/card-search-list.js"></script>
+  <script src="/static/js/search.js"></script>
+  <script src="/static/js/esconder.js"></script>
+  <style>
+    .card {
+      transition: all 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- header-->
+  <main>
+    <header>
+      <div style="padding: auto; background-color: rgb(16, 0, 87);">
+        <div class="container">
+          {% if session.get('cliente_nome') %}
+          <p class="text-end fs-6 text-small" style="margin-bottom: auto; color: whitesmoke;">
+            {{ session['cliente_nome'] }} - CNPJ: {{ session['cliente_cnpj'] }}
+          </p>
+          {% endif %}
+        </div>
+      </div>
+      <div class="border-bottom container shadow  mb-2 bg-white rounded" style="background-color: rgb(241, 241, 241);">
+        <div class="container ">
+          <div>
+            <div class="py-1 border-bottom">
+              <div class="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                  <a href="/loja"
+                    class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-bg-white text-decoration-none">
+                    <img src="/static/img/logo-dmpr.png" alt="Logo_DMParaná" width="200" height="50">
+                  </a>
+                  <div class="d-flex align-items-center">
+                    <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+
+                      <!-- Entregas -->
+                      <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle text-dark d-flex flex-column align-items-center"
+                          id="entregasDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <svg class="bi mb-1" width="24" height="2" aria-hidden="true">
+                            <use xlink:href="#speedometer2"></use>
+                          </svg>
+                          Entregas
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="entregasDropdown">
+                          <li><a class="dropdown-item" href="#">Rastrear Pedidos</a></li>
+                          <li><a class="dropdown-item" href="#">Outro item</a></li>
+                          <li>
+                            <hr class="dropdown-divider" />
+                          </li>
+                          <li><a class="dropdown-item" href="#">Relatórios</a></li>
+                        </ul>
+                      </li>
+
+                      <!-- Devoluções -->
+                      <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle text-dark d-flex flex-column align-items-center"
+                          id="devolucoesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <svg class="bi mb-1" width="24" height="2" aria-hidden="true">
+                            <use xlink:href="#speedometer2"></use>
+                          </svg>
+                          Devoluções
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="devolucoesDropdown">
+                          <li><a class="dropdown-item" href="#">Solicitar Devolução</a></li>
+                          <li><a class="dropdown-item" href="#">Acompanhar Devoluções</a></li>
+                          <li>
+                            <hr class="dropdown-divider" />
+                          </li>
+                          <li><a class="dropdown-item" href="#">Relatórios</a></li>
+                        </ul>
+                      </li>
+
+                      <!-- Financeiro -->
+                      <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle text-dark d-flex flex-column align-items-center"
+                          id="financeiroDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <svg class="bi mb-1" width="24" height="2" aria-hidden="true">
+                            <use xlink:href="#speedometer2"></use>
+                          </svg>
+                          Financeiro
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="financeiroDropdown">
+                          <li><a class="dropdown-item" href="#">Extrato</a></li>
+                          <li><a class="dropdown-item" href="#">Pagamentos</a></li>
+                          <li>
+                            <hr class="dropdown-divider" />
+                          </li>
+                          <li><a class="dropdown-item" href="#">Relatórios</a></li>
+                        </ul>
+                      </li>
+
+                      <!-- Meus Pedidos -->
+                      <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle text-dark d-flex flex-column align-items-center"
+                          id="meusPedidosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <svg class="bi mb-1" width="24" height="2" aria-hidden="true">
+                            <use xlink:href="#table"></use>
+                          </svg>
+                          Meus Pedidos
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="meusPedidosDropdown">
+                          <li><a class="dropdown-item" href="#">Pedidos Pendentes</a></li>
+                          <li><a class="dropdown-item" href="#">Histórico de Pedidos</a></li>
+                          <li>
+                            <hr class="dropdown-divider" />
+                          </li>
+                          <li><a class="dropdown-item" href="#">Ajuda</a></li>
+                        </ul>
+                      </li>
+
+                      <!-- Minha Conta -->
+                      <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle text-dark d-flex flex-column align-items-center"
+                          id="minhaContaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <svg class="bi mb-1" width="24" height="2" aria-hidden="true">
+                            <use xlink:href="#grid"></use>
+                          </svg>
+                          Minha Conta
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="minhaContaDropdown">
+                          <li><a class="dropdown-item" href="/conta">Meus dados</a></li>
+
+                          <li>
+                            <hr class="dropdown-divider" />
+                          </li>
+                          {% if session.get('cliente_nome') %}
+                          <li><a class="dropdown-item" href="{{ url_for('logout') }}">Sair</a></li>
+                          {% endif %}
+                        </ul>
+                      </li>
+
+                    </ul>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- input-->
+            <div class="py-2">
+              <div class="container py-3">
+                <div class="row justify-content-right">
+                  <!-- Campo de busca -->
+                  <div class="col-12 col-md-8 mx-auto">
+                    <form role="search">
+                      <input type="search" id="search-item" onkeyup="search()" class="form-control"
+                        placeholder="Buscar...">
+                    </form>
+                  </div>
+                  <div class="col-md-2">
+                    <button class="btn btn-outline-dark"> <a href="/multi">Modo Multi</a> </button>
+                  </div>
+                  <!-- Carrinho de compras - 2 colunas -->
+                  <div class="col-md-2 py-2 text-end">
+
+
+
+                    <a href="#" class="text-decoration-none position-relative">
+                      <Span id="cart-total" class="cart-total"
+                        onclick="substituirMultiplos(['card-search-list', 'carouselExampleDark', 'photo-search-list', 'text-search-list'], 'cart')"
+                        bold><strong>R$ 0,00</strong>
+                      </Span>
+                      <i class="bi bi-cart"></i>
+                      <!--<span id="cart-badge"
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                            style="display: none;">
+                            0
+                            <span class="visually-hidden">Itens no carrinho</span>
+                            </span>-->
+                      </i>
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="p-2 text-bg-white">
+          <div class="container">
+            <div class="nav justify-content-lg-start">
+              <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center">
+                <li><a href="/loja" type="button" class="btn btn-outline-dark me-2"><i class="bi bi-house"></i></a></a>
+                </li>
+                <!-- <li><button type="button" class="btn btn-outline-dark me-2"><svg xmlns="http://www.w3.org/2000/svg"
+                    width="16" height="16" fill="currentColor" class="bi bi-piggy-bank" viewBox="0 0 16 16">
+                    <path
+                      d="M5 6.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m1.138-1.496A6.6 6.6 0 0 1 7.964 4.5c.666 0 1.303.097 1.893.273a.5.5 0 0 0 .286-.958A7.6 7.6 0 0 0 7.964 3.5c-.734 0-1.441.103-2.102.292a.5.5 0 1 0 .276.962" />
+                    <path fill-rule="evenodd"
+                      d="M7.964 1.527c-2.977 0-5.571 1.704-6.32 4.125h-.55A1 1 0 0 0 .11 6.824l.254 1.46a1.5 1.5 0 0 0 1.478 1.243h.263c.3.513.688.978 1.145 1.382l-.729 2.477a.5.5 0 0 0 .48.641h2a.5.5 0 0 0 .471-.332l.482-1.351c.635.173 1.31.267 2.011.267.707 0 1.388-.095 2.028-.272l.543 1.372a.5.5 0 0 0 .465.316h2a.5.5 0 0 0 .478-.645l-.761-2.506C13.81 9.895 14.5 8.559 14.5 7.069q0-.218-.02-.431c.261-.11.508-.266.705-.444.315.306.815.306.815-.417 0 .223-.5.223-.461-.026a1 1 0 0 0 .09-.255.7.7 0 0 0-.202-.645.58.58 0 0 0-.707-.098.74.74 0 0 0-.375.562c-.024.243.082.48.32.654a2 2 0 0 1-.259.153c-.534-2.664-3.284-4.595-6.442-4.595M2.516 6.26c.455-2.066 2.667-3.733 5.448-3.733 3.146 0 5.536 2.114 5.536 4.542 0 1.254-.624 2.41-1.67 3.248a.5.5 0 0 0-.165.535l.66 2.175h-.985l-.59-1.487a.5.5 0 0 0-.629-.288c-.661.23-1.39.359-2.157.359a6.6 6.6 0 0 1-2.157-.359.5.5 0 0 0-.635.304l-.525 1.471h-.979l.633-2.15a.5.5 0 0 0-.17-.534 4.65 4.65 0 0 1-1.284-1.541.5.5 0 0 0-.446-.275h-.56a.5.5 0 0 1-.492-.414l-.254-1.46h.933a.5.5 0 0 0 .488-.393m12.621-.857a.6.6 0 0 1-.098.21l-.044-.025c-.146-.09-.157-.175-.152-.223a.24.24 0 0 1 .117-.173c.049-.027.08-.021.113.012a.2.2 0 0 1 .064.199" />
+                    </svg></a></button></li>-->
+                <li><a href="{{ url_for('promocoes') }}" class="btn btn-outline-dark me-2"><i
+                      class="bi bi-fire "></i></a>
+                </li>
+                <!--<li><button type="button" class="btn btn-outline-dark me-2"><svg xmlns="http://www.w3.org/2000/svg"
+                    width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
+                    </svg></a></button></li>-->
+                <li></li>
+                <li>
+                  <select id="filtro-industria" class="form-select" style="width: 350px; height: 40px;">
+                    <option value="">Filtrar por Indústria</option>
+                    {% for nome_laboratorio in produtos | map(attribute='NOME_LABORATORIO') | unique | sort %}
+                    <option value="{{ nome_laboratorio }}">{{ nome_laboratorio }}</option>
+                    {% endfor %}
+                  </select>
+                </li>
+                <!--<li>
+                    <div class="">
+                      <select class="form-select" style="width: 200px; margin-left: 20px; height: 40px;">
+                        <option selected disabled>Classificar de A-Z</option>
+                        <option value="1">Geolab</option>
+                        <option value="2">EMS Genéricos</option>
+                        <option value="3">Teuto</option>
+                      </select>
+                    </div>
+                    </li>-->
+              </ul>
+              <div class="row align-items-center">
+                <div class="text-end">
+                  <!-- Grid -->
+                  <button
+                    onclick="substituirMultiplos(['photo-search-list', 'carouselExampleDark', 'text-search-list', 'cart'], 'card-search-list')"
+                    type="button" class="btn btn-outline-dark me-2">
+                    <i class="bi bi-grid-3x3-gap-fill"></i>
+                  </button>
+
+                  <!-- Lista com imagem -->
+                  <button
+                    onclick="substituirMultiplos(['card-search-list', 'carouselExampleDark', 'text-search-list', 'cart'], 'photo-search-list')"
+                    type="button" class="btn btn-outline-dark me-2">
+                    <i class="bi bi-list-check"></i>
+                  </button>
+
+                  <!-- Lista sem imagem -->
+                  <button
+                    onclick="substituirMultiplos(['card-search-list', 'carouselExampleDark', 'photo-search-list', 'cart'], 'text-search-list')"
+                    type="button" class="btn btn-outline-dark me-2">
+                    <i class="bi bi-list"></i>
+                  </button>
+                  <!-- Botão que abre o modal -->
+                  <button type="button" class="btn btn-outline-dark me-2" data-bs-toggle="modal"
+                    data-bs-target="#uploadModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                      class="bi bi-upload" viewBox="0 0 16 16">
+                      <path
+                        d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                      <path
+                        d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z" />
+                    </svg>
+                  </button>
+                  <!-- Modal de Upload de Excel -->
+                  <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                      <form class="modal-content" id="uploadForm" enctype="multipart/form-data">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="uploadModalLabel">Enviar Arquivo Excel</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        </div>
+                        <div class="modal-body">
+                          <!-- Texto explicativo -->
+                          <p class="text-start">
+                            Baixe o arquivo de modelo, preencha e envie de volta. Você pode preencher com mais de um
+                            CNPJ no mesmo arquivo.
+                          </p>
+                          <!-- Link para download do modelo Excel -->
+                          <p>
+                            <a href="/static/excel/modelo.xlsx" download class="btn btn-sm btn-outline-primary">
+                              Baixar Modelo Excel
+                            </a>
+                          </p>
+                          <!-- Campo de upload de arquivo -->
+                          <div class="mb-3 text-start">
+                            <label for="fileUpload" class="form-label">Selecione o arquivo preenchido:</label>
+                            <input type="file" name="file" id="fileUpload" accept=".xlsx,.xls" class="form-control"
+                              required>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                          <button type="submit" class="btn btn-primary">Enviar</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <a href="https://wa.me/5545991098324" target="_blank" class="btn btn-outline-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                      class="bi bi-whatsapp" viewBox="0 0 16 16">
+                      <path
+                        d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- headerend-->
+    <div class="container mt-4">
+    <h2 class="mb-3">Histórico de Pedidos</h2>
+
+
+    {% if pedidos %}
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>Nota Fiscal</th>
+              <th>Cód Venda</th>
+              <th>Data</th>
+              <th>Vendedor</th>
+              <th>Status</th>
+              <th>Tipo Operação</th>
+              <th>Total (R$)</th>
+              <th>XML</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pedido in pedidos %}
+              <tr>
+                <td>{{ pedido['CODNOTA_VENDA'] }}</td>
+                <td>{{ pedido['COD_VENDA'] }}</td>
+                <td>{{ pedido['DATA_VENDA'] }}</td>
+                <td>{{ pedido['CODVENDEDOR_VENDA'] }}</td>
+                <td>{{ pedido['STATUS_VENDA'] }}</td>
+                <td>{{ pedido['TIPOOPERACAO'] }}</td>
+                <td>R$ {{ "%.2f"|format(pedido['TOTAL_VENDA'] or 0) }}</td>
+                <td>Baixar XML</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="alert alert-warning">
+        Você ainda não tem pedidos/vendas cadastradas.
+      </div>
+    {% endif %}
+  </div>
+
+    <!-- Carrinho -->
+    <div id="cart" style="display: none;" class="container shadow p-3 mb-2 bg-white rounded">
+      <!--Alinhar a direita com 4 colunas -->
+      <div class="row align-items-center justify-content-between mb-3">
+        <!-- Título -->
+        <div class="col-md-4 ">
+          <h3 class="mb-0">Carrinho de Compras</h3>
+          {% if session.get('cliente_nome') %}
+          <h6 class="mb-0 text-body-secondary">CNPJ: {{ session['cliente_cnpj'] }}</h6>
+          {% endif %}
+
+
+        </div>
+
+        <!-- Select de Prazo -->
+        <div class="col-md-4 text-start">
+          <label for="prazo" class="form-label mt-3"><strong>Prazo de Pagamento:</strong></label>
+          <select class="form-select" id="prazo" name="prazo">
+            <option value="" disabled selected>Selecione o prazo</option>
+            <option value="avista">À vista</option>
+            <option value="7">7 dias</option>
+            <option value="14">14 dias</option>
+            <option value="21">21 dias</option>
+            <option value="30">30 dias</option>
+            <option value="45">45 dias</option>
+            <option value="60">60 dias</option>
+            <option value="90">90 dias</option>
+          </select>
+        </div>
+
+        <!-- Totais à direita como card -->
+        <div class="col-md-3">
+          <div class="card shadow-sm h-100 d-flex justify-content-center">
+            <div class="card-body p-2" style="text-align: justify;">
+              <p class="mb-1 clearfix">
+                <strong class="float-start">Total Líquido:</strong>
+                <span class="float-end">R$ 200,00</span>
+              </p>
+              <p class="mb-1 border-bottom clearfix">
+                <strong class="float-start">Total Impostos:</strong>
+                <span class="float-end">R$ 24,00</span>
+              </p>
+              <p class="mb-0 clearfix">
+                <strong class="float-start">Total Final:</strong>
+                <strong id="cart-total-payment" class="cart-total-payment float-end">R$ 0,00</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--carrinho -->
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle text-center">
+          <thead class="table-light">
+            <tr>
+              <th>Imagem</th>
+              <th>Produto</th>
+              <th>Preço Final</th>
+              <th>Quantidade</th>
+              <th>Total</th>
+              <th>Remover</th>
+            </tr>
+          </thead>
+          <tbody id="cart-table-body"></tbody>
+        </table>
+      </div>
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <strong></strong>
+        <div>
+          <a href="/loja" class="btn btn-outline-dark me-2">Continuar comprando</a>
+          <button class="btn btn-outline-danger me-2" onclick="limparCarrinho()">Limpar Carrinho</button>
+          <button class="btn btn-success">Finalizar Compra</button>
+        </div>
+      </div>
+    </div>
+    <!--Page Navegation-->
+    <!--footer-->
+    <div class="container">
+      <footer class="py-3 my-4">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-body-secondary">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-body-secondary">Sobre Nós</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-body-secondary">Fale Conosco</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-body-secondary">Pedido Eletrônico</a>
+          </li>
+        </ul>
+        <p class="text-center text-body-secondary">
+          Copyright &copy; 2021-2025 DM-PR-DISTRIBUIDORA DE MEDICAMENTOS
+          PARANA LTDA. ESTRADA MUNICIPAL ITELO WEBBER, 281 ESTRADA DO
+          AEROPORTO | CNPJ: 39.448.478/0001-14 |FONE: (45) 9.9109-8324 | CEP:
+          85.820-899 – CASCAVEL – PR | sac@dmparana.com.br
+        </p>
+      </footer>
+    </div>
+    <!--footer end-->
+    <script>
+      function abrirModal(botao) {
+        document.getElementById("modalNome").textContent = botao.dataset.nome;
+        document.getElementById("modalCategoria").textContent = botao.dataset.categoria;
+        document.getElementById("modalBarra").textContent = botao.dataset.barra;
+        document.getElementById("modalPreco").textContent = botao.dataset.preco;
+        document.getElementById("modalImagem").src = botao.dataset.img;
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+      crossorigin="anonymous"></script>
+  </main>
+</body>
+
+</html>
