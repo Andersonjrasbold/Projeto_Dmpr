@@ -20,12 +20,15 @@ def get_pedidos_por_cliente(cliente_id):
         CODTRANSP_VENDA,
         ICMSSUBST_VENDA, 
         ICMSTRIBUTADO_VENDA,
-        STATUS_VENDA,
+        CASE
+	        WHEN STATUS_VENDA = 1 THEN 'FATURADO' ELSE 'CANCELADO' END AS STATUS_VENDA,
         CODCONTACOMISSAO_VENDA,
         TOTAL_VENDA, 
         HORA_VENDA,
         CODCONVENIO_VENDA,
-        TIPOOPERACAO,
+        CASE
+	        WHEN TIPOOPERACAO = 1 THEN 'VENDA' ELSE 'BONIFICAÇÃO' END AS OPERACAO,
+
         TOTALDEVOLVIDO_VENDA,
         CODNOTA_VENDA,
         QUANTVOL_VENDA, 
@@ -34,7 +37,8 @@ def get_pedidos_por_cliente(cliente_id):
         CODTELEOP_VENDA, 
         DTUPDATE_VENDA
     FROM VENDAS
-    WHERE CODCLIENTE_VENDA = ?
+    WHERE 1=1 
+    AND CODCLIENTE_VENDA = ?
     ORDER BY DATA_VENDA DESC
     """
 
@@ -61,5 +65,6 @@ def get_pedidos_por_cliente(cliente_id):
 
 # ✅ TESTE DIRETO (se rodar python pedidos.py no terminal)
 if __name__ == '__main__':
+    
     cliente_teste = 2551  # Coloque o código de cliente que você quer testar
     get_pedidos_por_cliente(cliente_teste)

@@ -338,6 +338,7 @@
               <th>Status</th>
               <th>Tipo Operação</th>
               <th>Total (R$)</th>
+              <th>vizualizar NF</th>
               <th>XML</th>
             </tr>
           </thead>
@@ -351,6 +352,7 @@
                 <td>{{ pedido['STATUS_VENDA'] }}</td>
                 <td>{{ pedido['TIPOOPERACAO'] }}</td>
                 <td>R$ {{ "%.2f"|format(pedido['TOTAL_VENDA'] or 0) }}</td>
+                <td>vizualizar</td>
                 <td>Baixar XML</td>
               </tr>
             {% endfor %}

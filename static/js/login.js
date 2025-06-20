@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
       })
       .catch(error => {
         console.error('Erro no login:', error);
-        alert('Erro ao tentar fazer login.');
+        
       });
     });
   }

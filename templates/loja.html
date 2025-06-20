@@ -55,25 +55,6 @@
                   <div class="d-flex align-items-center">
                     <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
 
-                      <!-- Entregas -->
-                      <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle text-dark d-flex flex-column align-items-center"
-                          id="entregasDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          <svg class="bi mb-1" width="24" height="2" aria-hidden="true">
-                            <use xlink:href="#speedometer2"></use>
-                          </svg>
-                          Entregas
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="entregasDropdown">
-                          <li><a class="dropdown-item" href="#">Rastrear Pedidos</a></li>
-                          <li><a class="dropdown-item" href="#">Outro item</a></li>
-                          <li>
-                            <hr class="dropdown-divider" />
-                          </li>
-                          <li><a class="dropdown-item" href="#">Relatórios</a></li>
-                        </ul>
-                      </li>
-
                       <!-- Devoluções -->
                       <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle text-dark d-flex flex-column align-items-center"
@@ -84,12 +65,13 @@
                           Devoluções
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="devolucoesDropdown">
-                          <li><a class="dropdown-item" href="#">Solicitar Devolução</a></li>
+                          <li><a class="dropdown-item" href="/chamado">Abrir chamado de Devolução</a></li>
                           <li><a class="dropdown-item" href="#">Acompanhar Devoluções</a></li>
+                          <li><a class="dropdown-item" href="/devolucoes">Minhas Devoluções</a></li>
                           <li>
                             <hr class="dropdown-divider" />
                           </li>
-                          <li><a class="dropdown-item" href="#">Relatórios</a></li>
+                          <li><a class="dropdown-item" href="https://api.whatsapp.com/send/?phone=554591079870&text&type=phone_number&app_absent=0"><i class="bi bi-whatsapp"></i> Ajuda</a></li>
                         </ul>
                       </li>
 
@@ -104,11 +86,11 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="financeiroDropdown">
                           <li><a class="dropdown-item" href="#">Extrato</a></li>
-                          <li><a class="dropdown-item" href="#">Pagamentos</a></li>
+                          <li><a class="dropdown-item" href="/historico">Pagamentos</a></li>
                           <li>
                             <hr class="dropdown-divider" />
                           </li>
-                          <li><a class="dropdown-item" href="#">Relatórios</a></li>
+                          <li><a class="dropdown-item" href="https://api.whatsapp.com/send/?phone=554591490589&text&type=phone_number&app_absent=0"><i class="bi bi-whatsapp"></i> Ajuda</a></li>
                         </ul>
                       </li>
 
@@ -122,12 +104,12 @@
                           Meus Pedidos
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="meusPedidosDropdown">
-                          <li><a class="dropdown-item" href="#">Pedidos Pendentes</a></li>
+                          
                           <li><a class="dropdown-item" href="/pedidos">Histórico de Pedidos</a></li>
                           <li>
                             <hr class="dropdown-divider" />
                           </li>
-                          <li><a class="dropdown-item" href="#">Ajuda</a></li>
+                          <li><a class="dropdown-item" href="https://api.whatsapp.com/send/?phone=554591042443&text&type=phone_number&app_absent=0"><i class="bi bi-whatsapp"></i> Ajuda</a></li>
                         </ul>
                       </li>
 
@@ -362,7 +344,7 @@
           {% for produto in produtos %}
           <div class="col product">
             <div class="card h-100">
-              <img src="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}"
+              <img  src="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}" loading="lazy"
                 class="card-img-top" alt="Imagem do produto {{ produto.NOME_PRODUTO }}"
                 style="height: 200px; object-fit: contain;" />
               <div class="card-body p-2">

@@ -1,28 +1,31 @@
-from flask import Flask, render_template, redirect, url_for, request, jsonify, session
+from flask import Flask, render_template, redirect, url_for, request, jsonify, session, send_from_directory, make_response
+import pandas as pd
+from io import BytesIO
+import Acesso
+import AcessoOutroBanco
 import Lista_Produtos
 from Lista_Produtos import get_produtos_promocao, get_laboratorios
 import clientes
 from clientes import get_cliente_por_id
 from pedidos import get_pedidos_por_cliente
-import pandas as pd
-from io import BytesIO
-import Acesso
-from flask import send_from_directory
-
+from financeiro import get_financeiro_por_cliente
+from devolucoes import get_devolucoes_por_cliente
 
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta_segura'
 
+# Página inicial
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# Login GET
 @app.route('/login')
 def pagina_login():
     lista_clientes = clientes.get_clientes()
-    print(f"Total de clientes carregados: {len(lista_clientes)}")
     return render_template('login.html', clientes=lista_clientes)
 
+# Login POST
 @app.route('/login', methods=['POST'])
 def login_post():
     data = request.get_json()
@@ -31,16 +34,12 @@ def login_post():
 
     con = Acesso.get_connection()
     cur = con.cursor()
-
-    query = """
-    SELECT COD_CLIENTE, NOME_CLIENTE, CGC_CLIENTE
-    FROM CLIENTES
-    WHERE CGC_CLIENTE = ? AND SENHAEPED_CLIENTE = ?
-    """
-
-    cur.execute(query, (username, password))
+    cur.execute("""
+        SELECT COD_CLIENTE, NOME_CLIENTE, CGC_CLIENTE
+        FROM CLIENTES
+        WHERE CGC_CLIENTE = ? AND SENHAEPED_CLIENTE = ?
+    """, (username, password))
     cliente = cur.fetchone()
-
     cur.close()
     con.close()
 
@@ -48,60 +47,105 @@ def login_post():
         session['cliente_id'] = cliente[0]
         session['cliente_nome'] = cliente[1]
         session['cliente_cnpj'] = cliente[2]
-        print("Cliente ID salvo na sessão:", session['cliente_id'])
         return jsonify(status='ok', cnpj=cliente[2])
     else:
         return jsonify(status='erro', mensagem='Credenciais inválidas')
-    
-@app.route('/historico')
-def historico_pedidos():
-    if 'cliente_id' not in session:
-        return redirect(url_for('pagina_login'))
 
-    cliente_id = session['cliente_id']
-    pedidos = get_pedidos_por_cliente(cliente_id)
-
-    print(f"Total de pedidos carregados: {len(pedidos)}")  # Debug
-
-    return render_template('historico.html', pedidos=pedidos)
-
+# Loja
 @app.route('/loja')
 def loja():
     if 'cliente_id' not in session:
         return redirect(url_for('pagina_login'))
+    produtos = Lista_Produtos.get_produtos()
+    return render_template('loja.html', produtos=produtos)
 
-    lista_produtos = Lista_Produtos.get_produtos()
-    print(f"Total de produtos carregados: {len(lista_produtos)}")
-    return render_template('loja.html', produtos=lista_produtos)
-
+# Produtos
 @app.route('/produtos')
 def produtos():
     if 'cliente_id' not in session:
         return redirect(url_for('pagina_login'))
-
     filtro = request.args.get('laboratorio')
-    lista_produtos = Lista_Produtos.get_produtos(filtro_laboratorio=filtro)
+    produtos = Lista_Produtos.get_produtos(filtro_laboratorio=filtro)
     laboratorios = get_laboratorios()
+    return render_template('produtos.html', produtos=produtos, laboratorios=laboratorios)
 
-    return render_template('produtos.html', produtos=lista_produtos, laboratorios=laboratorios)
-
+# Promoções
 @app.route('/promocoes')
 def promocoes():
     produtos = get_produtos_promocao()
     return render_template('promocoes.html', produtos=produtos)
 
+# Conta
 @app.route('/conta')
 def conta():
-    cliente_id = session.get('cliente_id')
-    if not cliente_id:
+    if 'cliente_id' not in session:
         return redirect(url_for('pagina_login'))
-
-    cliente = get_cliente_por_id(cliente_id)
+    cliente = get_cliente_por_id(session['cliente_id'])
     if not cliente:
         return "Cliente não encontrado", 404
-
     return render_template('conta.html', cliente=cliente)
 
+# Histórico de pedidos
+@app.route('/historico')
+def historico_pedidos():
+    if 'cliente_id' not in session:
+        return redirect(url_for('pagina_login'))
+    pedidos = get_pedidos_por_cliente(session['cliente_id'])
+    return render_template('historico.html', pedidos=pedidos)
+
+# Financeiro
+@app.route('/financeiro')
+def financeiro():
+    if 'cliente_id' not in session:
+        return redirect(url_for('pagina_login'))
+    financeiro = get_financeiro_por_cliente(session['cliente_id'])
+    return render_template('financeiro.html', financeiro=financeiro)
+
+# Chamado
+@app.route('/chamado')
+def chamado():
+    if 'cliente_id' not in session:
+        return redirect(url_for('pagina_login'))
+    financeiro = get_financeiro_por_cliente(session['cliente_id'])
+    return render_template('chamado.html', financeiro=financeiro)
+
+# Devoluções por cliente
+@app.route('/devolucoes')
+def listar_devolucoes():
+    if 'cliente_id' not in session:
+        return redirect(url_for('pagina_login'))
+    devolucoes = get_devolucoes_por_cliente(session['cliente_id'])
+    return render_template('devolucoes.html', devolucoes=devolucoes)
+
+# Enviar nova devolução para MySQL
+@app.route('/enviar_devolucao', methods=['POST'])
+def enviar_devolucao():
+    try:
+        numero_nota = request.form.get('numero_nota')
+        motivo = request.form.get('motivo')
+        tipo_devolucao = request.form.get('tipo_devolucao')
+
+        con = AcessoOutroBanco.get_mysql_connection()
+        cur = con.cursor()
+
+        query = """
+        INSERT INTO solicitacoes_devolucao (numero_nf, motivo, tipo_devolucao, status)
+        VALUES (%s, %s, %s, %s)
+        """
+        cur.execute(query, (numero_nota, motivo, tipo_devolucao, 'PENDENTE'))
+        con.commit()
+
+        cur.close()
+        con.close()
+
+        print(f"Devolução cadastrada: Nota {numero_nota}")
+        return redirect(url_for('loja'))
+
+    except Exception as e:
+        print(f"Erro ao enviar devolução: {e}")
+        return f"Erro ao enviar devolução: {e}", 500
+
+# Importação de produtos via Excel
 @app.route('/importar-produtos', methods=['POST'])
 def importar_produtos():
     try:
@@ -114,32 +158,12 @@ def importar_produtos():
             return jsonify({"status": "erro", "mensagem": "Arquivo inválido. Precisa de colunas: EAN e Quantidade"}), 400
 
         lista_eans = df['EAN'].dropna().astype(str).tolist()
-        produtos_do_banco = buscar_produtos_por_eans(lista_eans)
+        produtos = buscar_produtos_por_eans(lista_eans)
 
-        catalogo = []
-        for produto in produtos_do_banco:
-            catalogo.append({
-                "ean": str(produto['CODBARRA_PRODUTO']),
-                "nome": produto['NOME_PRODUTO'],
-                "preco": float(produto['PRECO_DESCONTO']),
-                "imagem": f"/static/fotos/{produto['COD_PRODUTO']}.jpg"
-            })
-
-        lista_produtos_quantidade = []
-        for _, row in df.iterrows():
-            lista_produtos_quantidade.append({
-                "ean": str(row['EAN']),
-                "quantidade": int(row['Quantidade'])
-            })
-
-        return jsonify({
-            "status": "ok",
-            "catalogo": catalogo,
-            "lista_de_produtos": lista_produtos_quantidade
-        })
+        return jsonify({"status": "ok", "produtos": produtos})
 
     except Exception as e:
-        print("Erro na importação:", e)
+        print(f"Erro na importação: {e}")
         return jsonify({"status": "erro", "mensagem": str(e)}), 500
 
 def buscar_produtos_por_eans(lista_eans):
@@ -148,19 +172,10 @@ def buscar_produtos_por_eans(lista_eans):
     placeholders = ",".join(["?" for _ in lista_eans])
 
     query = f"""
-    SELECT 
-        COD_PRODUTO,
-        CODBARRA_PRODUTO,
-        NOME_PRODUTO,
-        PRVENDA_PRODUTO,
-        CASE
-            WHEN EMPROMOCAO = 'N' THEN PRVENDA_PRODUTO
-            ELSE PRVENDA_PRODUTO * (1 - DESCPROMOCAO_PRODUTO / 100)
-        END AS PRECO_DESCONTO
+    SELECT COD_PRODUTO, CODBARRA_PRODUTO, NOME_PRODUTO, PRVENDA_PRODUTO
     FROM PRODUTOS
     WHERE CODBARRA_PRODUTO IN ({placeholders})
     """
-
     cur.execute(query, lista_eans)
     colunas = [desc[0] for desc in cur.description]
     produtos = [dict(zip(colunas, linha)) for linha in cur.fetchall()]
@@ -168,18 +183,7 @@ def buscar_produtos_por_eans(lista_eans):
     con.close()
     return produtos
 
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('pagina_login'))
-
-@app.route('/debug_session')
-def debug_session():
-    return jsonify(dict(session))
-
-
-
-
+# PDF Viewer
 @app.route('/pdf/<nome_arquivo>')
 def visualizar_pdf(nome_arquivo):
     try:
@@ -187,6 +191,23 @@ def visualizar_pdf(nome_arquivo):
     except Exception as e:
         return f"Erro ao carregar o PDF: {e}", 404
 
+# Debug session
+@app.route('/debug_session')
+def debug_session():
+    return jsonify(dict(session))
+
+# Logout
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('pagina_login'))
+
+# Cache Headers para imagens de produtos
+@app.after_request
+def add_header(response):
+    if request.path.startswith('/static/fotos/'):
+        response.headers['Cache-Control'] = 'public, max-age=31536000'
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)
