@@ -1,0 +1,25 @@
+body {
+    overflow-x: hidden;
+}
+
+.sidebar {
+    width: 220px;
+    min-height: 100vh;
+    background-color: #343a40;
+}
+
+.sidebar a {
+    color: #fff;
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    background-color: #495057;
+}
+
+.content {
+    margin-left: 220px;
+    padding: 20px;
+}

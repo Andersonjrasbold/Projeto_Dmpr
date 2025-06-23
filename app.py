@@ -101,13 +101,18 @@ def financeiro():
     financeiro = get_financeiro_por_cliente(session['cliente_id'])
     return render_template('financeiro.html', financeiro=financeiro)
 
+# Dashboard
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
 # Chamado
 @app.route('/chamado')
 def chamado():
     if 'cliente_id' not in session:
         return redirect(url_for('pagina_login'))
-    financeiro = get_financeiro_por_cliente(session['cliente_id'])
-    return render_template('chamado.html', financeiro=financeiro)
+    pedidos = get_pedidos_por_cliente(session['cliente_id'])
+    return render_template('chamado.html', pedidos=pedidos)
 
 # Devoluções por cliente
 @app.route('/devolucoes')
@@ -117,7 +122,72 @@ def listar_devolucoes():
     devolucoes = get_devolucoes_por_cliente(session['cliente_id'])
     return render_template('devolucoes.html', devolucoes=devolucoes)
 
-# Enviar nova devolução para MySQL
+# ✅ Nova Rota: Chamados de Devolução (MySQL)
+@app.route('/devolucoes_chamados')
+def listar_chamados_devolucao():
+    try:
+        con = AcessoOutroBanco.get_mysql_connection()
+        cur = con.cursor(dictionary=True)
+
+        query = """
+        SELECT id, cliente_id, data_solicitacao, valor, status, motivo, numero_nf
+        FROM solicitacoes_devolucao
+        ORDER BY data_solicitacao DESC
+        """
+        cur.execute(query)
+        chamados = cur.fetchall()
+
+        cur.close()
+        con.close()
+
+        # Agora busca o nome de cada cliente no Firebird
+        for chamado in chamados:
+            cliente_id = chamado.get('cliente_id')
+            cliente = get_cliente_por_id(cliente_id)
+            if cliente:
+                chamado['cliente'] = cliente['NOME_CLIENTE']
+            else:
+                chamado['cliente'] = 'Cliente não encontrado'
+
+        return render_template('devolucoes_chamados.html', chamados=chamados)
+
+    except Exception as e:
+        print(f"Erro ao buscar chamados de devolução: {e}")
+        return f"Erro ao buscar chamados: {e}", 500
+
+
+@app.route('/acompanhar_devolucoes')
+def acompanhar_devolucoes():
+    try:
+        cliente_id = session.get('cliente_id')
+
+        if not cliente_id:
+            return redirect(url_for('pagina_login'))
+
+        con = AcessoOutroBanco.get_mysql_connection()
+        cur = con.cursor(dictionary=True)
+
+        query = """
+        SELECT id, numero_nf, motivo, tipo_devolucao, status, data_solicitacao
+        FROM solicitacoes_devolucao
+        WHERE cliente_id = %s
+        ORDER BY data_solicitacao DESC
+        """
+        cur.execute(query, (cliente_id,))
+        devolucoes = cur.fetchall()
+
+        cur.close()
+        con.close()
+
+        return render_template('acompanhar_devolucoes.html', devolucoes=devolucoes)
+
+    except Exception as e:
+        print(f"Erro ao buscar devoluções do cliente: {e}")
+        return f"Erro ao buscar devoluções: {e}", 500
+
+
+
+# Enviar nova devolução
 @app.route('/enviar_devolucao', methods=['POST'])
 def enviar_devolucao():
     try:
@@ -125,25 +195,32 @@ def enviar_devolucao():
         motivo = request.form.get('motivo')
         tipo_devolucao = request.form.get('tipo_devolucao')
 
+        # Pega o cliente_id da session Flask
+        cliente_id = session.get('cliente_id')
+
+        if not cliente_id:
+            return redirect(url_for('pagina_login'))
+
         con = AcessoOutroBanco.get_mysql_connection()
         cur = con.cursor()
 
         query = """
-        INSERT INTO solicitacoes_devolucao (numero_nf, motivo, tipo_devolucao, status)
-        VALUES (%s, %s, %s, %s)
+        INSERT INTO solicitacoes_devolucao (numero_nf, motivo, tipo_devolucao, status, cliente_id)
+        VALUES (%s, %s, %s, %s, %s)
         """
-        cur.execute(query, (numero_nota, motivo, tipo_devolucao, 'PENDENTE'))
+        cur.execute(query, (numero_nota, motivo, tipo_devolucao, 'PENDENTE', cliente_id))
         con.commit()
 
         cur.close()
         con.close()
 
-        print(f"Devolução cadastrada: Nota {numero_nota}")
+        print(f"Devolução cadastrada: Nota {numero_nota}, Cliente {cliente_id}")
         return redirect(url_for('loja'))
 
     except Exception as e:
         print(f"Erro ao enviar devolução: {e}")
         return f"Erro ao enviar devolução: {e}", 500
+
 
 # Importação de produtos via Excel
 @app.route('/importar-produtos', methods=['POST'])
@@ -202,12 +279,13 @@ def logout():
     session.clear()
     return redirect(url_for('pagina_login'))
 
-# Cache Headers para imagens de produtos
+# Cache Headers
 @app.after_request
 def add_header(response):
     if request.path.startswith('/static/fotos/'):
         response.headers['Cache-Control'] = 'public, max-age=31536000'
     return response
 
+# Iniciar o Flask
 if __name__ == '__main__':
     app.run(debug=True)

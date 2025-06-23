@@ -71,7 +71,9 @@
                           <li>
                             <hr class="dropdown-divider" />
                           </li>
-                          <li><a class="dropdown-item" href="https://api.whatsapp.com/send/?phone=554591079870&text&type=phone_number&app_absent=0"><i class="bi bi-whatsapp"></i> Ajuda</a></li>
+                          <li><a class="dropdown-item"
+                              href="https://api.whatsapp.com/send/?phone=554591079870&text&type=phone_number&app_absent=0"><i
+                                class="bi bi-whatsapp"></i> Ajuda</a></li>
                         </ul>
                       </li>
 
@@ -90,7 +92,9 @@
                           <li>
                             <hr class="dropdown-divider" />
                           </li>
-                          <li><a class="dropdown-item" href="https://api.whatsapp.com/send/?phone=554591490589&text&type=phone_number&app_absent=0"><i class="bi bi-whatsapp"></i> Ajuda</a></li>
+                          <li><a class="dropdown-item"
+                              href="https://api.whatsapp.com/send/?phone=554591490589&text&type=phone_number&app_absent=0"><i
+                                class="bi bi-whatsapp"></i> Ajuda</a></li>
                         </ul>
                       </li>
 
@@ -104,12 +108,14 @@
                           Meus Pedidos
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="meusPedidosDropdown">
-                          
+
                           <li><a class="dropdown-item" href="/pedidos">Histórico de Pedidos</a></li>
                           <li>
                             <hr class="dropdown-divider" />
                           </li>
-                          <li><a class="dropdown-item" href="https://api.whatsapp.com/send/?phone=554591042443&text&type=phone_number&app_absent=0"><i class="bi bi-whatsapp"></i> Ajuda</a></li>
+                          <li><a class="dropdown-item"
+                              href="https://api.whatsapp.com/send/?phone=554591042443&text&type=phone_number&app_absent=0"><i
+                                class="bi bi-whatsapp"></i> Ajuda</a></li>
                         </ul>
                       </li>
 
@@ -301,234 +307,47 @@
         </div>
       </div>
     </header>
-    <!-- headerend-->
-    <!-- carrousel -->
-    <div class="container carrousel" id="carousel">
-      <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-          <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active"
-            aria-current="true" aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1"
-            aria-label="Slide 2"></button>
-          <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2"
-            aria-label="Slide 3"></button>
-        </div>
-        <div class="carousel-inner">
-          <div class="carousel-item active" data-bs-interval="10000">
-            <img src="/static/img/001.jpg" class="d-block w-100" alt="...">
-          </div>
-          <div class="carousel-item" data-bs-interval="2000">
-            <img src="/static/img/002.jpg" class="d-block w-100" alt="...">
-          </div>
-          <div class="carousel-item">
-            <img src="/static/img/003.jpg" class="d-block w-100" alt="...">
-          </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      </div>
-    </div>
-    <!-- carrousel end-->
-
-    <!--  Produtos-->
-    <div class="search-list" id="search-list">
-      <!-- Grid de cartões (padrão) -->
-      <div class="container visual-view" id="card-search-list" style="display: block; margin-top: 20px;">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
-          {% for produto in produtos %}
-          <div class="col product">
-            <div class="card h-100">
-              <img  src="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}" loading="lazy"
-                class="card-img-top" alt="Imagem do produto {{ produto.NOME_PRODUTO }}"
-                style="height: 200px; object-fit: contain;" />
-              <div class="card-body p-2">
-                <h5 class="card-title fs-6 mb-1">
-                  {{ produto.NOME_PRODUTO }}
-                  <!--<i class="bi bi-fire text-danger">--></i>
-                </h5>
-                <p class="card-text small  mb-1 d-flex justify-content-between">
-                  <span>
-                    <strong>{{ produto.NOME_LABORATORIO }}</strong>
-                  </span>
-                  <span class="text-body-secondary">Val 12/05/2028</span>
-                </p>
-                <div class="d-flex justify-content-between small mb-1">
-                  <p class="text-body-secondary mb-0">{{ produto.CODBARRA_PRODUTO }}</p>
-                  <p class="text-body-secondary mb-0">Preço R$ {{ "%.2f"|format(produto.PRVENDA_PRODUTO) }}</p>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <p class="text-body-secondary mb-0 small">ST R$</p>
-                  <strong class="text-dark fs-6 mb-0">Final R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}</strong>
-                </div>
-              </div>
-              <div class="card-footer d-flex justify-content-between align-items-center">
-                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 w-100">
-                  <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal"
-                    data-bs-target="#productModal" data-nome="{{ produto.NOME_PRODUTO }}"
-                    data-img="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}"
-                    data-categoria="{{ produto.NOME_CATEGORIA }}" data-barra="{{ produto.CODBARRA_PRODUTO }}"
-                    data-preco="{{ " %.2f"|format(produto.PRECO_DESCONTO) }}" onclick="abrirModal(this)">
-                    Mais <i class="bi bi-info-circle"></i>
-                  </button>
-                  <div class="d-flex align-items-center border rounded">
-                    <button type="button" class="btn btn-sm btn-outline-dark px-2"
-                      onclick="alterarQuantidade(-1, this)">−</button>
-                    <input type="number" class="form-control text-center border-0" name="quantidade" min="0" value="0"
-                      step="1" style="width: 60px;">
-                    <button type="button" class="btn btn-sm btn-outline-dark px-2"
-                      onclick="alterarQuantidade(1, this)">+</button>
-                  </div>
-                  <button class="btn btn-sm btn-outline-dark" onclick="adicionarAoCarrinho(this)">Comprar</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-      <!-- Modal FORA do loop -->
-      <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="productModalLabel">Detalhes do Produto</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-            </div>
-            <div class="modal-body">
-              <img id="modalImagem" src="" alt="Imagem do Produto" class="img-fluid mb-3" style="max-height: 200px;">
-              <p><strong>Nome:</strong> <span id="modalNome"></span></p>
-              <p><strong>Categoria:</strong> <span id="modalCategoria"></span></p>
-              <p><strong>Cód. de Barras:</strong> <span id="modalBarra"></span></p>
-              <p><strong>Preço Final:</strong> R$ <span id="modalPreco"></span></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Script para preencher o modal -->
-      <!-- Lista com imagem -->
-      <div class="search-list visual-view" id="photo-search-list"
-        style="display: none; margin-top: 20px; margin-left: 200px; margin-right: 200px;">
-        {% if produtos %}
-        <div class="table-responsive rounded">
-          <table class="table table-bordered table-hover table-sm align-middle text-center table-striped">
-            <thead class="">
+    <div class="container mt-4">
+      <h5>Minhas Devoluções</h5>
+      <div class="card">
+        <div class="card-body">
+          <table class="table table-striped">
+            <thead>
               <tr>
-                <th>Foto</th>
-                <th>Cod</th>
-                <th>Cód. Barras</th>
-                <th>Descrição</th>
-                <th>Marca</th>
-                <th>Estoque</th>
-                <th>Validade</th>
-                <th>Valor Líquido</th>
-                <th>Imposto</th>
-                <th>Preço Final</th>
-                <th>Quantidade</th>
+                <th>ID</th>
+                <th>Nota Fiscal</th>
+                <th>Motivo</th>
+                <th>Tipo</th>
+                <th>Status</th>
+                <th>Data</th>
               </tr>
             </thead>
             <tbody>
-              {% for produto in produtos %}
-              <tr class="product">
+              {% for dev in devolucoes %}
+              <tr>
+                <td>{{ dev.id }}</td>
+                <td>{{ dev.numero_nf }}</td>
+                <td>{{ dev.motivo }}</td>
+                <td>{{ dev.tipo_devolucao }}</td>
                 <td>
-                  <img src="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}"
-                    class="img-fluid" alt="Imagem do produto {{ produto.NOME_PRODUTO }}"
-                    style="width: 100px; height: 100px; object-fit: contain;">
+                  {% if dev.status == 'Concluído' %}
+                  <span class="badge bg-success">{{ dev.status }}</span>
+                  {% elif dev.status == 'Pendente' %}
+                  <span class="badge bg-warning">{{ dev.status }}</span>
+                  {% elif dev.status == 'Cancelado' %}
+                  <span class="badge bg-danger">{{ dev.status }}</span>
+                  {% else %}
+                  <span class="badge bg-secondary">{{ dev.status }}</span>
+                  {% endif %}
                 </td>
-                <td>{{ produto.COD_PRODUTO }}</td>
-                <td>{{ produto.CODBARRA_PRODUTO }}</td>
-                <td class="nome-produto">{{ produto.NOME_PRODUTO }}</td>
-                <td>{{ produto.NOME_LABORATORIO }}</td>
-                <td>125</td>
-                <td>12/07/2027</td>
-                <td>R$ 10,90</td>
-                <td>R$ 1,00</td>
-                <td class="preco-produto">R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal"
-                      data-bs-target="#productModal">Info</button>
-                    <div class="d-flex align-items-center border rounded">
-                      <button type="button" class="btn btn-sm btn-outline-dark px-2"
-                        onclick="alterarQuantidade(-1, this)">−</button>
-                      <input type="number" name="quantidade" value="0" min="0" class="form-control text-center border-0"
-                        style="width: 60px;">
-                      <button type="button" class="btn btn-sm btn-outline-dark px-2"
-                        onclick="alterarQuantidade(1, this)">+</button>
-                    </div>
-                    <button class="btn btn-sm btn-outline-dark" onclick="adicionarAoCarrinho(this)">Comprar</button>
-                  </div>
-                </td>
+                <td>{{ dev.data_solicitacao if dev.data_solicitacao else '-' }}</td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
-        {% else %}
-        <p class="text-muted">Nenhum produto encontrado no banco.</p>
-        {% endif %}
-      </div>
-      <!-- Lista simples sem imagem -->
-      <div class=" search-list visual-view" id="text-search-list"
-        style="display: none; margin-top: 20px; margin-left: 200px; margin-right: 200px;">
-        {% if produtos %}
-        <div class="table-responsive rounded">
-          <table class="table table-bordered table-hover table-sm align-middle text-center table-striped">
-            <thead class="text-align">
-              <tr>
-                <th>Código</th>
-                <th>Cód. Barras</th>
-                <th>Descrição</th>
-                <th>Marca</th>
-                <th>Estoque</th>
-                <th>Valor Líquido</th>
-                <th>Imposto</th>
-                <th>Preço Final</th>
-                <th>Quantidade</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for produto in produtos %}
-              <tr class="product">
-                <td>{{ produto.COD_PRODUTO }}</td>
-                <td>{{ produto.CODBARRA_PRODUTO }}</td>
-                <td class="nome-produto">{{ produto.NOME_PRODUTO }}</td>
-                <td>{{ produto.NOME_LABORATORIO }}</td>
-                <td>125</td>
-                <td>R$ 10,90</td>
-                <td>R$ 1,00</td>
-                <td class="preco-produto">R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal"
-                      data-bs-target="#productModal">Info</button>
-                    <div class="d-flex align-items-center border rounded">
-                      <button type="button" class="btn btn-sm btn-outline-dark px-2"
-                        onclick="alterarQuantidade(-1, this)">−</button>
-                      <input type="number" name="quantidade" value="0" min="0" class="form-control text-center border-0"
-                        style="width: 60px;">
-                      <button type="button" class="btn btn-sm btn-outline-dark px-2"
-                        onclick="alterarQuantidade(1, this)">+</button>
-                    </div>
-                    <button class="btn btn-sm btn-outline-dark" onclick="adicionarAoCarrinho(this)">Comprar</button>
-                  </div>
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        {% else %}
-        <p class="text-muted">Nenhum produto encontrado no banco.</p>
-        {% endif %}
       </div>
     </div>
-    <!--  Produtos-->
     <!-- Carrinho -->
     <div id="cart" style="display: none;" class="container shadow p-3 mb-2 bg-white rounded">
       <!--Alinhar a direita com 4 colunas -->
