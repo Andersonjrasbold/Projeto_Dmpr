@@ -10,6 +10,8 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="/static/js/dashboard.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 
 <body>
@@ -73,64 +75,131 @@
 
         <!-- Tabela -->
         <div class="container mt-4">
-        <h5>Chamados de Devolução</h5>
-        <div class="card">
-            <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr class="text-center">
-                            <th>NF</th>
-                            <th>Protocolo</th>
-                            <th>Cliente</th>
-                            <th>Data</th>
-                            <th>Valor</th>
-                            <th>Motivo</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                            <th>Vizualizar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for chamado in chamados %}
-                        <tr class="text-center">
-                            <td>{{ chamado.numero_nf }}</td>
-                            <td>{{ chamado.id }}</td>
-                            <td>{{ chamado.cliente }}</td>
-                            <td>
-                                {% if chamado.data_solicitacao %}
-                                    {{ chamado.data_solicitacao }}
-                                {% else %}
+            <h5>Chamados de Devolução</h5>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped text-center">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>NF</th>
+                                <th>Protocolo</th>
+                                <th>Cliente</th>
+                                <th>Data</th>
+                                <th>Valor</th>
+                                <th>Motivo</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                                <th>Visualizar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for chamado in chamados %}
+                            <tr>
+                                <td>{{ chamado.numero_nf }}</td>
+                                <td>{{ chamado.id }}</td>
+                                <td>{{ chamado.cliente }}</td>
+                                <td>
+                                    {% if chamado.data_solicitacao %}
+                                    {{ chamado.data_solicitacao.strftime('%d/%m/%Y') if chamado.data_solicitacao else
+                                    '-' }}
+                                    {% else %}
                                     -
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if chamado.valor %}
-                                    R$ {{ '{:,.2f}'.format(chamado.valor).replace(',', 'X').replace('.', ',').replace('X', '.') }}
-                                {% else %}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if chamado.valor %}
+                                    R$ {{ '{:,.2f}'.format(chamado.valor).replace(',', 'X').replace('.',
+                                    ',').replace('X', '.') }}
+                                    {% else %}
                                     R$ 0,00
-                                {% endif %}
-                            </td>
-                            <td>{{ chamado.motivo }}</td>
-                            <td>
-                                {% if chamado.status == 'Concluído' %}
+                                    {% endif %}
+                                </td>
+                                <td>{{ chamado.motivo }}</td>
+                                <td>
+                                    {% if chamado.status == 'Concluído' %}
                                     <span class="badge bg-success">{{ chamado.status }}</span>
-                                {% elif chamado.status == 'Pendente' %}
+                                    {% elif chamado.status == 'Pendente' %}
                                     <span class="badge bg-warning">{{ chamado.status }}</span>
-                                {% elif chamado.status == 'Cancelado' %}
+                                    {% elif chamado.status == 'Cancelado' %}
                                     <span class="badge bg-danger">{{ chamado.status }}</span>
-                                {% else %}
+                                    {% else %}
                                     <span class="badge bg-secondary">{{ chamado.status }}</span>
-                                {% endif %}
-                            </td>
-                            <td><button class="btn btn-sm btn-outline-success">Aceitar</button> <button class="btn btn-sm btn-outline-danger">Recusar</button></td>
-                            <td><i class="bi bi-download"></i></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                                        data-bs-target="#modalAcoes{{ chamado.id }}">
+                                        Ações
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="modalAcoes{{ chamado.id }}" tabindex="-1"
+                                        aria-labelledby="modalLabel{{ chamado.id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="modalLabel{{ chamado.id }}">Ações para o
+                                                        Chamado Protocolo nº {{ chamado.id }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Fechar"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form method="post" action="/atualizar_status_chamado">
+                                                        <input type="hidden" name="chamado_id" value="{{ chamado.id }}">
+                                                        <input type="hidden" name="acao" value="finalizar">
+                                                        <button type="submit" class="btn btn-success w-100 mb-2">Finalizar
+                                                            Chamado</button>
+                                                    </form>
+
+                                                    <form method="post" action="/atualizar_status_chamado">
+                                                        <input type="hidden" name="chamado_id" value="{{ chamado.id }}">
+                                                        <input type="hidden" name="acao" value="Aceitar_solicitar">
+                                                        <button type="submit" class="btn btn-success w-100 mb-2">Aceitar
+                                                            Solicitar NF de Devolução</button>
+                                                    </form>
+
+                                                    <form method="post" action="/atualizar_status_chamado">
+                                                        <input type="hidden" name="chamado_id" value="{{ chamado.id }}">
+                                                        <input type="hidden" name="acao" value="Recusar">
+                                                        <button type="submit" class="btn btn-danger w-100 mb-2">Recusar
+                                                            Chamado</button>
+                                                    </form>
+
+                                                    <form method="post" action="/atualizar_status_chamado">
+                                                        <input type="hidden" name="chamado_id" value="{{ chamado.id }}">
+                                                        <input type="hidden" name="acao" value="Outra Ação">
+                                                        <button type="submit" class="btn btn-secondary w-100">Outra
+                                                            Ação</button>
+                                                    </form>
+
+
+
+
+                                                    <!-- Você pode adicionar mais ações aqui 
+                                                    <form method="post" action="/outra_acao">
+                                                        <input type="hidden" name="chamado_id" value="{{ chamado.id }}">
+                                                        <button type="submit" class="btn btn-secondary w-100">Outra
+                                                            Ação</button>-->
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <a href="/download_pdf/{{ chamado.id }}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+
 
         <!-- Gráfico 
         <div class="card mb-4">

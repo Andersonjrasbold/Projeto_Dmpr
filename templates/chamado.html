@@ -333,22 +333,30 @@
                 <th>Data Venda</th>
                 <th>Total (R$)</th>
                 <th>Motivo</th>
-                <th>Tipo de devolução</th>
+                <th>Tipo de Devolução</th>
                 <th>Fotos</th>
-                <th>Documentos</th>
+                <!--<th>Documentos</th>-->
                 <th>Ação</th>
             </tr>
         </thead>
         <tbody>
             {% for pedido in pedidos %}
-            <form method="post" action="/enviar_devolucao" enctype="multipart/form-data">
-                <tr>
+            <tr>
+                <form method="post" action="/enviar_devolucao" enctype="multipart/form-data">
+                    <!-- Número da Nota -->
                     <td>
                         {{ pedido['CODNOTA_VENDA'] }}
                         <input type="hidden" name="numero_nota" value="{{ pedido['CODNOTA_VENDA'] }}">
                     </td>
+
+                    <!-- Data Venda -->
                     <td>{{ pedido['DATA_VENDA'] }}</td>
-                    <td>R$ {{ "%.2f"|format(pedido['TOTAL_VENDA'] or 0) }}</td>
+
+                    <!-- Total -->
+                    <td>
+                        R$ {{ "%.2f"|format(pedido['TOTAL_VENDA'] or 0) }}
+                        <input type="hidden" name="valor" value="{{ pedido['TOTAL_VENDA'] }}">
+                    </td>
 
                     <!-- Motivo -->
                     <td>
@@ -361,7 +369,7 @@
                         </select>
                     </td>
 
-                    <!-- Tipo -->
+                    <!-- Tipo de Devolução -->
                     <td>
                         <select class="form-select form-select-sm" name="tipo_devolucao" required>
                             <option value="" disabled selected>Tipo</option>
@@ -375,17 +383,17 @@
                         <input type="file" class="form-control form-control-sm" name="fotos" accept="image/*" multiple>
                     </td>
 
-                    <!-- Documentos -->
+                    <!-- Documentos 
                     <td>
                         <input type="file" class="form-control form-control-sm" name="documentos" accept=".pdf,.doc,.docx,.xls,.xlsx">
-                    </td>
+                    </td>-->
 
                     <!-- Botão -->
                     <td>
                         <button type="submit" class="btn btn-sm btn-primary">Solicitar</button>
                     </td>
-                </tr>
-            </form>
+                </form>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
@@ -393,6 +401,7 @@
     <p>Você ainda não tem pedidos/vendas cadastradas.</p>
     {% endif %}
 </div>
+
 
 
 

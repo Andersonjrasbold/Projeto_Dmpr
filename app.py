@@ -10,6 +10,11 @@ from clientes import get_cliente_por_id
 from pedidos import get_pedidos_por_cliente
 from financeiro import get_financeiro_por_cliente
 from devolucoes import get_devolucoes_por_cliente
+from flask import Flask, make_response
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import mm
+from reportlab.pdfgen import canvas
+
 
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta_segura'
@@ -58,6 +63,56 @@ def loja():
         return redirect(url_for('pagina_login'))
     produtos = Lista_Produtos.get_produtos()
     return render_template('loja.html', produtos=produtos)
+
+@app.route('/boleto/<int:numero>')
+def gerar_boleto(numero):
+    try:
+        buffer = BytesIO()
+        p = canvas.Canvas(buffer, pagesize=A4)
+        width, height = A4
+
+        # Margens
+        left_margin = 20 * mm
+        top_margin = height - 20 * mm
+
+        # Cabeçalho
+        p.setFont("Helvetica-Bold", 16)
+        p.drawString(left_margin, top_margin, "BOLETO BANCÁRIO")
+
+        # Dados do cliente
+        p.setFont("Helvetica", 12)
+        p.drawString(left_margin, top_margin - 20, f"Número do Boleto: {numero}")
+        p.drawString(left_margin, top_margin - 40, "Beneficiário: Empresa Exemplo Ltda")
+        p.drawString(left_margin, top_margin - 60, "Pagador: Cliente Exemplo")
+        p.drawString(left_margin, top_margin - 80, "Valor: R$ 150,00")
+        p.drawString(left_margin, top_margin - 100, "Vencimento: 25/06/2025")
+
+        # Linha digitável (código de barras em texto)
+        p.setFont("Courier-Bold", 14)
+        p.drawString(left_margin, top_margin - 140, "34191.79001 01043.510047 91020.150008 7 12345678900015")
+
+        # Faixa de recorte
+        p.setStrokeColorRGB(0, 0, 0)
+        p.line(left_margin, top_margin - 150, width - left_margin, top_margin - 150)
+
+        # Rodapé
+        p.setFont("Helvetica-Oblique", 8)
+        p.drawString(left_margin, 20 * mm, "Este boleto é apenas um exemplo gerado por Flask + ReportLab.")
+
+        p.showPage()
+        p.save()
+
+        pdf = buffer.getvalue()
+        buffer.close()
+
+        response = make_response(pdf)
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = f'inline; filename=boleto_{numero}.pdf'
+
+        return response
+
+    except Exception as e:
+        return f"Erro ao gerar boleto: {e}", 500
 
 # Produtos
 @app.route('/produtos')
@@ -121,6 +176,47 @@ def listar_devolucoes():
         return redirect(url_for('pagina_login'))
     devolucoes = get_devolucoes_por_cliente(session['cliente_id'])
     return render_template('devolucoes.html', devolucoes=devolucoes)
+
+@app.route('/atualizar_status_chamado', methods=['POST'])
+def atualizar_status_chamado():
+    try:
+        chamado_id = request.form.get('chamado_id')
+        acao = request.form.get('acao')
+
+        # Mapear as ações para status
+        mapa_status = {
+            'finalizar': 'Concluído',
+            'Recusar': 'Cancelado',
+            'Aceitar_solicitar': 'Enviar NF de Devolução',
+            'Outra Ação': 'Em análise'  # Exemplo, você pode definir como quiser
+        }
+
+        novo_status = mapa_status.get(acao)
+
+        if not novo_status:
+            return f"Ação inválida: {acao}", 400
+
+        con = AcessoOutroBanco.get_mysql_connection()
+        cur = con.cursor()
+
+        query = """
+        UPDATE solicitacoes_devolucao
+        SET status = %s
+        WHERE id = %s
+        """
+        cur.execute(query, (novo_status, chamado_id))
+        con.commit()
+
+        cur.close()
+        con.close()
+
+        print(f"Chamado {chamado_id} atualizado para status: {novo_status}")
+        return redirect(url_for('listar_chamados_devolucao'))
+
+    except Exception as e:
+        print(f"Erro ao atualizar status do chamado: {e}")
+        return f"Erro ao atualizar chamado: {e}", 500
+
 
 # ✅ Nova Rota: Chamados de Devolução (MySQL)
 @app.route('/devolucoes_chamados')
@@ -194,32 +290,36 @@ def enviar_devolucao():
         numero_nota = request.form.get('numero_nota')
         motivo = request.form.get('motivo')
         tipo_devolucao = request.form.get('tipo_devolucao')
-
-        # Pega o cliente_id da session Flask
+        valor = request.form.get('valor')  # <-- Novo campo valor vindo do formulário
         cliente_id = session.get('cliente_id')
 
         if not cliente_id:
             return redirect(url_for('pagina_login'))
 
+        # Se o valor vier vazio, força para 0
+        if not valor:
+            valor = 0
+
         con = AcessoOutroBanco.get_mysql_connection()
         cur = con.cursor()
 
         query = """
-        INSERT INTO solicitacoes_devolucao (numero_nf, motivo, tipo_devolucao, status, cliente_id)
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO solicitacoes_devolucao (numero_nf, motivo, tipo_devolucao, status, cliente_id, valor)
+        VALUES (%s, %s, %s, %s, %s, %s)
         """
-        cur.execute(query, (numero_nota, motivo, tipo_devolucao, 'PENDENTE', cliente_id))
+        cur.execute(query, (numero_nota, motivo, tipo_devolucao, 'PENDENTE', cliente_id, valor))
         con.commit()
 
         cur.close()
         con.close()
 
-        print(f"Devolução cadastrada: Nota {numero_nota}, Cliente {cliente_id}")
+        print(f"Devolução cadastrada: Nota {numero_nota}, Cliente {cliente_id}, Valor {valor}")
         return redirect(url_for('loja'))
 
     except Exception as e:
         print(f"Erro ao enviar devolução: {e}")
         return f"Erro ao enviar devolução: {e}", 500
+
 
 
 # Importação de produtos via Excel
