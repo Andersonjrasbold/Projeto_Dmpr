@@ -18,7 +18,14 @@
   <script src="/static/js/card-search-list.js"></script>
   <script src="/static/js/search.js"></script>
   <script src="/static/js/esconder.js"></script>
-  <style>
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+  <!-- jQuery + DataTables JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+ <!-- <style>
     .card {
       transition: all 0.3s;
     }
@@ -26,7 +33,7 @@
     .card:hover {
       transform: scale(1.05);
     }
-  </style>
+  </style>-->
 </head>
 
 <body>
@@ -311,18 +318,19 @@
       <h5>Minhas Devoluções</h5>
       <div class="card">
         <div class="card-body">
-          <table class="table table-striped">
-            <thead>
+          <table id="tabelaDevolucoes" class="table table-striped">
+            <thead class="text-center">
               <tr>
-                <th>ID</th>
+                <th>Protocolo</th>
                 <th>Nota Fiscal</th>
                 <th>Motivo</th>
                 <th>Tipo</th>
                 <th>Status</th>
                 <th>Data</th>
+                <th>NF Upload</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="text-center">
               {% for dev in devolucoes %}
               <tr>
                 <td>{{ dev.id }}</td>
@@ -336,11 +344,27 @@
                   <span class="badge bg-warning">{{ dev.status }}</span>
                   {% elif dev.status == 'Cancelado' %}
                   <span class="badge bg-danger">{{ dev.status }}</span>
+                  {% elif dev.status == 'Enviar NF de Devolução' %}
+                  <span class="badge bg-info text-dark">{{ dev.status }}</span>
                   {% else %}
                   <span class="badge bg-secondary">{{ dev.status }}</span>
                   {% endif %}
                 </td>
                 <td>{{ dev.data_solicitacao if dev.data_solicitacao else '-' }}</td>
+                <td>
+                  {% if dev.status == 'Enviar NF de Devolução' %}
+                  <form method="post" action="/upload_nf_devolucao" enctype="multipart/form-data">
+                    <input type="hidden" name="chamado_id" value="{{ dev.id }}">
+                    <div class="input-group input-group-sm">
+                      <input type="file" class="form-control form-control-sm" style="max-width: 200px;"
+                        name="arquivo_nf" required>
+                      <button class="btn btn-sm btn-outline-primary" type="submit">Enviar NF</button>
+                    </div>
+                  </form>
+                  {% else %}
+                  -
+                  {% endif %}
+                </td>
               </tr>
               {% endfor %}
             </tbody>
@@ -348,6 +372,18 @@
         </div>
       </div>
     </div>
+
+    <!-- DataTables ativação -->
+    <script>
+      $(document).ready(function () {
+        $('#tabelaDevolucoes').DataTable({
+          "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json"
+          }
+        });
+      });
+    </script>
+
     <!-- Carrinho -->
     <div id="cart" style="display: none;" class="container shadow p-3 mb-2 bg-white rounded">
       <!--Alinhar a direita com 4 colunas -->

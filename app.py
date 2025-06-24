@@ -1,4 +1,9 @@
 from flask import Flask, render_template, redirect, url_for, request, jsonify, session, send_from_directory, make_response
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import mm
+from werkzeug.utils import secure_filename
+import os
 import pandas as pd
 from io import BytesIO
 import Acesso
@@ -10,27 +15,85 @@ from clientes import get_cliente_por_id
 from pedidos import get_pedidos_por_cliente
 from financeiro import get_financeiro_por_cliente
 from devolucoes import get_devolucoes_por_cliente
-from flask import Flask, make_response
+from flask import make_response
+from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
-from reportlab.pdfgen import canvas
-
+from io import BytesIO
 
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta_segura'
 
-# Página inicial
+# Config upload
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
+ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx', 'xls', 'xlsx'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Rotas principais...
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Login GET
+
+@app.route('/boleto/<int:numero>')
+def gerar_boleto(numero):
+    try:
+        buffer = BytesIO()
+        p = canvas.Canvas(buffer, pagesize=A4)
+        width, height = A4
+
+        # Margens
+        left_margin = 20 * mm
+        top_margin = height - 20 * mm
+
+        # Cabeçalho do boleto
+        p.setFont("Helvetica-Bold", 16)
+        p.drawString(left_margin, top_margin, "BOLETO BANCÁRIO")
+
+        # Dados do boleto
+        p.setFont("Helvetica", 12)
+        p.drawString(left_margin, top_margin - 20, f"Número do Boleto: {numero}")
+        p.drawString(left_margin, top_margin - 40, "Beneficiário: Empresa Exemplo Ltda")
+        p.drawString(left_margin, top_margin - 60, "Pagador: Cliente Exemplo")
+        p.drawString(left_margin, top_margin - 80, "Valor: R$ 150,00")
+        p.drawString(left_margin, top_margin - 100, "Vencimento: 25/06/2025")
+
+        # Linha digitável (código de barras em texto)
+        p.setFont("Courier-Bold", 14)
+        p.drawString(left_margin, top_margin - 140, "34191.79001 01043.510047 91020.150008 7 12345678900015")
+
+        # Linha separadora
+        p.line(left_margin, top_margin - 150, width - left_margin, top_margin - 150)
+
+        # Rodapé
+        p.setFont("Helvetica-Oblique", 8)
+        p.drawString(left_margin, 20 * mm, "Este boleto é apenas um exemplo gerado com Flask + ReportLab.")
+
+        p.showPage()
+        p.save()
+
+        pdf = buffer.getvalue()
+        buffer.close()
+
+        response = make_response(pdf)
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = f'inline; filename=boleto_{numero}.pdf'
+
+        return response
+
+    except Exception as e:
+        return f"Erro ao gerar boleto: {e}", 500
+
+
 @app.route('/login')
 def pagina_login():
     lista_clientes = clientes.get_clientes()
     return render_template('login.html', clientes=lista_clientes)
 
-# Login POST
 @app.route('/login', methods=['POST'])
 def login_post():
     data = request.get_json()
@@ -56,7 +119,6 @@ def login_post():
     else:
         return jsonify(status='erro', mensagem='Credenciais inválidas')
 
-# Loja
 @app.route('/loja')
 def loja():
     if 'cliente_id' not in session:
@@ -64,56 +126,67 @@ def loja():
     produtos = Lista_Produtos.get_produtos()
     return render_template('loja.html', produtos=produtos)
 
-@app.route('/boleto/<int:numero>')
-def gerar_boleto(numero):
+@app.route('/upload_nf_devolucao', methods=['POST'])
+def upload_nf_devolucao():
     try:
-        buffer = BytesIO()
-        p = canvas.Canvas(buffer, pagesize=A4)
-        width, height = A4
+        chamado_id = request.form.get('chamado_id')
+        file = request.files.get('arquivo_nf')
 
-        # Margens
-        left_margin = 20 * mm
-        top_margin = height - 20 * mm
+        if not chamado_id or not file or file.filename == '':
+            return "ID do chamado ou arquivo inválido", 400
 
-        # Cabeçalho
-        p.setFont("Helvetica-Bold", 16)
-        p.drawString(left_margin, top_margin, "BOLETO BANCÁRIO")
+        if allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(save_path)
 
-        # Dados do cliente
-        p.setFont("Helvetica", 12)
-        p.drawString(left_margin, top_margin - 20, f"Número do Boleto: {numero}")
-        p.drawString(left_margin, top_margin - 40, "Beneficiário: Empresa Exemplo Ltda")
-        p.drawString(left_margin, top_margin - 60, "Pagador: Cliente Exemplo")
-        p.drawString(left_margin, top_margin - 80, "Valor: R$ 150,00")
-        p.drawString(left_margin, top_margin - 100, "Vencimento: 25/06/2025")
+            con = AcessoOutroBanco.get_mysql_connection()
+            cur = con.cursor()
 
-        # Linha digitável (código de barras em texto)
-        p.setFont("Courier-Bold", 14)
-        p.drawString(left_margin, top_margin - 140, "34191.79001 01043.510047 91020.150008 7 12345678900015")
+            query = """
+            UPDATE solicitacoes_devolucao
+            SET arquivo_nf = %s, status = %s
+            WHERE id = %s
+            """
+            cur.execute(query, (filename, 'NF Recebida', chamado_id))
+            con.commit()
+            cur.close()
+            con.close()
 
-        # Faixa de recorte
-        p.setStrokeColorRGB(0, 0, 0)
-        p.line(left_margin, top_margin - 150, width - left_margin, top_margin - 150)
+            print(f"Arquivo '{filename}' salvo para chamado {chamado_id}")
+            return redirect(url_for('acompanhar_devolucoes'))
 
-        # Rodapé
-        p.setFont("Helvetica-Oblique", 8)
-        p.drawString(left_margin, 20 * mm, "Este boleto é apenas um exemplo gerado por Flask + ReportLab.")
-
-        p.showPage()
-        p.save()
-
-        pdf = buffer.getvalue()
-        buffer.close()
-
-        response = make_response(pdf)
-        response.headers['Content-Type'] = 'application/pdf'
-        response.headers['Content-Disposition'] = f'inline; filename=boleto_{numero}.pdf'
-
-        return response
+        else:
+            return "Extensão de arquivo não permitida", 400
 
     except Exception as e:
-        return f"Erro ao gerar boleto: {e}", 500
+        print(f"Erro no upload da NF: {e}")
+        return f"Erro no upload: {e}", 500
 
+@app.route('/download_nf/<int:chamado_id>')
+def download_nf(chamado_id):
+    try:
+        con = AcessoOutroBanco.get_mysql_connection()
+        cur = con.cursor(dictionary=True)
+
+        query = "SELECT arquivo_nf FROM solicitacoes_devolucao WHERE id = %s"
+        cur.execute(query, (chamado_id,))
+        resultado = cur.fetchone()
+
+        cur.close()
+        con.close()
+
+        if not resultado or not resultado['arquivo_nf']:
+            return "Arquivo não encontrado.", 404
+
+        nome_arquivo = resultado['arquivo_nf']
+        caminho_uploads = app.config['UPLOAD_FOLDER']
+
+        return send_from_directory(caminho_uploads, nome_arquivo, as_attachment=True)
+
+    except Exception as e:
+        print(f"Erro ao fazer download: {e}")
+        return f"Erro no download: {e}", 500
 # Produtos
 @app.route('/produtos')
 def produtos():
@@ -307,7 +380,7 @@ def enviar_devolucao():
         INSERT INTO solicitacoes_devolucao (numero_nf, motivo, tipo_devolucao, status, cliente_id, valor)
         VALUES (%s, %s, %s, %s, %s, %s)
         """
-        cur.execute(query, (numero_nota, motivo, tipo_devolucao, 'PENDENTE', cliente_id, valor))
+        cur.execute(query, (numero_nota, motivo, tipo_devolucao, 'Em análise', cliente_id, valor))
         con.commit()
 
         cur.close()
@@ -386,6 +459,5 @@ def add_header(response):
         response.headers['Cache-Control'] = 'public, max-age=31536000'
     return response
 
-# Iniciar o Flask
 if __name__ == '__main__':
     app.run(debug=True)
