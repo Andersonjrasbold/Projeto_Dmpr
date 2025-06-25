@@ -20,6 +20,10 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from io import BytesIO
+from flask import request, jsonify, session
+import mysql.connector
+from werkzeug.security import check_password_hash
+from werkzeug.security import generate_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta_segura'
@@ -37,6 +41,91 @@ def allowed_file(filename):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/cadastro')
+def pagina_cadastro():
+    return render_template('cadastro.html')
+
+@app.route('/login_usuario')
+def pagina_login_usuario():
+    return render_template('acesso.html')
+
+@app.route('/dashboard')
+def dashboard():
+    if 'usuario_id' not in session:
+        return redirect(url_for('pagina_login_usuario'))
+    return render_template('dashboard.html')
+
+
+@app.route('/cadastrar_usuario', methods=['POST'])
+def cadastrar_usuario():
+    try:
+        data = request.get_json()
+        nome = data.get('nome')
+        email = data.get('email')
+        senha = data.get('senha')
+
+        if not nome or not email or not senha:
+            return jsonify(status='erro', mensagem='Campos obrigatórios não preenchidos')
+
+        senha_hash = generate_password_hash(senha)
+
+        con = AcessoOutroBanco.get_mysql_connection()
+        cur = con.cursor()
+        cur.execute("""
+            INSERT INTO usuarios (nome, email, senha)
+            VALUES (%s, %s, %s)
+        """, (nome, email, senha_hash))
+        con.commit()
+        cur.close()
+        con.close()
+
+        return jsonify(status='ok', mensagem='Usuário cadastrado com sucesso')
+
+    except Exception as e:
+        print("Erro ao cadastrar usuário:", e)
+        return jsonify(status='erro', mensagem='Erro ao cadastrar usuário')
+
+
+
+def get_mysql_connection():
+    return mysql.connector.connect(
+        host='localhost',
+        user='seu_usuario',
+        password='sua_senha',
+        database='seu_banco'
+    )
+
+from werkzeug.security import check_password_hash
+
+@app.route('/acesso', methods=['POST'])
+def acesso():
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        senha = data.get('senha')
+
+        con = AcessoOutroBanco.get_mysql_connection()
+        cur = con.cursor(dictionary=True)
+        cur.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
+        user = cur.fetchone()
+
+        cur.close()
+        con.close()
+
+        if user and check_password_hash(user['senha'], senha):
+            session['usuario_id'] = user['id']
+            session['usuario_nome'] = user['nome']
+            return jsonify(status='ok', nome=user['nome'])
+        else:
+            return jsonify(status='erro', mensagem='Usuário ou senha inválidos.')
+
+    except Exception as e:
+        print("Erro ao autenticar:", e)
+        return jsonify(status='erro', mensagem='Erro interno no servidor.')
+
+
+
 
 
 @app.route('/boleto/<int:numero>')
@@ -229,10 +318,7 @@ def financeiro():
     financeiro = get_financeiro_por_cliente(session['cliente_id'])
     return render_template('financeiro.html', financeiro=financeiro)
 
-# Dashboard
-@app.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html')
+
 
 # Chamado
 @app.route('/chamado')
@@ -255,40 +341,82 @@ def atualizar_status_chamado():
     try:
         chamado_id = request.form.get('chamado_id')
         acao = request.form.get('acao')
+        ordem_coleta = request.form.get('ordem_coleta')  # pode vir vazio
 
-        # Mapear as ações para status
-        mapa_status = {
-            'finalizar': 'Concluído',
-            'Recusar': 'Cancelado',
-            'Aceitar_solicitar': 'Enviar NF de Devolução',
-            'Outra Ação': 'Em análise'  # Exemplo, você pode definir como quiser
-        }
+        if not chamado_id or not acao:
+            return "Dados incompletos", 400
 
-        novo_status = mapa_status.get(acao)
+        # Define o novo status baseado na ação
+        if acao == 'finalizar':
+            novo_status = 'Concluído'
+        elif acao == 'Aceitar_solicitar':
+            novo_status = 'Enviar NF de Devolução'
+        elif acao == 'Recusar':
+            novo_status = 'Cancelado'
+        elif acao == 'Outra Ação':
+            novo_status = 'Em análise'
+        else:
+            novo_status = acao  # fallback genérico
 
-        if not novo_status:
-            return f"Ação inválida: {acao}", 400
-
+        # Conexão com o banco
         con = AcessoOutroBanco.get_mysql_connection()
         cur = con.cursor()
 
-        query = """
-        UPDATE solicitacoes_devolucao
-        SET status = %s
-        WHERE id = %s
-        """
-        cur.execute(query, (novo_status, chamado_id))
-        con.commit()
+        # Atualização com ou sem ordem de coleta
+        if ordem_coleta:
+            query = """
+            UPDATE solicitacoes_devolucao
+            SET status = %s, ordem_coleta = %s
+            WHERE id = %s
+            """
+            cur.execute(query, (novo_status, ordem_coleta, chamado_id))
+        else:
+            query = """
+            UPDATE solicitacoes_devolucao
+            SET status = %s
+            WHERE id = %s
+            """
+            cur.execute(query, (novo_status, chamado_id))
 
+        con.commit()
         cur.close()
         con.close()
 
-        print(f"Chamado {chamado_id} atualizado para status: {novo_status}")
         return redirect(url_for('listar_chamados_devolucao'))
 
     except Exception as e:
-        print(f"Erro ao atualizar status do chamado: {e}")
+        print(f"Erro ao atualizar chamado: {e}")
         return f"Erro ao atualizar chamado: {e}", 500
+    
+@app.route('/resumo_devolucoes')
+def resumo_devolucoes():
+    estatisticas = buscar_estatisticas_devolucoes()
+    return render_template('resumo.html', estatisticas=estatisticas)
+
+
+def buscar_estatisticas_devolucoes():
+    try:
+        con = AcessoOutroBanco.get_mysql_connection()
+        cur = con.cursor(dictionary=True)
+
+        cur.execute("""
+            SELECT
+                COUNT(*) AS total_devolucoes,
+                SUM(valor) AS total_valor,
+                SUM(CASE WHEN status = 'Concluído' THEN 1 ELSE 0 END) AS finalizadas,
+                SUM(CASE WHEN status = 'Pendente' THEN 1 ELSE 0 END) AS pendentes,
+                SUM(CASE WHEN status = 'Enviar NF de Devolução' THEN 1 ELSE 0 END) AS nf_recebidas
+            FROM solicitacoes_devolucao
+        """)
+        dados = cur.fetchone()
+        cur.close()
+        con.close()
+
+        return dados
+    except Exception as e:
+        print("Erro:", e)
+        return {}
+
 
 
 # ✅ Nova Rota: Chamados de Devolução (MySQL)
@@ -299,26 +427,31 @@ def listar_chamados_devolucao():
         cur = con.cursor(dictionary=True)
 
         query = """
-        SELECT id, cliente_id, data_solicitacao, valor, status, motivo, numero_nf
+        SELECT id, cliente_id, data_solicitacao, valor, status, motivo, numero_nf, ordem_coleta, arquivo_nf
         FROM solicitacoes_devolucao
         ORDER BY data_solicitacao DESC
         """
         cur.execute(query)
         chamados = cur.fetchall()
-
         cur.close()
         con.close()
 
-        # Agora busca o nome de cada cliente no Firebird
+        # Nome do cliente
         for chamado in chamados:
             cliente_id = chamado.get('cliente_id')
             cliente = get_cliente_por_id(cliente_id)
-            if cliente:
-                chamado['cliente'] = cliente['NOME_CLIENTE']
-            else:
-                chamado['cliente'] = 'Cliente não encontrado'
+            chamado['cliente'] = cliente['NOME_CLIENTE'] if cliente else 'Cliente não encontrado'
 
-        return render_template('devolucoes_chamados.html', chamados=chamados)
+        # Estatísticas para os cards
+        estatisticas = {
+            "total_valor": sum(c['valor'] or 0 for c in chamados),
+            "finalizadas": sum(1 for c in chamados if c['status'] == 'Concluído'),
+            "pendentes": sum(1 for c in chamados if c['status'] == 'PENDENTE'),
+            "com_nf": sum(1 for c in chamados if c['status'] == 'NF Recebida')
+
+        }
+
+        return render_template('devolucoes_chamados.html', chamados=chamados, estatisticas=estatisticas)
 
     except Exception as e:
         print(f"Erro ao buscar chamados de devolução: {e}")
@@ -337,7 +470,7 @@ def acompanhar_devolucoes():
         cur = con.cursor(dictionary=True)
 
         query = """
-        SELECT id, numero_nf, motivo, tipo_devolucao, status, data_solicitacao
+        SELECT id, numero_nf, motivo, tipo_devolucao, status, data_solicitacao, ordem_coleta
         FROM solicitacoes_devolucao
         WHERE cliente_id = %s
         ORDER BY data_solicitacao DESC

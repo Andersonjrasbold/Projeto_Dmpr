@@ -18,6 +18,12 @@
   <script src="/static/js/card-search-list.js"></script>
   <script src="/static/js/search.js"></script>
   <script src="/static/js/esconder.js"></script>
+  <!-- CSS do DataTables -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+  <!-- jQuery + JS do DataTables -->
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <style>
     .card {
       transition: all 0.3s;
@@ -326,15 +332,15 @@
       <h2>Minhas Devoluções</h2>
 
       {% if devolucoes %}
-      <table class="table table-striped table-bordered table-hover">
-        <thead class="table-dark">
+      <table id="tabelaDevolucoes" class="table table-striped table-bordered">
+        <thead class="table-light">
           <tr>
-            
+            <th>Nota Venda</th>
             <th>Data Venda</th>
             <th>Data Devolução</th>
             <th>Status</th>
-            <th>Motivo Devolução</th>
-            <th>Nota Venda</th>
+            <!--<th>Motivo Devolução</th>-->
+
             <th>Nota Devolução</th>
             <th>Código Produto</th>
             <th>Nome Produto</th>
@@ -346,12 +352,13 @@
         <tbody>
           {% for d in devolucoes %}
           <tr>
-            
-            <td>{{ d.DATA_VENDA }}</td>
-            <td>{{ d.DATA_DEVOLUCAO }}</td>
-            <td>{{ d.STATUS }}</td>
-            <td>{{ d.MOTIVO_DEVOLUCAO }}</td>
             <td>{{ d.NOTA_VENDA }}</td>
+            <td>{{ d.DATA_VENDA.strftime('%d/%m/%Y') if d.DATA_VENDA else '-' }}</td>
+            <td>{{ d.DATA_DEVOLUCAO.strftime('%d/%m/%Y') if d.DATA_DEVOLUCAO else '-' }}</td>
+
+            <td>{{ d.STATUS }}</td>
+            <!--<td>{{ d.MOTIVO_DEVOLUCAO }}</td>-->
+
             <td>{{ d.NOTA_DEVOLUCAO }}</td>
             <td>{{ d.COD_PRODUTO }}</td>
             <td>{{ d.NOME_PRODUTO }}</td>
@@ -366,10 +373,10 @@
       <p>Você ainda não possui devoluções registradas.</p>
       {% endif %}
 
-      
+
 
     </div>
-    <!--  Produtos-->
+
     <!-- Carrinho -->
     <div id="cart" style="display: none;" class="container shadow p-3 mb-2 bg-white rounded">
       <!--Alinhar a direita com 4 colunas -->
@@ -473,6 +480,18 @@
       </footer>
     </div>
     <!--footer end-->
+    <script>
+      $(document).ready(function () {
+        $('#tabelaDevolucoes').DataTable({
+          language: {
+            url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+          },
+          ordering: true,
+          pageLength: 10
+        });
+      });
+    </script>
+
     <script>
       function abrirModal(botao) {
         document.getElementById("modalNome").textContent = botao.dataset.nome;

@@ -25,7 +25,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
- <!-- <style>
+  <!-- <style>
     .card {
       transition: all 0.3s;
     }
@@ -49,7 +49,7 @@
           {% endif %}
         </div>
       </div>
-      <div class="border-bottom container shadow  mb-2 bg-white rounded" style="background-color: rgb(241, 241, 241);">
+      <div class="border-bottom container shadow mb-1 bg-white rounded" style="background-color: rgb(241, 241, 241);">
         <div class="container ">
           <div>
             <div class="py-1 border-bottom">
@@ -153,21 +153,21 @@
                 </div>
               </div>
             </div>
-            <!-- input-->
+            <!-- input
             <div class="py-2">
               <div class="container py-3">
                 <div class="row justify-content-right">
-                  <!-- Campo de busca -->
+                  <!-- Campo de busca 
                   <div class="col-12 col-md-8 mx-auto">
                     <form role="search">
-                      <input type="search" id="search-item" onkeyup="search()" class="form-control"
+                      <input disabled type="search" id="search-item" onkeyup="search()" class="form-control"
                         placeholder="Buscar...">
                     </form>
                   </div>
                   <div class="col-md-2">
                     <button class="btn btn-outline-dark"> <a href="/multi">Modo Multi</a> </button>
                   </div>
-                  <!-- Carrinho de compras - 2 colunas -->
+                  <!-- Carrinho de compras - 2 colunas 
                   <div class="col-md-2 py-2 text-end">
 
 
@@ -183,7 +183,7 @@
                             style="display: none;">
                             0
                             <span class="visually-hidden">Itens no carrinho</span>
-                            </span>-->
+                            </span>
                       </i>
                       </span>
                     </a>
@@ -193,7 +193,7 @@
             </div>
           </div>
         </div>
-        <div class="p-2 text-bg-white">
+        <!--<div class="p-2 text-bg-white">
           <div class="container">
             <div class="nav justify-content-lg-start">
               <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center">
@@ -207,21 +207,21 @@
                 <li><a href="{{ url_for('promocoes') }}" class="btn btn-outline-dark me-2"><i
                       class="bi bi-fire "></i></a>
                 </li>
-                <!--<li><button type="button" class="btn btn-outline-dark me-2"><svg xmlns="http://www.w3.org/2000/svg"
+                <li><button type="button" class="btn btn-outline-dark me-2"><svg xmlns="http://www.w3.org/2000/svg"
                     width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
                       d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
-                    </svg></a></button></li>-->
+                    </svg></a></button></li>
                 <li></li>
                 <li>
-                  <select id="filtro-industria" class="form-select" style="width: 350px; height: 40px;">
+                  <select id="filtro-industria" class="form-select" style="width: 350px; height: 40px;" disabled>
                     <option value="">Filtrar por Indústria</option>
                     {% for nome_laboratorio in produtos | map(attribute='NOME_LABORATORIO') | unique | sort %}
                     <option value="{{ nome_laboratorio }}">{{ nome_laboratorio }}</option>
                     {% endfor %}
                   </select>
                 </li>
-                <!--<li>
+                <li>
                     <div class="">
                       <select class="form-select" style="width: 200px; margin-left: 20px; height: 40px;">
                         <option selected disabled>Classificar de A-Z</option>
@@ -230,32 +230,32 @@
                         <option value="3">Teuto</option>
                       </select>
                     </div>
-                    </li>-->
+                    </li>
               </ul>
               <div class="row align-items-center">
                 <div class="text-end">
-                  <!-- Grid -->
-                  <button
+                   Grid 
+                  <button disabled
                     onclick="substituirMultiplos(['photo-search-list', 'carouselExampleDark', 'text-search-list', 'cart'], 'card-search-list')"
                     type="button" class="btn btn-outline-dark me-2">
                     <i class="bi bi-grid-3x3-gap-fill"></i>
                   </button>
 
-                  <!-- Lista com imagem -->
-                  <button
+                   Lista com imagem 
+                  <button disabled
                     onclick="substituirMultiplos(['card-search-list', 'carouselExampleDark', 'text-search-list', 'cart'], 'photo-search-list')"
                     type="button" class="btn btn-outline-dark me-2">
                     <i class="bi bi-list-check"></i>
                   </button>
 
-                  <!-- Lista sem imagem -->
-                  <button
+                  Lista sem imagem 
+                  <button disabled
                     onclick="substituirMultiplos(['card-search-list', 'carouselExampleDark', 'photo-search-list', 'cart'], 'text-search-list')"
                     type="button" class="btn btn-outline-dark me-2">
                     <i class="bi bi-list"></i>
                   </button>
-                  <!-- Botão que abre o modal -->
-                  <button type="button" class="btn btn-outline-dark me-2" data-bs-toggle="modal"
+                   Botão que abre o modal 
+                  <button disabled type="button" class="btn btn-outline-dark me-2" data-bs-toggle="modal"
                     data-bs-target="#uploadModal">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                       class="bi bi-upload" viewBox="0 0 16 16">
@@ -265,7 +265,7 @@
                         d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z" />
                     </svg>
                   </button>
-                  <!-- Modal de Upload de Excel -->
+                   Modal de Upload de Excel 
                   <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog">
@@ -275,18 +275,18 @@
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                         </div>
                         <div class="modal-body">
-                          <!-- Texto explicativo -->
+                          Texto explicativo 
                           <p class="text-start">
                             Baixe o arquivo de modelo, preencha e envie de volta. Você pode preencher com mais de um
                             CNPJ no mesmo arquivo.
                           </p>
-                          <!-- Link para download do modelo Excel -->
+                           Link para download do modelo Excel 
                           <p>
                             <a href="/static/excel/modelo.xlsx" download class="btn btn-sm btn-outline-primary">
                               Baixar Modelo Excel
                             </a>
                           </p>
-                          <!-- Campo de upload de arquivo -->
+                          Campo de upload de arquivo 
                           <div class="mb-3 text-start">
                             <label for="fileUpload" class="form-label">Selecione o arquivo preenchido:</label>
                             <input type="file" name="file" id="fileUpload" accept=".xlsx,.xls" class="form-control"
@@ -300,22 +300,30 @@
                       </form>
                     </div>
                   </div>
-                  <a href="https://wa.me/5545991098324" target="_blank" class="btn btn-outline-success">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                      class="bi bi-whatsapp" viewBox="0 0 16 16">
-                      <path
-                        d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
-                    </svg>
-                  </a>
+
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </div>-->
       </div>
     </header>
     <div class="container mt-4">
-      <h5>Minhas Devoluções</h5>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Título à esquerda -->
+        <h5 class="mb-0">Minhas Devoluções</h5>
+
+        <!-- Botões à direita -->
+        <div class="d-flex gap-2">
+          <a href="https://wa.me/5545991098324" target="_blank" class="btn btn-outline-success">
+            <i class="bi bi-whatsapp"></i>
+          </a>
+          <a href="/loja" class="btn btn-outline-dark">
+            <i class="bi bi-house"></i>
+          </a>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-body">
           <table id="tabelaDevolucoes" class="table table-striped">
@@ -328,6 +336,7 @@
                 <th>Status</th>
                 <th>Data</th>
                 <th>NF Upload</th>
+                <th>Ordem de coleta</th>
               </tr>
             </thead>
             <tbody class="text-center">
@@ -350,7 +359,14 @@
                   <span class="badge bg-secondary">{{ dev.status }}</span>
                   {% endif %}
                 </td>
-                <td>{{ dev.data_solicitacao if dev.data_solicitacao else '-' }}</td>
+                <td>
+                  {% if dev.data_solicitacao %}
+                  {{ dev.data_solicitacao.strftime('%d/%m/%Y') }}
+                  {% else %}
+                  -
+                  {% endif %}
+                </td>
+
                 <td>
                   {% if dev.status == 'Enviar NF de Devolução' %}
                   <form method="post" action="/upload_nf_devolucao" enctype="multipart/form-data">
@@ -365,6 +381,10 @@
                   -
                   {% endif %}
                 </td>
+                <td>
+                  {{ dev.ordem_coleta or '-' }}
+                </td>
+
               </tr>
               {% endfor %}
             </tbody>

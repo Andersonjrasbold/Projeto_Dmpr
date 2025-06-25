@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Completa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <!-- jQuery + DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar position-fixed">
+        <h4 class="text-white text-center py-3">Meu Painel</h4>
+        <a href="#">🏠 Início</a>
+        <a href="#">📈 Relatórios</a>
+        <a href="#">🛒 Pedidos</a>
+        <a href="#">👥 Clientes</a>
+        <a href="#">⚙️ Configurações</a>
+    </div>
+
+    <!-- Conteúdo -->
+    <div class="content">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Dashboard</h2>
+            <div>
+                <span>👤 Usuário</span>
+                <button class="btn btn-sm btn-danger ms-2">Logout</button>
+            </div>
+        </div>
+
+        <!-- Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card text-bg-primary">
+                    <div class="card-body">
+                        <h5>Total de Vendas</h5>
+                        <p class="fs-4">R$ 12.500</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-bg-success">
+                    <div class="card-body">
+                        <h5>Clientes Ativos</h5>
+                        <p class="fs-4">340</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-bg-warning">
+                    <div class="card-body">
+                        <h5>Pedidos Pendentes</h5>
+                        <p class="fs-4">15</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-bg-danger">
+                    <div class="card-body">
+                        <h5>Faturas Atrasadas</h5>
+                        <p class="fs-4">8</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container mt-5" style="max-width: 400px;">
+            <h4 class="mb-3 text-center">Cadastro de Usuário</h4>
+            <form id="formCadastro">
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="nome" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="email" class="form-control" id="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="senha" class="form-label">Senha</label>
+                    <input type="password" class="form-control" id="senha" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+            </form>
+
+            <div id="mensagem" class="mt-3 text-center"></div>
+        </div>
+
+        <script>
+            document.getElementById('formCadastro').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const nome = document.getElementById('nome').value;
+                const email = document.getElementById('email').value;
+                const senha = document.getElementById('senha').value;
+
+                fetch('/cadastrar_usuario', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, email, senha })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        const mensagem = document.getElementById('mensagem');
+                        if (data.status === 'ok') {
+                            mensagem.innerHTML = '<span class="text-success">Usuário cadastrado com sucesso!</span>';
+                            document.getElementById('formCadastro').reset();
+                        } else {
+                            mensagem.innerHTML = '<span class="text-danger">' + data.mensagem + '</span>';
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Erro:', err);
+                        document.getElementById('mensagem').innerHTML = '<span class="text-danger">Erro ao cadastrar usuário.</span>';
+                    });
+            });
+        </script>
+
+        <!-- DataTables init -->
+        <script>
+            $(document).ready(function () {
+                $('#tabelaChamados').DataTable({
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json"
+                    }
+                });
+            });
+        </script>
+
+
+
+        <!-- Gráfico 
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5>Gráfico de Vendas</h5>
+                <div id="curve_chart" style="width: 100%; height: 300px;"></div>
+            </div>
+        </div>-->
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+</body>
+
+</html>

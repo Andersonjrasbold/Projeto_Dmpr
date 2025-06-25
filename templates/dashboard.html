@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
+    <title>Dashboard Completa</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/dashboard.css">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -25,10 +25,10 @@
     <!-- Sidebar -->
     <div class="sidebar position-fixed">
         <h4 class="text-white text-center py-3">Meu Painel</h4>
-        <a href="dashboard.html">🏠 Início</a>
+        <a href="#">🏠 Início</a>
         <a href="#">📈 Relatórios</a>
         <a href="#">🛒 Pedidos</a>
-        <a href="/templates/cadastro">👥 Usuários</a>
+        <a href="#">👥 Clientes</a>
         <a href="#">⚙️ Configurações</a>
     </div>
 
@@ -48,38 +48,36 @@
             <div class="col-md-3">
                 <div class="card text-bg-primary">
                     <div class="card-body">
-                        <h5>Total de Devoluções</h5>
-                        <p class="fs-4"> {{ '{:,.2f}'.format(estatisticas.total_valor).replace(',', 'X').replace('.',
-                            ',').replace('X', '.') }}</p>
+                        <h5>Total de Vendas</h5>
+                        <p class="fs-4">R$ 12.500</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card text-bg-success">
                     <div class="card-body">
-                        <h5>Devoluções Finalizadas</h5>
-                        <p class="fs-4">{{ estatisticas.finalizadas }}</p>
+                        <h5>Clientes Ativos</h5>
+                        <p class="fs-4">340</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card text-bg-warning">
                     <div class="card-body">
-                        <h5>Devoluções Pendentes</h5>
-                        <p class="fs-4">{{ estatisticas.pendentes }}</p>
+                        <h5>Pedidos Pendentes</h5>
+                        <p class="fs-4">15</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card text-bg-danger">
                     <div class="card-body">
-                        <h5>NF Recebidas</h5>
-                        <p class="fs-4">{{ estatisticas.com_nf }}</p>
+                        <h5>Faturas Atrasadas</h5>
+                        <p class="fs-4">8</p>
                     </div>
                 </div>
             </div>
         </div>
-
 
 
         <!-- Tabela -->
@@ -98,8 +96,7 @@
                                 <th>Motivo</th>
                                 <th>Status</th>
                                 <th>Ações</th>
-                                <th>Ordem de coleta</th>
-                                <th>download</th>
+                                <th>Visualizar</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -152,12 +149,12 @@
                                                         aria-label="Fechar"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <!--<form method="post" action="/atualizar_status_chamado">
+                                                    <form method="post" action="/atualizar_status_chamado">
                                                         <input type="hidden" name="chamado_id" value="{{ chamado.id }}">
                                                         <input type="hidden" name="acao" value="finalizar">
                                                         <button type="submit"
                                                             class="btn btn-success w-100 mb-2">Finalizar</button>
-                                                    </form>-->
+                                                    </form>
                                                     <form method="post" action="/atualizar_status_chamado">
                                                         <input type="hidden" name="chamado_id" value="{{ chamado.id }}">
                                                         <input type="hidden" name="acao" value="Aceitar_solicitar">
@@ -174,36 +171,13 @@
                                                     <form method="post" action="/atualizar_status_chamado">
                                                         <input type="hidden" name="chamado_id" value="{{ chamado.id }}">
                                                         <input type="hidden" name="acao" value="Outra Ação">
-                                                        <button type="submit" class="btn btn-secondary w-100">Em
-                                                            análise</button>
+                                                        <button type="submit" class="btn btn-secondary w-100">Em análise</button>
                                                     </form>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
-                                <td>
-                                    <form method="post" action="/atualizar_status_chamado">
-                                        <input type="hidden" name="chamado_id" value="{{ chamado.id }}">
-                                        <div class="input-group input-group-sm">
-                                            <input type="text" name="ordem_coleta"
-                                                class="form-control form-control-sm ordem-input"
-                                                placeholder="Ordem de coleta" value="{{ chamado.ordem_coleta or '' }}"
-                                                {% if chamado.status=='Concluído' %} readonly {% endif %}
-                                                data-original="{{ chamado.ordem_coleta or '' }}" required>
-
-                                            {% if chamado.status == 'Concluído' and chamado.ordem_coleta %}
-                                            <button type="button"
-                                                class="btn btn-sm btn-secondary editar-btn">Editar</button>
-                                            {% else %}
-                                            <button type="submit" name="acao" value="finalizar"
-                                                class="btn btn-sm btn-success">Finalizar</button>
-                                            {% endif %}
-                                        </div>
-                                    </form>
-
-                                </td>
-
                                 <td>
                                     <a href="/download_nf/{{ chamado.id }}" class="btn btn-sm btn-outline-secondary">
                                         <i class="bi bi-download"></i>
@@ -216,26 +190,6 @@
                 </div>
             </div>
         </div>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                document.querySelectorAll('.editar-btn').forEach(function (btn) {
-                    btn.addEventListener('click', function () {
-                        const input = btn.closest('.input-group').querySelector('.ordem-input');
-
-                        input.removeAttribute('readonly');
-                        input.focus();
-
-                        // Substitui o botão "Editar" por "Finalizar"
-                        btn.outerHTML = `
-        <button type="submit" name="acao" value="finalizar" class="btn btn-sm btn-success">
-          Finalizar
-        </button>
-      `;
-                    });
-                });
-            });
-        </script>
-
 
         <!-- DataTables init -->
         <script>
