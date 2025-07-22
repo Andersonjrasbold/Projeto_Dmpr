@@ -668,60 +668,63 @@ def importar_produtos():
     try:
         file = request.files.get('file')
         if not file:
-            print("Nenhum arquivo recebido.")
             return jsonify({"status": "erro", "mensagem": "Nenhum arquivo enviado"}), 400
 
-        # Leitura do Excel
         df = pd.read_excel(BytesIO(file.read()), engine='openpyxl')
         df.columns = df.columns.str.strip().str.upper()
-        print("Colunas encontradas:", df.columns.tolist())
 
-        if 'EAN' not in df.columns or 'QUANTIDADE' not in df.columns:
-            return jsonify({
-                "status": "erro",
-                "mensagem": "Arquivo inválido. Precisa de colunas: EAN e Quantidade"
-            }), 400
+        for col in ['EAN', 'QUANTIDADE', 'CNPJ']:
+            if col not in df.columns:
+                return jsonify({"status": "erro", "mensagem": f"Coluna obrigatória '{col}' não encontrada"}), 400
 
-        # Remover linhas sem EAN
-        df = df.dropna(subset=['EAN'])
-        print("DataFrame após dropna():")
-        print(df)
+        df = df.dropna(subset=['EAN', 'CNPJ'])
 
-        lista_eans = df['EAN'].astype(str).tolist()
-        print("EANs extraídos:", lista_eans)
-
-        # Verificar se QUANTIDADE contém valores válidos
         try:
             df['QUANTIDADE'] = df['QUANTIDADE'].astype(int)
-        except Exception as conv_erro:
-            print("Erro ao converter coluna QUANTIDADE para int:", conv_erro)
+        except Exception:
             return jsonify({"status": "erro", "mensagem": "Coluna 'Quantidade' contém valores inválidos."}), 400
 
-        # Criar dicionário de quantidade por EAN
-        quantidade_map = dict(zip(df['EAN'].astype(str), df['QUANTIDADE']))
+        # Agrupar os dados por CNPJ
+        pedidos_por_cnpj = {}
+        todos_eans = set()
 
-        # Buscar produtos no banco
-        produtos = buscar_produtos_por_eans(lista_eans)
-        print("Produtos encontrados:", produtos)
+        for _, row in df.iterrows():
+            cnpj = str(row['CNPJ']).strip()
+            ean = str(row['EAN']).strip()
+            quantidade = int(row['QUANTIDADE'])
 
-        # Criar lista de produtos com quantidade
-        lista_de_produtos = [
-            {"ean": str(ean), "quantidade": quantidade_map.get(str(ean), 1)}
-            for ean in lista_eans
-        ]
+            if cnpj not in pedidos_por_cnpj:
+                pedidos_por_cnpj[cnpj] = []
 
-        return jsonify({
-            "status": "ok",
-            "produtos": produtos,
-            "lista_de_produtos": lista_de_produtos
-        })
+            pedidos_por_cnpj[cnpj].append({"ean": ean, "quantidade": quantidade})
+            todos_eans.add(ean)
+
+        # Buscar todos os produtos de uma vez só
+        produtos = buscar_produtos_por_eans(list(todos_eans))
+        produtos_por_ean = {str(p['CODBARRA_PRODUTO']): p for p in produtos}
+
+        # Montar estrutura final por CNPJ
+        pedidos_final = {}
+
+        for cnpj, itens in pedidos_por_cnpj.items():
+            pedidos_final[cnpj] = []
+            for item in itens:
+                produto_info = produtos_por_ean.get(item['ean'])
+                if produto_info:
+                    pedidos_final[cnpj].append({
+                        "ean": item['ean'],
+                        "quantidade": item['quantidade'],
+                        "nome": produto_info['NOME_PRODUTO'],
+                        "preco": float(produto_info['PRVENDA_PRODUTO']),
+                        "imagem": f"/static/fotos/{produto_info['COD_PRODUTO']}.jpg"
+                    })
+
+        return jsonify({"status": "ok", "pedidos": pedidos_final})
 
     except Exception as e:
         import traceback
-        print("❗ ERRO DESCONHECIDO")
         traceback.print_exc()
-        return jsonify({"status": "erro", "mensagem": "Erro desconhecido. Verifique o terminal para detalhes."}), 500
-
+        return jsonify({"status": "erro", "mensagem": "Erro desconhecido."}), 500
 
 # PDF Viewer
 @app.route('/pdf/<nome_arquivo>')

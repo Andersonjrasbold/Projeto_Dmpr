@@ -2,35 +2,26 @@ let carrinho = [];
 let itensPorPagina = 12;
 let paginaAtual = 1;
 
-// Função para obter a chave do carrinho por cliente
 function getChaveCarrinho() {
   const cnpj = sessionStorage.getItem('cliente_cnpj');
-  return cnpj ? `carrinho_${cnpj}` : 'carrinho';
+  return cnpj ? `carrinho_${cnpj}` : 'carrinho_padrao';
 }
 
-// Atualiza a badge de quantidade de itens no carrinho
 function atualizarBadgeCarrinho() {
   const badge = document.getElementById('cart-badge');
   const totalItens = carrinho.reduce((soma, item) => soma + item.quantidade, 0);
-
   if (badge) {
-    if (totalItens > 0) {
-      badge.textContent = totalItens;
-      badge.style.display = 'inline-block';
-    } else {
-      badge.style.display = 'none';
-    }
+    badge.textContent = totalItens;
+    badge.style.display = totalItens > 0 ? 'inline-block' : 'none';
   }
 }
 
-// Salvar carrinho no localStorage
 function salvarCarrinho() {
   const chave = getChaveCarrinho();
   localStorage.setItem(chave, JSON.stringify(carrinho));
   atualizarBadgeCarrinho();
 }
 
-// Carregar carrinho do localStorage
 function carregarCarrinho() {
   const chave = getChaveCarrinho();
   const dados = localStorage.getItem(chave);
@@ -44,8 +35,6 @@ function carregarCarrinho() {
   atualizarBadgeCarrinho();
 }
 
-// Atualizar carrinho na tela
-// Atualizar carrinho na tela
 function atualizarCarrinho() {
   const tbody = document.getElementById("cart-table-body");
   const totalSpan = document.getElementById("cart-total");
@@ -82,28 +71,36 @@ function atualizarCarrinho() {
   salvarCarrinho();
 }
 
-
-// Adicionar produto ao carrinho
 function adicionarProdutoCarrinho(nome, preco, quantidade, imagem) {
-  const existente = carrinho.find(item => item.nome === nome);
+  const chave = getChaveCarrinho();
+  let carrinhoAtual = JSON.parse(localStorage.getItem(chave) || "[]");
+
+  const existente = carrinhoAtual.find(item => item.nome === nome);
   if (existente) {
     existente.quantidade += quantidade;
   } else {
-    carrinho.push({ nome, preco, quantidade, imagem });
+    carrinhoAtual.push({ nome, preco, quantidade, imagem });
   }
-  atualizarCarrinho();
+
+  // Salva no carrinho do CNPJ específico
+  localStorage.setItem(chave, JSON.stringify(carrinhoAtual));
+
+  // Se este CNPJ for o mesmo da sessão, atualiza o carrinho visual (cart padrão)
+  if (chave === getChaveCarrinho()) {
+    carrinho = carrinhoAtual;
+    atualizarCarrinho();
+    atualizarBadgeCarrinho();
+  }
 }
 
-// Alterar quantidade (incremento/decremento)
+
+
 function alterarQuantidadeCarrinho(index, delta) {
   carrinho[index].quantidade += delta;
-  if (carrinho[index].quantidade <= 0) {
-    carrinho.splice(index, 1);
-  }
+  if (carrinho[index].quantidade <= 0) carrinho.splice(index, 1);
   atualizarCarrinho();
 }
 
-// Atualizar quantidade digitada direto no input
 function atualizarQuantidadeDireta(index, valor) {
   const novaQtd = parseInt(valor);
   if (novaQtd > 0) {
@@ -114,21 +111,32 @@ function atualizarQuantidadeDireta(index, valor) {
   atualizarCarrinho();
 }
 
-// Remover item do carrinho
 function removerItem(index) {
-  carrinho.splice(index, 1);
-  atualizarCarrinho();
-}
+  const chave = getChaveCarrinho();
+  let carrinhoAtual = JSON.parse(localStorage.getItem(chave) || "[]");
 
-// Limpar carrinho inteiro
-function limparCarrinho() {
-  if (confirm("Deseja limpar o carrinho?")) {
-    carrinho = [];
+  carrinhoAtual.splice(index, 1);
+  localStorage.setItem(chave, JSON.stringify(carrinhoAtual));
+
+  if (chave === getChaveCarrinho()) {
+    carrinho = carrinhoAtual;
     atualizarCarrinho();
+    atualizarBadgeCarrinho();
   }
 }
 
-// Adicionar produto de Card ou Tabela
+
+function limparCarrinho() {
+  if (confirm("Deseja limpar o carrinho?")) {
+    const chave = getChaveCarrinho();
+    localStorage.removeItem(chave);
+    carrinho = [];
+    atualizarCarrinho();
+    atualizarBadgeCarrinho();
+  }
+}
+
+
 function adicionarAoCarrinho(botao) {
   const card = botao.closest(".card");
   if (card) {
@@ -171,7 +179,6 @@ function adicionarAoCarrinho(botao) {
   alert("Não foi possível adicionar o produto.");
 }
 
-// Importação de catálogo via backend (Excel)
 function adicionarProdutosPorCatalogo(catalogoBackEnd, listaDeProdutos) {
   listaDeProdutos.forEach(produto => {
     const info = catalogoBackEnd.find(item => item.ean === produto.ean);
@@ -181,6 +188,87 @@ function adicionarProdutosPorCatalogo(catalogoBackEnd, listaDeProdutos) {
       console.warn(`Produto com EAN ${produto.ean} não encontrado no catálogo do backend.`);
     }
   });
+}
+
+function formatarMoeda(valor) {
+  return `R$ ${valor.toFixed(2).replace('.', ',')}`;
+}
+
+function removerItemPorCNPJ(cnpj, index) {
+  const chave = `carrinho_${cnpj}`;
+  const carrinho = JSON.parse(localStorage.getItem(chave) || "[]");
+  carrinho.splice(index, 1);
+  localStorage.setItem(chave, JSON.stringify(carrinho));
+  mostrarCarrinhosPorCNPJ();
+}
+
+function renderizarCarrinhosPorCNPJ(carrinhosPorCNPJ) {
+  const container = document.getElementById('carrinhos-container');
+  const template = document.getElementById('template-carrinho-cnpj');
+  container.innerHTML = '';
+
+  Object.entries(carrinhosPorCNPJ).forEach(([cnpj, itens]) => {
+    if (!Array.isArray(itens) || itens.length === 0) return;
+
+    const clone = template.content.cloneNode(true);
+    clone.querySelector('.cnpj-label').textContent = cnpj;
+
+    const tbody = clone.querySelector('.cart-table-body');
+    let total = 0;
+
+    itens.forEach((item, index) => {
+      const subtotal = item.preco * item.quantidade;
+      total += subtotal;
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><img src="${item.imagem}" alt="${item.nome}" style="width: 50px; height: 50px; object-fit: cover;"></td>
+        <td>${item.nome}</td>
+        <td>${formatarMoeda(item.preco)}</td>
+        <td>${item.quantidade}</td>
+        <td>${formatarMoeda(subtotal)}</td>
+        <td><button class="btn btn-sm btn-danger" onclick="removerItemPorCNPJ('${cnpj}', ${index})">Remover</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    clone.querySelector('.total-final').textContent = formatarMoeda(total);
+
+    // ✅ Botão de limpar carrinho individual
+    const limparBtn = clone.querySelector('.limpar-btn');
+    limparBtn.dataset.cnpj = cnpj;
+    limparBtn.addEventListener('click', () => {
+      if (confirm(`Deseja limpar o carrinho do CNPJ ${cnpj}?`)) {
+        localStorage.removeItem(`carrinho_${cnpj}`);
+        mostrarCarrinhosPorCNPJ();
+      }
+    });
+
+    container.appendChild(clone);
+  });
+}
+
+
+function mostrarCarrinhosPorCNPJ() {
+  ['card-search-list', 'carouselExampleDark', 'photo-search-list', 'text-search-list', 'cart'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  const carrinhosDiv = document.getElementById('carrinhos-container');
+  if (carrinhosDiv) {
+    carrinhosDiv.style.display = 'block';
+
+    const carrinhosPorCNPJ = {};
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('carrinho_')) {
+        const cnpj = key.replace('carrinho_', '');
+        const carrinho = JSON.parse(localStorage.getItem(key));
+        carrinhosPorCNPJ[cnpj] = carrinho;
+      }
+    });
+
+    renderizarCarrinhosPorCNPJ(carrinhosPorCNPJ);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -210,33 +298,48 @@ document.addEventListener("DOMContentLoaded", function () {
       })
         .then(response => response.json())
         .then(data => {
-          if (data.status === "ok" && Array.isArray(data.produtos)) {
+          if (data.status === "ok" && data.pedidos) {
+            const carrinhosPorCNPJ = {};
 
-            const catalogo = data.produtos.map(produto => ({
-              nome: produto.NOME_PRODUTO,
-              preco: parseFloat(produto.PRVENDA_PRODUTO),
-              ean: String(produto.CODBARRA_PRODUTO),
-              imagem: `/static/fotos/${produto.COD_PRODUTO}.jpg`
-            }));
+            Object.entries(data.pedidos).forEach(([cnpj, itens]) => {
+              const chaveCarrinho = `carrinho_${cnpj}`;
+              const carrinhoAtual = JSON.parse(localStorage.getItem(chaveCarrinho) || "[]");
 
-            const listaDeProdutos = Array.isArray(data.lista_de_produtos)
-              ? data.lista_de_produtos.map(p => ({
-                ean: String(p.ean),
-                quantidade: parseInt(p.quantidade)
-              }))
-              : [];
+              itens.forEach(produto => {
+                const existente = carrinhoAtual.find(p => p.nome === produto.nome);
+                if (existente) {
+                  existente.quantidade += produto.quantidade;
+                } else {
+                  carrinhoAtual.push({ ...produto });
+                }
+              });
 
-            adicionarProdutosPorCatalogo(catalogo, listaDeProdutos);
+              localStorage.setItem(chaveCarrinho, JSON.stringify(carrinhoAtual));
+              carrinhosPorCNPJ[cnpj] = carrinhoAtual;
+            });
 
-            alert("Produtos importados com sucesso!");
+            renderizarCarrinhosPorCNPJ(carrinhosPorCNPJ);
+            mostrarCarrinhosPorCNPJ();
+            alert("Pedidos importados com sucesso para os CNPJs!");
 
-            const uploadModal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
-            uploadModal.hide();
+            // ✅ FECHAMENTO TOTAL DO MODAL e LIMPEZA DO TRAVAMENTO
+            const modalEl = document.getElementById('uploadModal');
+            if (modalEl) {
+              const instance = bootstrap.Modal.getInstance(modalEl);
+              if (instance) instance.hide();
+            }
 
-            // Corrige o travamento da tela (backdrop e scroll bloqueado)
-            document.body.classList.remove('modal-open');
-            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+            // ⚠️ Atraso para garantir que backdrop seja removido corretamente
+            setTimeout(() => {
+              document.body.classList.remove('modal-open');
 
+              // Remove qualquer backdrop remanescente
+              const backdrops = document.querySelectorAll('.modal-backdrop');
+              backdrops.forEach(el => el.remove());
+
+              // ⚠️ Também desbloqueia scroll se necessário
+              document.body.style.overflow = '';
+            }, 400);
           } else {
             alert("Erro ao importar: " + (data.mensagem || "Erro desconhecido."));
           }

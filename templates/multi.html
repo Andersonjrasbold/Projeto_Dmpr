@@ -527,31 +527,29 @@
 
     <!-- Template que será usado para criar os carrinhos por CNPJ -->
     <template id="template-carrinho-cnpj">
-      <div class="container">
-        <div class="carrinho-cnpj mb-4 border p-3 rounded bg-white shadow-sm">
-          <h5 class="mb-3">Carrinho - CNPJ: <span class="cnpj-label"></span></h5>
-          <div class="table-responsive">
-            <table class="table table-bordered align-middle text-center">
-              <thead class="table-light">
-                <tr>
-                  <th>Imagem</th>
-                  <th>Produto</th>
-                  <th>Preço</th>
-                  <th>Quantidade</th>
-                  <th>Total</th>
-                  <th>Ação</th>
-                </tr>
-              </thead>
-              <tbody class="cart-table-body"></tbody>
-            </table>
-          </div>
-          <div class="text-end">
-            <strong>Total Final: <span class="total-final">R$ 0,00</span></strong>
-          </div>
-          <div class="text-end mt-2">
-            <button class="btn btn-outline-danger limpar-btn" data-cnpj="">Limpar Carrinho</button>
-            <button class="btn btn-success finalizar-btn">Finalizar Compra</button>
-          </div>
+      <div class="carrinho-cnpj mb-4 border p-3 rounded bg-white">
+        <h5 class="mb-3">Carrinho - CNPJ: <span class="cnpj-label"></span></h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle text-center">
+            <thead class="table-light">
+              <tr>
+                <th>Imagem</th>
+                <th>Produto</th>
+                <th>Preço</th>
+                <th>Quantidade</th>
+                <th>Total</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+            <tbody class="cart-table-body"></tbody>
+          </table>
+        </div>
+        <div class="text-end">
+          <strong>Total Final: <span class="total-final">R$ 0,00</span></strong>
+        </div>
+        <div class="text-end mt-2">
+          <button class="btn btn-outline-danger limpar-btn">Limpar Carrinho</button>
+          <button class="btn btn-success finalizar-btn">Finalizar Compra</button>
         </div>
       </div>
     </template>
