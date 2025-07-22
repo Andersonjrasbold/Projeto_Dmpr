@@ -183,15 +183,14 @@ function adicionarProdutosPorCatalogo(catalogoBackEnd, listaDeProdutos) {
   });
 }
 
-// Ao carregar a página
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   carregarCarrinho();
   atualizarCarrinho();
   atualizarBadgeCarrinho();
 
   const uploadForm = document.getElementById('uploadForm');
   if (uploadForm) {
-    uploadForm.addEventListener('submit', function(e) {
+    uploadForm.addEventListener('submit', function (e) {
       e.preventDefault();
 
       const fileInput = document.getElementById('fileUpload');
@@ -209,21 +208,44 @@ document.addEventListener("DOMContentLoaded", function() {
         method: 'POST',
         body: formData
       })
-      .then(response => response.json())
-      .then(data => {
-        if (data.status === "ok" && Array.isArray(data.catalogo) && Array.isArray(data.lista_de_produtos)) {
-          adicionarProdutosPorCatalogo(data.catalogo, data.lista_de_produtos);
-          alert("Produtos importados com sucesso!");
-          const uploadModal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
-          uploadModal.hide();
-        } else {
-          alert("Erro ao importar: " + (data.mensagem || "Erro desconhecido."));
-        }
-      })
-      .catch(error => {
-        console.error("Erro:", error);
-        alert("Falha na importação.");
-      });
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === "ok" && Array.isArray(data.produtos)) {
+
+            const catalogo = data.produtos.map(produto => ({
+              nome: produto.NOME_PRODUTO,
+              preco: parseFloat(produto.PRVENDA_PRODUTO),
+              ean: String(produto.CODBARRA_PRODUTO),
+              imagem: `/static/fotos/${produto.COD_PRODUTO}.jpg`
+            }));
+
+            const listaDeProdutos = Array.isArray(data.lista_de_produtos)
+              ? data.lista_de_produtos.map(p => ({
+                ean: String(p.ean),
+                quantidade: parseInt(p.quantidade)
+              }))
+              : [];
+
+            adicionarProdutosPorCatalogo(catalogo, listaDeProdutos);
+
+            alert("Produtos importados com sucesso!");
+
+            const uploadModal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
+            uploadModal.hide();
+
+            // Corrige o travamento da tela (backdrop e scroll bloqueado)
+            document.body.classList.remove('modal-open');
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+
+          } else {
+            alert("Erro ao importar: " + (data.mensagem || "Erro desconhecido."));
+          }
+        })
+        .catch(error => {
+          console.error("Erro:", error);
+          alert("Falha na importação.");
+        });
     });
   }
 });
+

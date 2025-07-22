@@ -56,6 +56,55 @@ def dashboard():
         return redirect(url_for('pagina_login_usuario'))
     return render_template('dashboard.html')
 
+@app.route('/minhas_lojas')
+def minhas_lojas():
+    if 'cliente_id' not in session:
+        return redirect(url_for('pagina_login'))
+
+    cliente_id = session['cliente_id']
+    lojas = get_lojas_do_cliente(cliente_id)  # <-- nome corrigido
+    return render_template('minhas_lojas.html', lojas=lojas)  # <-- nome coerente com o HTML
+
+
+
+def get_lojas_do_cliente(cliente_id):
+    con = Acesso.get_connection()
+    cur = con.cursor()
+
+    # Primeiro, pegar o código do grupo do cliente
+    cur.execute("SELECT CODGRUPO_CLIENTE FROM CLIENTES WHERE COD_CLIENTE = ?", (cliente_id,))
+    grupo = cur.fetchone()
+
+    if not grupo or not grupo[0]:
+        cur.close()
+        con.close()
+        return []
+
+    cod_grupo = grupo[0]
+
+    # Agora buscar todas as lojas que pertencem a esse grupo
+    query = """
+    SELECT 
+        CGC_CLIENTE,
+        COD_CLIENTE,
+        NOME_CLIENTE,
+        CODGRUPO_CLIENTE,
+        NOME_GRUPOCLI
+    FROM CLIENTES c
+    LEFT JOIN GRUPO_CLIENTE gc ON c.CODGRUPO_CLIENTE = gc.COD_GRUPOCLI
+    WHERE c.CODGRUPO_CLIENTE = ?
+    ORDER BY NOME_CLIENTE
+    """
+
+    cur.execute(query, (cod_grupo,))
+    colunas = [desc[0] for desc in cur.description]
+    resultado = [dict(zip(colunas, row)) for row in cur.fetchall()]
+
+    cur.close()
+    con.close()
+    return resultado
+
+
 
 @app.route('/cadastrar_usuario', methods=['POST'])
 def cadastrar_usuario():
@@ -528,27 +577,7 @@ def enviar_devolucao():
 
 
 
-# Importação de produtos via Excel
-@app.route('/importar-produtos', methods=['POST'])
-def importar_produtos():
-    try:
-        file = request.files.get('file')
-        if not file:
-            return jsonify({"status": "erro", "mensagem": "Nenhum arquivo enviado"}), 400
-
-        df = pd.read_excel(BytesIO(file.read()))
-        if 'EAN' not in df.columns or 'Quantidade' not in df.columns:
-            return jsonify({"status": "erro", "mensagem": "Arquivo inválido. Precisa de colunas: EAN e Quantidade"}), 400
-
-        lista_eans = df['EAN'].dropna().astype(str).tolist()
-        produtos = buscar_produtos_por_eans(lista_eans)
-
-        return jsonify({"status": "ok", "produtos": produtos})
-
-    except Exception as e:
-        print(f"Erro na importação: {e}")
-        return jsonify({"status": "erro", "mensagem": str(e)}), 500
-
+# ✅ Defina a função primeiro
 def buscar_produtos_por_eans(lista_eans):
     con = Acesso.get_connection()
     cur = con.cursor()
@@ -565,6 +594,134 @@ def buscar_produtos_por_eans(lista_eans):
     cur.close()
     con.close()
     return produtos
+
+@app.route('/importar_excel_para_carrinho', methods=['POST'])
+def importar_excel_para_carrinho():
+    try:
+        file = request.files.get('file')
+        if not file:
+            print("⚠️ Nenhum arquivo enviado.")
+            return jsonify({"status": "erro", "mensagem": "Nenhum arquivo enviado"}), 400
+
+        # Leitura e padronização de colunas
+        df = pd.read_excel(BytesIO(file.read()), engine='openpyxl')
+        df.columns = df.columns.str.strip().str.upper()
+        print("📄 Colunas encontradas:", df.columns.tolist())
+
+        if 'EAN' not in df.columns or 'QUANTIDADE' not in df.columns:
+            return jsonify({"status": "erro", "mensagem": "Arquivo precisa ter colunas 'EAN' e 'Quantidade'"}), 400
+
+        df = df.dropna(subset=['EAN'])
+        print("📦 Linhas após remover EANs vazios:", len(df))
+
+        lista_eans = df['EAN'].astype(str).tolist()
+        quantidade_map = dict(zip(df['EAN'].astype(str), df['QUANTIDADE'].astype(int)))
+        print("🔍 EANs lidos:", lista_eans)
+        print("🧮 Quantidades:", quantidade_map)
+
+        # Buscar produtos no banco
+        produtos = buscar_produtos_por_eans(lista_eans)
+        print("✅ Produtos encontrados:", produtos)
+
+        # Comparar EANs encontrados
+        eans_encontrados = {str(p['CODBARRA_PRODUTO']) for p in produtos}
+        eans_nao_encontrados = [ean for ean in lista_eans if ean not in eans_encontrados]
+        print("❌ EANs não encontrados:", eans_nao_encontrados)
+
+        # Carrinho
+        carrinho = session.get('carrinho', {})
+
+        for produto in produtos:
+            cod = str(produto['COD_PRODUTO'])
+            ean = str(produto['CODBARRA_PRODUTO'])
+            qtd = quantidade_map.get(ean, 1)
+
+            if cod not in carrinho:
+                carrinho[cod] = {
+                    "nome": produto['NOME_PRODUTO'],
+                    "ean": produto['CODBARRA_PRODUTO'],
+                    "preco": float(produto['PRVENDA_PRODUTO']),
+                    "quantidade": 0
+                }
+
+            carrinho[cod]['quantidade'] += qtd
+
+        session['carrinho'] = carrinho
+
+        return jsonify({
+            "status": "ok",
+            "mensagem": "Produtos adicionados ao carrinho",
+            "carrinho": carrinho,
+            "ean_nao_encontrado": eans_nao_encontrados
+        })
+
+    except Exception as e:
+        import traceback
+        print("❗ ERRO ao importar Excel:")
+        traceback.print_exc()
+        return jsonify({"status": "erro", "mensagem": "Erro desconhecido. Verifique o servidor para mais detalhes."}), 500
+
+
+# ✅ Depois defina a rota
+@app.route('/importar-produtos', methods=['POST'])
+def importar_produtos():
+    try:
+        file = request.files.get('file')
+        if not file:
+            print("Nenhum arquivo recebido.")
+            return jsonify({"status": "erro", "mensagem": "Nenhum arquivo enviado"}), 400
+
+        # Leitura do Excel
+        df = pd.read_excel(BytesIO(file.read()), engine='openpyxl')
+        df.columns = df.columns.str.strip().str.upper()
+        print("Colunas encontradas:", df.columns.tolist())
+
+        if 'EAN' not in df.columns or 'QUANTIDADE' not in df.columns:
+            return jsonify({
+                "status": "erro",
+                "mensagem": "Arquivo inválido. Precisa de colunas: EAN e Quantidade"
+            }), 400
+
+        # Remover linhas sem EAN
+        df = df.dropna(subset=['EAN'])
+        print("DataFrame após dropna():")
+        print(df)
+
+        lista_eans = df['EAN'].astype(str).tolist()
+        print("EANs extraídos:", lista_eans)
+
+        # Verificar se QUANTIDADE contém valores válidos
+        try:
+            df['QUANTIDADE'] = df['QUANTIDADE'].astype(int)
+        except Exception as conv_erro:
+            print("Erro ao converter coluna QUANTIDADE para int:", conv_erro)
+            return jsonify({"status": "erro", "mensagem": "Coluna 'Quantidade' contém valores inválidos."}), 400
+
+        # Criar dicionário de quantidade por EAN
+        quantidade_map = dict(zip(df['EAN'].astype(str), df['QUANTIDADE']))
+
+        # Buscar produtos no banco
+        produtos = buscar_produtos_por_eans(lista_eans)
+        print("Produtos encontrados:", produtos)
+
+        # Criar lista de produtos com quantidade
+        lista_de_produtos = [
+            {"ean": str(ean), "quantidade": quantidade_map.get(str(ean), 1)}
+            for ean in lista_eans
+        ]
+
+        return jsonify({
+            "status": "ok",
+            "produtos": produtos,
+            "lista_de_produtos": lista_de_produtos
+        })
+
+    except Exception as e:
+        import traceback
+        print("❗ ERRO DESCONHECIDO")
+        traceback.print_exc()
+        return jsonify({"status": "erro", "mensagem": "Erro desconhecido. Verifique o terminal para detalhes."}), 500
+
 
 # PDF Viewer
 @app.route('/pdf/<nome_arquivo>')

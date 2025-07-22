@@ -39,7 +39,7 @@
 <body>
   <!-- header-->
   <main>
-    <header>
+     <header>
       <div style="padding: auto; background-color: rgb(16, 0, 87);">
         <div class="container">
           {% if session.get('cliente_nome') %}
@@ -73,7 +73,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="devolucoesDropdown">
                           <li><a class="dropdown-item" href="/chamado">Abrir chamado de Devolução</a></li>
-                          <li><a class="dropdown-item" href="#">Acompanhar Devoluções</a></li>
+                          <li><a class="dropdown-item" href="/acompanhar_devolucoes">Acompanhar Devoluções</a></li>
                           <li><a class="dropdown-item" href="/devolucoes">Minhas Devoluções</a></li>
                           <li>
                             <hr class="dropdown-divider" />
@@ -94,8 +94,8 @@
                           Financeiro
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="financeiroDropdown">
-                          <li><a class="dropdown-item" href="#">Extrato</a></li>
-                          <li><a class="dropdown-item" href="/historico">Pagamentos</a></li>
+                          
+                          <li><a class="dropdown-item" href="/financeiro">Histórico</a></li>
                           <li>
                             <hr class="dropdown-divider" />
                           </li>
@@ -116,7 +116,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="meusPedidosDropdown">
 
-                          <li><a class="dropdown-item" href="/pedidos">Histórico de Pedidos</a></li>
+                          <li><a class="dropdown-item" href="/historico">Histórico de Pedidos</a></li>
                           <li>
                             <hr class="dropdown-divider" />
                           </li>
@@ -137,6 +137,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="minhaContaDropdown">
                           <li><a class="dropdown-item" href="/conta">Meus dados</a></li>
+                          <li><a class="dropdown-item" href="/minhas_lojas">Minhas Lojas</a></li>
 
                           <li>
                             <hr class="dropdown-divider" />
