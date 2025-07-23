@@ -9,6 +9,7 @@ from io import BytesIO
 import Acesso
 import AcessoOutroBanco
 import Lista_Produtos
+from Lista_Produtos import get_produtos
 from Lista_Produtos import get_produtos_promocao, get_laboratorios
 import clientes
 from clientes import get_cliente_por_id
@@ -24,6 +25,18 @@ from flask import request, jsonify, session
 import mysql.connector
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
+from functools import wraps
+from flask import session, redirect, url_for, request
+import re
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'cliente_id' not in session:
+            return redirect(url_for('pagina_login', next=request.path))
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta_segura'
@@ -55,6 +68,45 @@ def dashboard():
     if 'usuario_id' not in session:
         return redirect(url_for('pagina_login_usuario'))
     return render_template('dashboard.html')
+
+
+
+@app.route('/minhas_lojas_json')
+def minhas_lojas_json():
+    cliente_id = session.get('cliente_id')  # ou outro identificador do cliente logado
+    if not cliente_id:
+        return jsonify({'status': 'erro', 'mensagem': 'Cliente não autenticado'})
+
+    conn = Acesso.get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("""
+            SELECT C.NOME_CLIENTE, C.CGC_CLIENTE, G.NOME_GRUPOCLI
+            FROM CLIENTES C
+            LEFT JOIN GRUPOCLI G ON C.COD_GRUPOCLI = G.COD_GRUPOCLI
+            WHERE C.COD_GRUPOCLI = (
+                SELECT COD_GRUPOCLI FROM CLIENTES WHERE COD_CLIENTE = ?
+            )
+        """, (cliente_id,))
+        linhas = cursor.fetchall()
+
+        lojas = []
+        for row in linhas:
+            lojas.append({
+                'nome': row[0],
+                'cnpj': row[1],
+                'grupo': row[2] or 'Sem grupo'
+            })
+
+        return jsonify({'status': 'ok', 'lojas': lojas})
+    except Exception as e:
+        print("Erro ao buscar lojas:", e)
+        return jsonify({'status': 'erro', 'mensagem': 'Erro ao consultar lojas'})
+    finally:
+        cursor.close()
+        conn.close()
+
 
 @app.route('/minhas_lojas')
 def minhas_lojas():
@@ -175,8 +227,6 @@ def acesso():
 
 
 
-
-
 @app.route('/boleto/<int:numero>')
 def gerar_boleto(numero):
     try:
@@ -229,14 +279,17 @@ def gerar_boleto(numero):
 
 @app.route('/login')
 def pagina_login():
+    next_url = request.args.get('next')
     lista_clientes = clientes.get_clientes()
-    return render_template('login.html', clientes=lista_clientes)
+    return render_template('login.html', clientes=lista_clientes, next_url=next_url)
+
 
 @app.route('/login', methods=['POST'])
 def login_post():
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
+    next_url = data.get('next')  # ← capturando next
 
     con = Acesso.get_connection()
     cur = con.cursor()
@@ -253,9 +306,11 @@ def login_post():
         session['cliente_id'] = cliente[0]
         session['cliente_nome'] = cliente[1]
         session['cliente_cnpj'] = cliente[2]
-        return jsonify(status='ok', cnpj=cliente[2])
+        return jsonify(status='ok', redirect_url=next_url or '/loja')
     else:
         return jsonify(status='erro', mensagem='Credenciais inválidas')
+    
+
 
 @app.route('/loja')
 def loja():
@@ -263,6 +318,48 @@ def loja():
         return redirect(url_for('pagina_login'))
     produtos = Lista_Produtos.get_produtos()
     return render_template('loja.html', produtos=produtos)
+
+@app.route("/multi")
+@login_required
+def multi():
+    cliente_logado = session.get("cliente_cnpj")
+
+    # Limpa qualquer caractere não numérico (CNPJ limpo)
+    if cliente_logado:
+        cliente_logado = re.sub(r"\D", "", cliente_logado)
+
+    conn = Acesso.get_connection()
+    cursor = conn.cursor()
+
+    print("cliente_logado:", cliente_logado)
+
+    cursor.execute("SELECT CODGRUPO_CLIENTE FROM CLIENTES WHERE CGC_CLIENTE = ?", (cliente_logado,))
+    row = cursor.fetchone()
+    grupo = row[0] if row else None
+
+    print("Grupo encontrado:", grupo)
+
+    lojas = []
+    if grupo:
+        cursor.execute("""
+            SELECT 
+                c.NOME_CLIENTE, 
+                c.CGC_CLIENTE, 
+                gc.NOME_GRUPOCLI
+            FROM CLIENTES c
+            LEFT JOIN GRUPO_CLIENTE gc ON c.CODGRUPO_CLIENTE = gc.COD_GRUPOCLI
+            WHERE c.CODGRUPO_CLIENTE = ?
+            ORDER BY c.NOME_CLIENTE
+        """, (grupo,))
+        lojas = [dict(zip([column[0] for column in cursor.description], row)) for row in cursor.fetchall()]
+
+    print("Lojas carregadas:", lojas)
+
+    produtos = get_produtos()
+    return render_template("multi.html", lojas=lojas, produtos=produtos)
+
+
+
 
 @app.route('/upload_nf_devolucao', methods=['POST'])
 def upload_nf_devolucao():

@@ -34,7 +34,7 @@ def get_produtos(filtro_laboratorio=None):
         AND CATEGORIA_PRODUTO NOT IN ('26','13','29','14')
         AND COD_CLASSE NOT IN (4,5,6,7,9,10)
         AND ESTOQUE_PRODUTO > 0
-        --AND COD_PRODUTO <= 100
+        AND COD_PRODUTO <= 100
     """
 
     params = []
