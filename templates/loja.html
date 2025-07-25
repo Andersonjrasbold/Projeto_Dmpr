@@ -12,12 +12,21 @@
   <script src="https://kit.fontawesome.com/e8a55f7da4.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  
+  <!--
+  <script src="/static/js/carrinhoMulti.js"></script>
+  <script src="/static/js/carrinhoResumo.js"></script>
+  ESSES DE BAIXO ESTAVAM FUNCIONANDO
+  <script src="/static/js/carrinhoLoja.js"></script>
+  <script src="/static/js/carrinhoUtilidades.js"></script>
+  -->
   <script src="/static/js/carrinho.js"></script>
   <script src="/static/js/quantidadeBotoes.js"></script>
-  <script src></script>
-  <script src="/static/js/card-search-list.js"></script>
   <script src="/static/js/search.js"></script>
-  <script src="/static/js/esconder.js"></script>
+  <script src="/static/js/subistituirMultiplos.js"></script>
+  
+  
+
   <style>
     .card {
       transition: all 0.3s;
@@ -161,13 +170,16 @@
                   <div class="col-md-2">
                     <button class="btn btn-outline-dark"> <a href="/multi">Modo Multi</a> </button>
                   </div>
+
+
+
                   <!-- Carrinho de compras - 2 colunas -->
                   <div class="col-md-2 py-2 text-end">
                     <a href="#" class="text-decoration-none position-relative">
-                      <span id="cart-total" class="cart-total" onclick="mostrarCarrinhosPorCNPJ()" bold>
+                      <span id="cart-total" class="cart-total" style="cursor: pointer;"
+                        onclick="substituirMultiplos(['card-search-list', 'photo-search-list', 'text-search-list', 'carouselExampleDark'], 'cart')">
                         <strong>R$ 0,00</strong>
                       </span>
-
 
                       <i class="bi bi-cart"></i>
                       <!--<span id="cart-badge"
@@ -348,11 +360,11 @@
                 </p>
                 <div class="d-flex justify-content-between small mb-1">
                   <p class="text-body-secondary mb-0">{{ produto.CODBARRA_PRODUTO }}</p>
-                  <p class="text-body-secondary mb-0">Preço R$ {{ "%.2f"|format(produto.PRVENDA_PRODUTO) }}</p>
+                  <p class="text-body-secondary mb-0">Preço R$ {{ "%.2f"|format(produto.PRVENDA) }}</p>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                   <p class="text-body-secondary mb-0 small">ST R$</p>
-                  <strong class="text-dark fs-6 mb-0">Final R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}</strong>
+                  <strong class="text-dark fs-6 mb-0">Final R$ {{ "%.2f"|format(produto.PRVENDA_COM_DESC) }}</strong>
                 </div>
               </div>
               <div class="card-footer d-flex justify-content-between align-items-center">
@@ -361,7 +373,7 @@
                     data-bs-target="#productModal" data-nome="{{ produto.NOME_PRODUTO }}"
                     data-img="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}"
                     data-categoria="{{ produto.NOME_CATEGORIA }}" data-barra="{{ produto.CODBARRA_PRODUTO }}"
-                    data-preco="{{ " %.2f"|format(produto.PRECO_DESCONTO) }}" onclick="abrirModal(this)">
+                    data-preco="{{ " %.2f"|format(produto.PRVENDA_COM_DESC) }}" onclick="abrirModal(this)">
                     Mais <i class="bi bi-info-circle"></i>
                   </button>
                   <div class="d-flex align-items-center border rounded">
@@ -436,7 +448,7 @@
                 <td>12/07/2027</td>
                 <td>R$ 10,90</td>
                 <td>R$ 1,00</td>
-                <td class="preco-produto">R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}</td>
+                <td class="preco-produto">R$ {{ "%.2f"|format(produto.PRVENDA_COM_DESC) }}</td>
                 <td>
                   <div class="d-flex align-items-center gap-2">
                     <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal"
@@ -490,7 +502,7 @@
                 <td>125</td>
                 <td>R$ 10,90</td>
                 <td>R$ 1,00</td>
-                <td class="preco-produto">R$ {{ "%.2f"|format(produto.PRECO_DESCONTO) }}</td>
+                <td class="preco-produto">R$ {{ "%.2f"|format(produto.PRVENDA_COM_DESC) }}</td>
                 <td>
                   <div class="d-flex align-items-center gap-2">
                     <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal"
@@ -517,57 +529,52 @@
       </div>
     </div>
     <!--  Produtos-->
-    <!-- Carrinho -->
-    <!-- Carrinho padrão -->
-    <div id="cart" style="display: none;" class="container shadow p-3 mb-2 bg-white rounded">
-      <!-- conteúdo do carrinho original aqui -->
-    </div>
-    <div id="resumo-geral-pedidos" class="container mb-4" style="display: block;">
-      <div class=" shadow-sm p-3">
-        <div class="row align-items-center justify-content-between">
 
-          <!-- Título -->
-          <div class="col-md-4">
-            <h5 class="mb-2">Resumo dos Pedidos</h5>
-            <strong>Total Geral: <span id="total-geral-pedidos">R$ 0,00</span></strong>
-          </div>
+    <!-- Carrinho por CNPJ -->
+    <section id="cart" class="container" style="display: none;">
+      <!-- BLOCO ÚNICO COM RESUMO E CARRINHOS NO MESMO CONTAINER -->
 
-          <!-- Select de Prazo Global -->
-          <div class="col-md-4">
-            <label for="prazo-global" class="form-label mb-1"><strong>Prazo de Pagamento:</strong></label>
-            <select class="form-select" id="prazo-global">
-              <option value="" selected disabled>Selecione o prazo</option>
-              <option value="avista">À vista</option>
-              <option value="7">7 dias</option>
-              <option value="14">14 dias</option>
-              <option value="21">21 dias</option>
-              <option value="30">30 dias</option>
-              <option value="45">45 dias</option>
-              <option value="60">60 dias</option>
-              <option value="90">90 dias</option>
-            </select>
-          </div>
+      <!-- Resumo Geral dos Pedidos -->
+      <div id="resumo-geral-pedidos" class="mb-4">
+        <div class="shadow-sm p-3 bg-white rounded border">
+          <div class="row align-items-center justify-content-between">
+            <div class="col-md-4">
+              <h5 class="mb-2">Resumo dos Pedidos</h5>
+              <strong>Total Geral: <span id="total-geral-pedidos">R$ 0,00</span></strong>
+            </div>
 
-          <!-- Botão Enviar Todos -->
-          <div class="col-md-3 text-end">
-            <button class="btn btn-success mt-4" onclick="enviarTodosPedidos()">Enviar Todos os Pedidos</button>
+            <div class="col-md-4">
+              <label for="prazo-global" class="form-label mb-1"><strong>Prazo de Pagamento:</strong></label>
+              <select class="form-select" id="prazo-global">
+                <option value="" selected disabled>Selecione o prazo</option>
+                <option value="avista">À vista</option>
+                <option value="7">7 dias</option>
+                <option value="14">14 dias</option>
+                <option value="21">21 dias</option>
+                <option value="30">30 dias</option>
+                <option value="45">45 dias</option>
+                <option value="60">60 dias</option>
+                <option value="90">90 dias</option>
+              </select>
+            </div>
+
+            <div class="col-md-3 text-end">
+              <button class="btn btn-success mt-4" onclick="enviarTodosPedidos()">Enviar Todos os Pedidos</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Carrinhos múltiplos por CNPJ (inserir aqui!) -->
-    <div id="carrinhos-container" style="display: none;"></div>
+      <!-- Carrinhos dinâmicos por CNPJ serão inseridos aqui -->
+      <div id="carrinhos-container" class="mb-4"></div>
 
-    <!-- Template que será usado para criar os carrinhos por CNPJ -->
-    <template id="template-carrinho-cnpj">
-      <div class="container">
+      <!-- Template de carrinho individual por CNPJ -->
+      <template id="template-carrinho-cnpj">
         <div class="carrinho-cnpj mb-4 border p-3 rounded bg-white shadow-sm">
-          <!-- Cabeçalho com título à esquerda e prazo à direita na mesma linha -->
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0">Carrinho - CNPJ: <span class="cnpj-label"></span></h5>
             <div class="d-flex align-items-center">
-              <label for="prazo-cnpj" class="form-label me-2 mb-0"><strong>Prazo:</strong></label>
+              <label class="form-label me-2 mb-0"><strong>Prazo:</strong></label>
               <select class="form-select d-inline-block w-auto prazo-individual" data-cnpj="">
                 <option value="" disabled selected>Selecione</option>
                 <option value="avista">À vista</option>
@@ -582,6 +589,7 @@
             </div>
           </div>
 
+          <!-- Tabela de produtos do carrinho -->
           <div class="table-responsive">
             <table class="table table-bordered align-middle text-center">
               <thead class="table-light">
@@ -597,6 +605,8 @@
               <tbody class="cart-table-body"></tbody>
             </table>
           </div>
+
+          <!-- Total final e ações -->
           <div class="text-end">
             <strong>Total Final: <span class="total-final">R$ 0,00</span></strong>
           </div>
@@ -605,11 +615,8 @@
             <button class="btn btn-success finalizar-btn">Finalizar Compra</button>
           </div>
         </div>
-      </div>
-    </template>
-
-
-
+      </template>
+    </section>
 
 
     <!--Page Navegation-->

@@ -26,8 +26,9 @@ import mysql.connector
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 from functools import wraps
-from flask import session, redirect, url_for, request
+from flask import session, redirect, url_for, request 
 import re
+from lista_precos import get_lista_precos_por_cliente
 
 def login_required(f):
     @wraps(f)
@@ -50,6 +51,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # Rotas principais...
+
 
 @app.route('/')
 def index():
@@ -311,13 +313,18 @@ def login_post():
         return jsonify(status='erro', mensagem='Credenciais inválidas')
     
 
-
-@app.route('/loja')
+@app.route("/loja")
 def loja():
     if 'cliente_id' not in session:
-        return redirect(url_for('pagina_login'))
-    produtos = Lista_Produtos.get_produtos()
-    return render_template('loja.html', produtos=produtos)
+        return redirect(url_for('login'))
+
+    cliente_id = session['cliente_id']
+    cliente = get_cliente_por_id(cliente_id)
+    produtos = get_lista_precos_por_cliente(cliente_id)
+
+    return render_template("loja.html", produtos=produtos, cliente=cliente)
+
+
 
 @app.route("/multi")
 @login_required
