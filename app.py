@@ -291,26 +291,45 @@ def login_post():
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
-    next_url = data.get('next')  # ← capturando next
+    next_url = data.get('next')
 
     con = Acesso.get_connection()
     cur = con.cursor()
+
+    # Consulta o cliente com login/senha
     cur.execute("""
-        SELECT COD_CLIENTE, NOME_CLIENTE, CGC_CLIENTE
+        SELECT COD_CLIENTE, NOME_CLIENTE, CGC_CLIENTE, CODGRUPO_CLIENTE
         FROM CLIENTES
         WHERE CGC_CLIENTE = ? AND SENHAEPED_CLIENTE = ?
     """, (username, password))
     cliente = cur.fetchone()
+
+    if not cliente:
+        cur.close()
+        con.close()
+        return jsonify(status='erro', mensagem='Credenciais inválidas')
+
+    cliente_id, nome, cnpj, grupo_id = cliente
+    session['cliente_id'] = cliente_id
+    session['cliente_nome'] = nome
+    session['cliente_cnpj'] = cnpj
+
+    # Verifica quantas lojas existem no mesmo grupo
+    redirecionar_para = '/loja'  # padrão
+
+    if grupo_id:
+        cur.execute("""
+            SELECT COUNT(*) FROM CLIENTES WHERE CODGRUPO_CLIENTE = ?
+        """, (grupo_id,))
+        total_lojas = cur.fetchone()[0]
+        if total_lojas > 1:
+            redirecionar_para = '/multi'
+
     cur.close()
     con.close()
 
-    if cliente:
-        session['cliente_id'] = cliente[0]
-        session['cliente_nome'] = cliente[1]
-        session['cliente_cnpj'] = cliente[2]
-        return jsonify(status='ok', redirect_url=next_url or '/loja')
-    else:
-        return jsonify(status='erro', mensagem='Credenciais inválidas')
+    return jsonify(status='ok', redirect_url=next_url or redirecionar_para)
+
     
 
 @app.route("/loja")

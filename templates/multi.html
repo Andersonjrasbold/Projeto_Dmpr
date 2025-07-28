@@ -12,12 +12,10 @@
   <script src="https://kit.fontawesome.com/e8a55f7da4.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="/static/js/carrinho.js"></script>
+  <script src="/static/js/carrinhoMulti.js"></script>
   <script src="/static/js/quantidadeBotoes.js"></script>
-  <script src></script>
-  <script src="/static/js/card-search-list.js"></script>
   <script src="/static/js/search.js"></script>
-  <script src="/static/js/esconder.js"></script>
+  <script src="/static/js/subistituirMultiplos.js"></script>
   <style>
     .card {
       transition: all 0.3s;
@@ -26,25 +24,27 @@
     .card:hover {
       transform: scale(1.05);
     }
-  
-  @keyframes piscar {
-    0%, 100% {
-      opacity: 1;
+
+    @keyframes piscar {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
     }
-    50% {
-      opacity: 0.4;
+
+    .btn-piscar {
+      animation: piscar 1s infinite;
     }
-  }
 
-  .btn-piscar {
-    animation: piscar 1s infinite;
-  }
-
-  .btn-piscar a {
-    text-decoration: none;
-    color: inherit;
-  }
-
+    .btn-piscar a {
+      text-decoration: none;
+      color: inherit;
+    }
   </style>
 </head>
 
@@ -67,7 +67,7 @@
             <div class="py-1 border-bottom">
               <div class="container">
                 <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                  <a href="/loja"
+                  <a href="/multi"
                     class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-bg-white text-decoration-none">
                     <img src="/static/img/logo-dmpr.png" alt="Logo_DMParaná" width="200" height="50">
                   </a>
@@ -84,6 +84,12 @@
                           Devoluções
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="devolucoesDropdown">
+                          <!--<span id="cart-badge"
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                            style="display: none;">
+                            0
+                            <span class="visually-hidden">Itens no carrinho</span>
+                            </span>-->
                           <li><a class="dropdown-item" href="/chamado">Abrir chamado de Devolução</a></li>
                           <li><a class="dropdown-item" href="/acompanhar_devolucoes">Acompanhar Devoluções</a></li>
                           <li><a class="dropdown-item" href="/devolucoes">Minhas Devoluções</a></li>
@@ -166,44 +172,31 @@
                 </div>
               </div>
             </div>
-            <!-- input-->
+            <!-- input -->
             <div class="py-2">
               <div class="container py-3">
-                <div class="row justify-content-right">
-                  <!-- Campo de busca -->
-                  <div class="col-12 col-md-8 mx-auto">
+                <div class="row align-items-center">
+                  <!-- Campo de busca centralizado -->
+                  <div class="col-12 col-md-9 mx-auto">
                     <form role="search">
                       <input type="search" id="search-item" onkeyup="search()" class="form-control"
                         placeholder="Buscar...">
                     </form>
                   </div>
-                  <div class="col-md-2">
-                    <button class="btn btn-outline-primary btn-piscar">
-                      <a href="/multi">Modo Multi</a>
-                    </button>
-                  </div>
-                  <!-- Carrinho de compras - 2 colunas -->
-                  <div class="col-md-2 py-2 text-end">
-                    <a href="#" class="text-decoration-none position-relative">
-                      <span id="cart-total" class="cart-total" onclick="mostrarCarrinhosPorCNPJ()" bold>
-                        <strong>R$ 0,00</strong>
-                      </span>
 
-
-                      <i class="bi bi-cart"></i>
-                      <!--<span id="cart-badge"
-                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                            style="display: none;">
-                            0
-                            <span class="visually-hidden">Itens no carrinho</span>
-                            </span>-->
-                      </i>
+                  <!-- Carrinho de compras à direita -->
+                  <div class="col-12 col-md-3 text-md-end text-center py-2">
+                    <a href="#" class="text-decoration-none position-relative" onclick="mostrarCarrinhosPorCNPJ()">
+                      <span id="cart-total" class="cart-total fw-bold">
+                        <p>R$ 0,00</p>
                       </span>
+                      <i class="bi bi-cart ms-2 fs-5"></i>
                     </a>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
         <div class="p-2 text-bg-white">
@@ -220,12 +213,6 @@
                 <li><a href="{{ url_for('promocoes') }}" class="btn btn-outline-dark me-2"><i
                       class="bi bi-fire "></i></a>
                 </li>
-                <!--<li><button type="button" class="btn btn-outline-dark me-2"><svg xmlns="http://www.w3.org/2000/svg"
-                    width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
-                    </svg></a></button></li>-->
-                <li></li>
                 <li>
                   <select id="filtro-industria" class="form-select" style="width: 350px; height: 40px;">
                     <option value="">Filtrar por Indústria</option>
@@ -234,16 +221,6 @@
                     {% endfor %}
                   </select>
                 </li>
-                <!--<li>
-                    <div class="">
-                      <select class="form-select" style="width: 200px; margin-left: 20px; height: 40px;">
-                        <option selected disabled>Classificar de A-Z</option>
-                        <option value="1">Geolab</option>
-                        <option value="2">EMS Genéricos</option>
-                        <option value="3">Teuto</option>
-                      </select>
-                    </div>
-                    </li>-->
               </ul>
               <div class="row align-items-center">
                 <div class="text-end">
@@ -385,14 +362,6 @@
                     data-preco="{{ " %.2f"|format(produto.PRECO_DESCONTO) }}" onclick="abrirModal(this)">
                     Mais <i class="bi bi-info-circle"></i>
                   </button>
-                  <!-- <div class="d-flex align-items-center border rounded">
-                    <button type="button" class="btn btn-sm btn-outline-dark px-2"
-                      onclick="alterarQuantidade(-1, this)">−</button>
-                    <input type="number" class="form-control text-center border-0" name="quantidade" min="0" value="0"
-                      step="1" style="width: 60px;">
-                    <button type="button" class="btn btn-sm btn-outline-dark px-2"
-                      onclick="alterarQuantidade(1, this)">+</button>
-                  </div>-->
                   <button class="btn btn-sm btn-outline-dark" onclick="abrirModalLojasDoGrupo(this)">Selecionar
                     Loja</button>
 
@@ -801,10 +770,6 @@
       crossorigin="anonymous"></script>
 
   </main>
-
 </body>
-
-
-
 
 </html>

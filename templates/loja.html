@@ -25,6 +25,8 @@
   <script src="/static/js/search.js"></script>
   <script src="/static/js/subistituirMultiplos.js"></script>
   
+
+  
   
 
   <style>
@@ -646,6 +648,7 @@
       </footer>
     </div>
     <!--footer end-->
+    <script src="{{ url_for('static', filename='js/carrinho.js') }}"></script>
     <script>
       function abrirModal(botao) {
         document.getElementById("modalNome").textContent = botao.dataset.nome;
