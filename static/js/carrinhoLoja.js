@@ -1,3 +1,42 @@
+document.addEventListener('DOMContentLoaded', () => {
+  mostrarCarrinho();
+
+  // Evento para botão de prazo global
+  const selectPrazoGlobal = document.getElementById("prazo-global");
+  if (selectPrazoGlobal) {
+    selectPrazoGlobal.addEventListener("change", () => {
+      const novoPrazo = selectPrazoGlobal.value;
+      const cnpj = sessionStorage.getItem('cliente_cnpj');
+      if (!cnpj) return;
+
+      const select = document.querySelector(`.prazo-individual[data-cnpj="${cnpj}"]`);
+      if (select) {
+        select.value = novoPrazo;
+        localStorage.setItem(`prazo_${cnpj}`, novoPrazo);
+        alert("Prazo aplicado com sucesso.");
+      }
+    });
+  }
+
+  // Delegação para botão de "Limpar Carrinho"
+  document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('limpar-btn')) {
+      const cnpj = e.target.dataset.cnpj;
+      if (confirm(`Deseja limpar o carrinho do CNPJ ${cnpj}?`)) {
+        localStorage.removeItem(`carrinho_${cnpj}`);
+        mostrarCarrinho();
+      }
+    }
+  });
+
+  // Delegação para botão "Finalizar Compra"
+  document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('finalizar-btn')) {
+      enviarPedido();
+    }
+  });
+});
+
 function adicionarAoCarrinho(botao) {
   const cnpj = sessionStorage.getItem('cliente_cnpj');
   if (!cnpj) return alert("Você precisa estar logado!");
@@ -38,97 +77,151 @@ function adicionarAoCarrinho(botao) {
 
   localStorage.setItem(chave, JSON.stringify(carrinho));
   quantidadeInput.value = 0;
-  mostrarCarrinhosPorCNPJ();
+
+  // ✅ Atualiza o total exibido no topo
+  const totalCarrinho = carrinho.reduce((soma, prod) => soma + (prod.quantidade * prod.preco), 0);
+  const spanTotal = document.getElementById('carrinhoLoja-total');
+  if (spanTotal) spanTotal.innerHTML = `<strong>${formatarMoeda(totalCarrinho)}</strong>`;
+
+  mostrarCarrinho();
 }
 
-function mostrarCarrinhosPorCNPJ() {
+
+function mostrarCarrinho() {
+  const cnpj = sessionStorage.getItem('cliente_cnpj');
+  if (!cnpj) return alert("Você precisa estar logado!");
+
+  const chave = `carrinho_${cnpj}`;
+  const carrinho = JSON.parse(localStorage.getItem(chave) || "[]");
   const container = document.getElementById('carrinhos-container');
+  const template = document.getElementById('template-carrinho-cnpj').content.cloneNode(true);
+
   container.innerHTML = '';
-  let totalGeral = 0;
 
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (!key.startsWith('carrinho_')) continue;
-
-    const cnpj = key.replace('carrinho_', '');
-    const carrinho = JSON.parse(localStorage.getItem(key)) || [];
-    if (carrinho.length === 0) continue;
-
-    const template = document.getElementById('template-carrinho-cnpj').content.cloneNode(true);
-    const tabelaBody = template.querySelector('.cart-table-body');
-    const totalFinalSpan = template.querySelector('.total-final');
-    const prazoSelect = template.querySelector('.prazo-individual');
-    const limparBtn = template.querySelector('.limpar-btn');
-    const cnpjLabel = template.querySelector('.cnpj-label');
-
-    prazoSelect.dataset.cnpj = cnpj;
-    limparBtn.dataset.cnpj = cnpj;
-    cnpjLabel.textContent = cnpj;
-
-    let total = 0;
-    carrinho.forEach(prod => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><img src="${prod.imagem}" style="height: 50px;"></td>
-        <td>${prod.nome}</td>
-        <td>${formatarMoeda(prod.preco)}</td>
-        <td>${prod.quantidade}</td>
-        <td>${formatarMoeda(prod.total)}</td>
-        <td><button class="btn btn-sm btn-danger" onclick="removerItemCarrinho('${prod.codBarra}', '${cnpj}')">Remover</button></td>
-      `;
-      total += prod.total;
-      tabelaBody.appendChild(tr);
-    });
-
-    totalFinalSpan.textContent = formatarMoeda(total);
-    container.appendChild(template);
-    totalGeral += total;
+  if (carrinho.length === 0) {
+    container.style.display = 'none';
+    return;
   }
 
-  document.getElementById('total-geral-pedidos').textContent = formatarMoeda(totalGeral);
+  const tabelaBody = template.querySelector('.cart-table-body');
+  const totalFinalSpan = template.querySelector('.total-final');
+  const prazoSelect = template.querySelector('.prazo-individual');
+  const limparBtn = template.querySelector('.limpar-btn');
+  const cnpjLabel = template.querySelector('.cnpj-label');
+
+  prazoSelect.dataset.cnpj = cnpj;
+  limparBtn.dataset.cnpj = cnpj;
+  cnpjLabel.textContent = cnpj;
+
+  let total = 0;
+
+  carrinho.forEach((prod, index) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+    <td><img src="${prod.imagem}" style="height: 50px;"></td>
+    <td>${prod.nome}</td>
+    <td>${formatarMoeda(prod.preco)}</td>
+    <td>
+      <div class="d-flex justify-content-center align-items-center">
+        <input type="number" class="form-control text-center" name="quantidade" 
+              value="${prod.quantidade}" min="1" style="width: 80px;"
+              onchange="atualizarQuantidadeDireta('${cnpj}', ${index}, this.value)">
+      </div>
+    </td>
+    <td id="totalProduto-${index}">${formatarMoeda(prod.total)}</td>
+    <td><button class="btn btn-sm btn-danger" onclick="removerItemPorCNPJ('${cnpj}', ${index})">Remover</button></td>
+  `;
+    total += prod.total;
+    tabelaBody.appendChild(tr);
+  });
+
+
+  totalFinalSpan.textContent = formatarMoeda(total);
+  container.appendChild(template);
   container.style.display = 'block';
+
+  document.getElementById('total-geral-pedidos').textContent = formatarMoeda(total);
+
+  const prazoSalvo = localStorage.getItem(`prazo_${cnpj}`);
+  if (prazoSalvo) prazoSelect.value = prazoSalvo;
+
+  prazoSelect.addEventListener('change', () => {
+    localStorage.setItem(`prazo_${cnpj}`, prazoSelect.value);
+  });
+}
+
+function atualizarQuantidadeDireta(cnpj, index, valor) {
+  const chave = `carrinho_${cnpj}`;
+  const carrinho = JSON.parse(localStorage.getItem(chave) || "[]");
+
+  const novaQtd = parseInt(valor);
+  if (isNaN(novaQtd) || novaQtd < 1) return;
+
+  carrinho[index].quantidade = novaQtd;
+  carrinho[index].total = parseFloat((novaQtd * carrinho[index].preco).toFixed(2));
+
+  localStorage.setItem(chave, JSON.stringify(carrinho));
+
+  // Atualiza total do produto diretamente
+  const totalCell = document.getElementById(`totalProduto-${index}`);
+  if (totalCell) totalCell.textContent = formatarMoeda(carrinho[index].total);
+
+  // Atualiza total final do carrinho
+  mostrarCarrinho();
 }
 
 
 
+function enviarPedido() {
+  const cnpj = sessionStorage.getItem('cliente_cnpj');
+  const chave = `carrinho_${cnpj}`;
+  const carrinho = JSON.parse(localStorage.getItem(chave) || "[]");
+  const prazo = document.querySelector(`[data-cnpj="${cnpj}"]`)?.value;
 
-function enviarTodosPedidos() {
-  let pedidos = [];
+  if (!prazo) return alert(`Selecione o prazo de pagamento.`);
+  if (carrinho.length === 0) return alert("Carrinho vazio.");
 
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (!key.startsWith('carrinho_')) continue;
+  const pedido = { cnpj, prazo, itens: carrinho };
 
-    const cnpj = key.replace('carrinho_', '');
-    const carrinho = JSON.parse(localStorage.getItem(key)) || [];
-    if (carrinho.length === 0) continue;
-
-    const prazo = document.querySelector(`[data-cnpj="${cnpj}"]`)?.value;
-    if (!prazo) {
-      alert(`Selecione o prazo de pagamento para o CNPJ ${cnpj}.`);
-      return;
-    }
-
-    pedidos.push({ cnpj, prazo, itens: carrinho });
-  }
-
-  if (pedidos.length === 0) return alert("Nenhum pedido para enviar.");
-
-  // Aqui você pode enviar via fetch() ou outro método
-  console.log("Pedidos enviados:", pedidos);
-
-  pedidos.forEach(p => localStorage.removeItem(`carrinho_${p.cnpj}`));
-  alert("Todos os pedidos foram enviados!");
-  mostrarCarrinhosPorCNPJ();
+  // Enviar pedido
+  fetch('/enviar-pedidos', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify([pedido])
+  })
+    .then(res => res.json())
+    .then(data => {
+      alert("Pedido enviado com sucesso!");
+      localStorage.removeItem(chave);
+      mostrarCarrinho();  // atualiza visual
+    })
+    .catch(err => {
+      console.error("Erro:", err);
+      alert("Erro ao enviar pedido.");
+    });
 }
 
-// Delegação para botões "Limpar Carrinho"
-document.addEventListener('click', function (e) {
-  if (e.target.classList.contains('limpar-btn')) {
-    const cnpj = e.target.dataset.cnpj;
-    limparCarrinho(cnpj);
-  }
-});
+function formatarMoeda(valor) {
+  const numero = parseFloat(valor);
+  if (isNaN(numero)) return "R$ 0,00";
+  return `R$ ${numero.toFixed(2).replace('.', ',')}`;
+}
 
-// Mostrar carrinhos ao carregar página
-document.addEventListener('DOMContentLoaded', mostrarCarrinhosPorCNPJ);
+function removerItem(cnpj, index) {
+  const chave = `carrinho_${cnpj}`;
+  const carrinho = JSON.parse(localStorage.getItem(chave) || "[]");
+  carrinho.splice(index, 1);
+  localStorage.setItem(chave, JSON.stringify(carrinho));
+  mostrarCarrinho();
+}
+
+localStorage.setItem(chave, JSON.stringify(carrinho));
+quantidadeInput.value = 0;
+
+// Atualiza total no ícone do carrinho no topo
+const totalCarrinho = carrinho.reduce((soma, prod) => soma + (prod.quantidade * prod.preco), 0);
+const spanTotal = document.getElementById('carrinhoLoja-total');
+if (spanTotal) spanTotal.innerHTML = `<strong>${formatarMoeda(totalCarrinho)}</strong>`;
+
+mostrarCarrinho();
+

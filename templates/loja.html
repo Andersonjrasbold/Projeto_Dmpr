@@ -12,7 +12,7 @@
   <script src="https://kit.fontawesome.com/e8a55f7da4.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  
+
   <!--
   <script src="/static/js/carrinhoMulti.js"></script>
   <script src="/static/js/carrinhoResumo.js"></script>
@@ -20,14 +20,14 @@
   <script src="/static/js/carrinhoLoja.js"></script>
   <script src="/static/js/carrinhoUtilidades.js"></script>
   -->
-  <script src="/static/js/carrinho.js"></script>
+  <script src="/static/js/carrinhoLoja.js"></script>
   <script src="/static/js/quantidadeBotoes.js"></script>
   <script src="/static/js/search.js"></script>
   <script src="/static/js/subistituirMultiplos.js"></script>
-  
 
-  
-  
+
+
+
 
   <style>
     .card {
@@ -172,25 +172,14 @@
                   <div class="col-md-2">
                     <button class="btn btn-outline-dark"> <a href="/multi">Modo Multi</a> </button>
                   </div>
-
-
-
                   <!-- Carrinho de compras - 2 colunas -->
                   <div class="col-md-2 py-2 text-end">
                     <a href="#" class="text-decoration-none position-relative">
-                      <span id="cart-total" class="cart-total" style="cursor: pointer;"
+                      <span id="carrinhoLoja-total" class="carrinhoLoja-total" style="cursor: pointer;"
                         onclick="substituirMultiplos(['card-search-list', 'photo-search-list', 'text-search-list', 'carouselExampleDark'], 'cart')">
                         <strong>R$ 0,00</strong>
                       </span>
-
                       <i class="bi bi-cart"></i>
-                      <!--<span id="cart-badge"
-                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                            style="display: none;">
-                            0
-                            <span class="visually-hidden">Itens no carrinho</span>
-                            </span>-->
-                      </i>
                       </span>
                     </a>
                   </div>
@@ -213,12 +202,6 @@
                 <li><a href="{{ url_for('promocoes') }}" class="btn btn-outline-dark me-2"><i
                       class="bi bi-fire "></i></a>
                 </li>
-                <!--<li><button type="button" class="btn btn-outline-dark me-2"><svg xmlns="http://www.w3.org/2000/svg"
-                    width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
-                    </svg></a></button></li>-->
-                <li></li>
                 <li>
                   <select id="filtro-industria" class="form-select" style="width: 350px; height: 40px;">
                     <option value="">Filtrar por Indústria</option>
@@ -227,16 +210,6 @@
                     {% endfor %}
                   </select>
                 </li>
-                <!--<li>
-                    <div class="">
-                      <select class="form-select" style="width: 200px; margin-left: 20px; height: 40px;">
-                        <option selected disabled>Classificar de A-Z</option>
-                        <option value="1">Geolab</option>
-                        <option value="2">EMS Genéricos</option>
-                        <option value="3">Teuto</option>
-                      </select>
-                    </div>
-                    </li>-->
               </ul>
               <div class="row align-items-center">
                 <div class="text-end">
@@ -394,25 +367,7 @@
           {% endfor %}
         </div>
       </div>
-      <!-- Modal FORA do loop -->
-      <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="productModalLabel">Detalhes do Produto</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-            </div>
-            <div class="modal-body">
-              <img id="modalImagem" src="" alt="Imagem do Produto" class="img-fluid mb-3" style="max-height: 200px;">
-              <p><strong>Nome:</strong> <span id="modalNome"></span></p>
-              <p><strong>Categoria:</strong> <span id="modalCategoria"></span></p>
-              <p><strong>Cód. de Barras:</strong> <span id="modalBarra"></span></p>
-              <p><strong>Preço Final:</strong> R$ <span id="modalPreco"></span></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Script para preencher o modal -->
+
       <!-- Lista com imagem -->
       <div class="search-list visual-view" id="photo-search-list"
         style="display: none; margin-top: 20px; margin-left: 200px; margin-right: 200px;">
@@ -529,6 +484,25 @@
         <p class="text-muted">Nenhum produto encontrado no banco.</p>
         {% endif %}
       </div>
+      <!-- Modal FORA do loop -->
+      <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="productModalLabel">Detalhes do Produto</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+              <img id="modalImagem" src="" alt="Imagem do Produto" class="img-fluid mb-3" style="max-height: 200px;">
+              <p><strong>Nome:</strong> <span id="modalNome"></span></p>
+              <p><strong>Categoria:</strong> <span id="modalCategoria"></span></p>
+              <p><strong>Cód. de Barras:</strong> <span id="modalBarra"></span></p>
+              <p><strong>Preço Final:</strong> R$ <span id="modalPreco"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Script para preencher o modal -->
     </div>
     <!--  Produtos-->
 
@@ -561,7 +535,8 @@
             </div>
 
             <div class="col-md-3 text-end">
-              <button class="btn btn-success mt-4" onclick="enviarTodosPedidos()">Enviar Todos os Pedidos</button>
+              <button class="btn btn-success mt-4" onclick="enviarPedido()">Enviar Pedido</button>
+
             </div>
           </div>
         </div>
@@ -648,7 +623,7 @@
       </footer>
     </div>
     <!--footer end-->
-    <script src="{{ url_for('static', filename='js/carrinho.js') }}"></script>
+    
     <script>
       function abrirModal(botao) {
         document.getElementById("modalNome").textContent = botao.dataset.nome;
