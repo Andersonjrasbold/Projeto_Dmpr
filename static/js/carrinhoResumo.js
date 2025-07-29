@@ -1,4 +1,4 @@
-alterarQuantidade
+/*alterarQuantidade
 
 // Módulo: carrinho-ui.js (refatorado)
 // Responsável por lidar com a interface visual do carrinho
@@ -257,4 +257,79 @@ function atualizarCarrinho() {
   totalSpan.textContent = formatarMoeda(total);
   totalPaymentSpan.textContent = formatarMoeda(total);
   salvarCarrinho();
+}
+*/
+
+
+
+function atualizarResumoGeralPedidos() {
+  let totalGeral = 0;
+
+  // Soma de todos os carrinhos armazenados
+  Object.keys(localStorage).forEach(chave => {
+    if (chave.startsWith("carrinho_")) {
+      const carrinho = JSON.parse(localStorage.getItem(chave) || "[]");
+      carrinho.forEach(item => {
+        totalGeral += item.preco * item.quantidade;
+      });
+    }
+  });
+
+  const spanTotal = document.getElementById("total-geral-pedidos");
+  if (spanTotal) {
+    spanTotal.textContent = formatarMoeda(totalGeral);
+  }
+
+  const cartTotal = document.getElementById("cart-total");
+  if (cartTotal) {
+    cartTotal.innerHTML = `<strong>${formatarMoeda(totalGeral)}</strong>`;
+  }
+
+  const resumoDiv = document.getElementById("resumo-geral-pedidos");
+  if (resumoDiv) {
+    resumoDiv.style.display = totalGeral > 0 ? "block" : "none";
+  }
+}
+
+
+function enviarTodosPedidos() {
+  const pedidos = [];
+
+  Object.keys(localStorage).forEach(key => {
+    if (key.startsWith('carrinho_')) {
+      const cnpj = key.replace('carrinho_', '');
+      const itens = JSON.parse(localStorage.getItem(key));
+      const prazo = document.getElementById('prazo-global').value || '';
+      if (itens.length > 0) {
+        pedidos.push({ cnpj, prazo, itens });
+      }
+    }
+  });
+
+  if (pedidos.length === 0) {
+    alert("Nenhum pedido encontrado para envio.");
+    return;
+  }
+
+  fetch('/enviar-pedidos', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pedidos })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'ok') {
+        alert("Todos os pedidos foram enviados com sucesso!");
+        Object.keys(localStorage).forEach(key => {
+          if (key.startsWith('carrinho_')) localStorage.removeItem(key);
+        });
+        mostrarCarrinhosPorCNPJ(); // recarrega carrinhos
+      } else {
+        alert("Erro ao enviar pedidos: " + (data.mensagem || "Erro desconhecido."));
+      }
+    })
+    .catch(err => {
+      console.error("Erro:", err);
+      alert("Falha ao enviar pedidos.");
+    });
 }

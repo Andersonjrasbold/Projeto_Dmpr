@@ -97,20 +97,28 @@ document.addEventListener("DOMContentLoaded", function () {
 let produtoSelecionado = null;
 
 
-function adicionarAoCarrinhoPorCNPJ(cnpj, produto) {
+function adicionarAoCarrinhoPorCNPJ(cnpj, item) {
   const chave = `carrinho_${cnpj}`;
-  const carrinhoAtual = JSON.parse(localStorage.getItem(chave) || "[]");
+  const carrinho = JSON.parse(localStorage.getItem(chave)) || [];
 
-  const existente = carrinhoAtual.find(p => p.codbarra === produto.codbarra);
+  // Verifica se o produto já existe no carrinho
+  const existente = carrinho.find(p => p.codBarra === item.codBarra);
+
   if (existente) {
-    existente.quantidade += produto.quantidade;
+    existente.quantidade += item.quantidade;
+    existente.total = parseFloat((existente.quantidade * existente.preco).toFixed(2));
   } else {
-    carrinhoAtual.push(produto);
+    // Calcula o total do novo item
+    item.total = parseFloat((item.quantidade * item.preco).toFixed(2));
+    carrinho.push(item);
   }
 
-  localStorage.setItem(chave, JSON.stringify(carrinhoAtual));
+  // Salva no mesmo carrinho, sem criar duplicatas
+  localStorage.setItem(chave, JSON.stringify(carrinho));
 }
 
+
+/*
 function abrirModalLojasDoGrupo(botao) {
   const modal = new bootstrap.Modal(document.getElementById('modalSelecionarLoja'));
   const tabela = document.getElementById('tabela-lojas-grupo');
@@ -168,7 +176,7 @@ function abrirModalLojasDoGrupo(botao) {
   });
 
   modal.show();
-}
+} */
 
 function adicionarParaLoja(cnpj, botao) {
   if (!produtoSelecionado || !produtoSelecionado.nome) {
@@ -195,13 +203,62 @@ function adicionarParaLoja(cnpj, botao) {
   }
 }
 
+// Atualiza a quantidade ao clicar nos botões + ou - dentro dos carrinhos por CNPJ
 function alterarQuantidade(delta, botao) {
   const input = botao.parentElement.querySelector("input");
   let valor = parseInt(input.value) || 0;
   valor += delta;
   if (valor < 0) valor = 0;
   input.value = valor;
+
+  // Atualiza o carrinho com base no DOM
+  atualizarQuantidadeCarrinhoPorCNPJ(botao);
 }
+
+// Atualiza a quantidade ao digitar diretamente no campo
+function atualizarQuantidadeDiretaInput(input) {
+  const valor = parseInt(input.value);
+  if (isNaN(valor) || valor < 0) return;
+  atualizarQuantidadeCarrinhoPorCNPJ(input);
+}
+
+function atualizarQuantidadeCarrinhoPorCNPJ(elemento) {
+  const tr = elemento.closest("tr");
+  const tbody = tr.closest("tbody");
+  const container = tr.closest(".carrinho-cnpj-container");
+  const cnpj = container?.dataset?.cnpj;
+  if (!cnpj) return;
+
+  const carrinho = JSON.parse(localStorage.getItem(`carrinho_${cnpj}`) || "[]");
+  const index = [...tbody.children].indexOf(tr);
+
+  const inputQtd = tr.querySelector("input[name='quantidade']");
+  const novaQtd = parseInt(inputQtd.value);
+  if (isNaN(novaQtd) || novaQtd < 1) return;
+
+  // Atualiza valores
+  carrinho[index].quantidade = novaQtd;
+  carrinho[index].total = parseFloat((novaQtd * carrinho[index].preco).toFixed(2));
+  localStorage.setItem(`carrinho_${cnpj}`, JSON.stringify(carrinho));
+
+  // ✅ Atualiza subtotal da linha
+  const tdSubtotal = tr.querySelector("td:nth-child(5)");
+  if (tdSubtotal) {
+    tdSubtotal.textContent = formatarMoeda(carrinho[index].total);
+  }
+
+  // ✅ Atualiza total do carrinho individual
+  const novaSoma = carrinho.reduce((acc, item) => acc + item.preco * item.quantidade, 0);
+  const containerTotal = container.querySelector(".total-final");
+  if (containerTotal) {
+    containerTotal.textContent = formatarMoeda(novaSoma);
+  }
+
+  // ✅ Atualiza resumo geral no topo
+  atualizarResumoGeralPedidos();
+}
+
+
 
 
 function adicionarProdutoParaTodasLojas(nomeProduto, codBarra, preco, modalId) {
@@ -216,7 +273,7 @@ function adicionarProdutoParaTodasLojas(nomeProduto, codBarra, preco, modalId) {
     if (qtd > 0) {
       adicionarAoCarrinhoPorCNPJ(cnpj, {
         nome: nomeProduto,
-        codbarra: codBarra,
+        codBarra: codBarra,
         preco: parseFloat(preco.replace(',', '.')),
         quantidade: qtd
       });
@@ -225,10 +282,17 @@ function adicionarProdutoParaTodasLojas(nomeProduto, codBarra, preco, modalId) {
   });
 
   if (algumAdicionado) {
+    // ✅ Atualiza visual
     if (typeof atualizarCarrinhoVisualPorCNPJ === "function") {
       atualizarCarrinhoVisualPorCNPJ();
     }
 
+    // ✅ Atualiza total no topo
+    if (typeof atualizarResumoGeralPedidos === "function") {
+      atualizarResumoGeralPedidos();
+    }
+
+    // ✅ Fecha modal
     const modalEl = document.getElementById(modalId);
     if (modalEl) {
       const modalInstance = bootstrap.Modal.getInstance(modalEl);
@@ -237,11 +301,13 @@ function adicionarProdutoParaTodasLojas(nomeProduto, codBarra, preco, modalId) {
       }
     }
 
-    alert("Produtos adicionados ao(s) carrinho(s) com sucesso!");
+    // ✅ Toast moderno
+    exibirToast("Produtos adicionados ao(s) carrinho(s)!");
   } else {
     alert("Informe ao menos uma quantidade válida.");
   }
 }
+
 
 // carrinho.js - V2 UNIFICADO E ROBUSTO
 
@@ -262,10 +328,11 @@ function formatarMoeda(valor) {
   return `R$ ${num.toFixed(2).replace('.', ',')}`;
 }
 
+
 function salvarCarrinho(cnpj = null) {
   const chave = getChaveCarrinho(cnpj);
   localStorage.setItem(chave, JSON.stringify(carrinho));
-  
+
 }
 
 function carregarCarrinho(cnpj = null) {
@@ -276,7 +343,7 @@ function carregarCarrinho(cnpj = null) {
   } catch {
     carrinho = [];
   }
-  
+
 }
 
 function atualizarBadgeCarrinho() {
@@ -304,7 +371,7 @@ function adicionarProdutoCarrinho(nome, preco, quantidade, imagem, cnpj = null) 
   if (cnpj === null || chave === getChaveCarrinho()) {
     carrinho = carrinhoAtual;
     atualizarCarrinho();
-    
+
   }
 }
 
@@ -329,7 +396,9 @@ function atualizarCarrinho() {
       <td>
         <div class="d-flex justify-content-center align-items-center">
           <button class="btn btn-sm btn-outline-secondary" onclick="alterarQuantidadeCarrinho(${index}, -1)">−</button>
-          <input type="number" min="1" value="${item.quantidade}" class="form-control mx-2 text-center" style="width: 60px;" onchange="atualizarQuantidadeDireta(${index}, this.value)">
+          <input type="number" name="quantidade" value="${item.quantidade}" min="1"
+            class="form-control text-center" style="max-width: 70px;"
+            onchange="atualizarQuantidadeDiretaPorCNPJ('${cnpj}', ${index}, this.value)">
           <button class="btn btn-sm btn-outline-secondary" onclick="alterarQuantidadeCarrinho(${index}, 1)">+</button>
         </div>
       </td>
@@ -343,6 +412,21 @@ function atualizarCarrinho() {
   totalPaymentSpan.textContent = formatarMoeda(total);
   salvarCarrinho();
 }
+
+function atualizarQuantidadeDiretaPorCNPJ(cnpj, index, novaQtd) {
+  const chave = `carrinho_${cnpj}`;
+  let carrinho = JSON.parse(localStorage.getItem(chave) || "[]");
+
+  const qtd = parseInt(novaQtd);
+  if (!carrinho[index] || isNaN(qtd) || qtd < 1) return;
+
+  carrinho[index].quantidade = qtd;
+  carrinho[index].total = parseFloat((qtd * carrinho[index].preco).toFixed(2));
+  localStorage.setItem(chave, JSON.stringify(carrinho));
+
+  mostrarCarrinhosPorCNPJ(); // re-renderiza visual
+}
+
 
 function alterarQuantidadeCarrinho(index, delta) {
   if (!carrinho[index]) return;
@@ -368,7 +452,7 @@ function limparCarrinho() {
   localStorage.removeItem(chave);
   carrinho = [];
   atualizarCarrinho();
-  
+
 }
 
 
@@ -389,6 +473,10 @@ function renderizarCarrinhosPorCNPJ(carrinhosPorCNPJ) {
     if (!Array.isArray(itens) || itens.length === 0) return;
 
     const clone = template.content.cloneNode(true);
+    const wrapper = document.createElement('div');
+    wrapper.className = 'carrinho-cnpj-container';
+    wrapper.dataset.cnpj = cnpj;
+
     clone.querySelector('.cnpj-label').textContent = cnpj;
 
     const tbody = clone.querySelector('.cart-table-body');
@@ -406,8 +494,9 @@ function renderizarCarrinhosPorCNPJ(carrinhosPorCNPJ) {
         <td>
         <div class="input-group input-group-sm justify-content-center" style="max-width: 160px; margin: auto;">
           <button class="btn btn-outline-dark" type="button" onclick="alterarQuantidade(-1, this)">−</button>
-          <input type="number" name="quantidade" value="${item.quantidade}" min="0"
-                class="form-control text-center" style="max-width: 70px;">
+          <input type="number" name="quantidade" value="${item.quantidade}" min="1"
+            class="form-control text-center" style="max-width: 70px;"
+            onchange="atualizarQuantidadeDiretaPorCNPJ('${cnpj}', ${index}, this.value)">
           <button class="btn btn-outline-dark" type="button" onclick="alterarQuantidade(1, this)">+</button>
         </div>
 
@@ -420,7 +509,6 @@ function renderizarCarrinhosPorCNPJ(carrinhosPorCNPJ) {
 
     clone.querySelector('.total-final').textContent = formatarMoeda(total);
 
-    // ✅ Botão de limpar
     const limparBtn = clone.querySelector('.limpar-btn');
     limparBtn.dataset.cnpj = cnpj;
     limparBtn.addEventListener('click', () => {
@@ -430,25 +518,20 @@ function renderizarCarrinhosPorCNPJ(carrinhosPorCNPJ) {
       }
     });
 
-    // ✅ Select de prazo
     const prazoSelect = clone.querySelector('.prazo-individual');
     prazoSelect.dataset.cnpj = cnpj;
-
-    // Carrega o prazo salvo, se existir
     const prazoSalvo = localStorage.getItem(`prazo_${cnpj}`);
     if (prazoSalvo) {
       prazoSelect.value = prazoSalvo;
     }
-
-    // Salva alterações ao mudar
     prazoSelect.addEventListener('change', () => {
       localStorage.setItem(`prazo_${cnpj}`, prazoSelect.value);
     });
 
-    container.appendChild(clone);
+    wrapper.appendChild(clone);
+    container.appendChild(wrapper);
   });
 
-  // ✅ Atualiza card resumo geral depois de renderizar tudo
   atualizarResumoGeralPedidos();
 }
 
@@ -476,77 +559,4 @@ function mostrarCarrinhosPorCNPJ() {
   }
 }
 
-
-
-function atualizarResumoGeralPedidos() {
-  let totalGeral = 0;
-
-  // Soma de todos os carrinhos armazenados
-  Object.keys(localStorage).forEach(chave => {
-    if (chave.startsWith("carrinho_")) {
-      const carrinho = JSON.parse(localStorage.getItem(chave) || "[]");
-      carrinho.forEach(item => {
-        totalGeral += item.preco * item.quantidade;
-      });
-    }
-  });
-
-  const spanTotal = document.getElementById("total-geral-pedidos");
-  if (spanTotal) {
-    spanTotal.textContent = formatarMoeda(totalGeral);
-  }
-
-  const cartTotal = document.getElementById("cart-total");
-  if (cartTotal) {
-    cartTotal.innerHTML = `<strong>${formatarMoeda(totalGeral)}</strong>`;
-  }
-
-  const resumoDiv = document.getElementById("resumo-geral-pedidos");
-  if (resumoDiv) {
-    resumoDiv.style.display = totalGeral > 0 ? "block" : "none";
-  }
-}
-
-
-function enviarTodosPedidos() {
-  const pedidos = [];
-
-  Object.keys(localStorage).forEach(key => {
-    if (key.startsWith('carrinho_')) {
-      const cnpj = key.replace('carrinho_', '');
-      const itens = JSON.parse(localStorage.getItem(key));
-      const prazo = document.getElementById('prazo-global').value || '';
-      if (itens.length > 0) {
-        pedidos.push({ cnpj, prazo, itens });
-      }
-    }
-  });
-
-  if (pedidos.length === 0) {
-    alert("Nenhum pedido encontrado para envio.");
-    return;
-  }
-
-  fetch('/enviar-pedidos', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ pedidos })
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (data.status === 'ok') {
-        alert("Todos os pedidos foram enviados com sucesso!");
-        Object.keys(localStorage).forEach(key => {
-          if (key.startsWith('carrinho_')) localStorage.removeItem(key);
-        });
-        mostrarCarrinhosPorCNPJ(); // recarrega carrinhos
-      } else {
-        alert("Erro ao enviar pedidos: " + (data.mensagem || "Erro desconhecido."));
-      }
-    })
-    .catch(err => {
-      console.error("Erro:", err);
-      alert("Falha ao enviar pedidos.");
-    });
-}
 

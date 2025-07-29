@@ -344,26 +344,23 @@ def loja():
     return render_template("loja.html", produtos=produtos, cliente=cliente)
 
 
-
 @app.route("/multi")
 @login_required
 def multi():
     cliente_logado = session.get("cliente_cnpj")
 
-    # Limpa qualquer caractere não numérico (CNPJ limpo)
-    if cliente_logado:
-        cliente_logado = re.sub(r"\D", "", cliente_logado)
+    if not cliente_logado:
+        return redirect(url_for("login"))
+
+    cliente_logado = re.sub(r"\D", "", cliente_logado)
 
     conn = Acesso.get_connection()
     cursor = conn.cursor()
 
-    print("cliente_logado:", cliente_logado)
-
-    cursor.execute("SELECT CODGRUPO_CLIENTE FROM CLIENTES WHERE CGC_CLIENTE = ?", (cliente_logado,))
+    # Obter grupo do cliente logado
+    cursor.execute("SELECT CODGRUPO_CLIENTE FROM CLIENTES WHERE REPLACE(REPLACE(REPLACE(CGC_CLIENTE, '.', ''), '-', ''), '/', '') = ?", (cliente_logado,))
     row = cursor.fetchone()
     grupo = row[0] if row else None
-
-    print("Grupo encontrado:", grupo)
 
     lojas = []
     if grupo:
@@ -379,11 +376,12 @@ def multi():
         """, (grupo,))
         lojas = [dict(zip([column[0] for column in cursor.description], row)) for row in cursor.fetchall()]
 
-    print("Lojas carregadas:", lojas)
-
     produtos = get_produtos()
-    return render_template("multi.html", lojas=lojas, produtos=produtos)
 
+    cursor.close()
+    conn.close()
+
+    return render_template("multi.html", lojas=lojas, produtos=produtos)
 
 
 
