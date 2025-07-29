@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   mostrarCarrinho();
 
-  // Evento para botão de prazo global
   const selectPrazoGlobal = document.getElementById("prazo-global");
   if (selectPrazoGlobal) {
     selectPrazoGlobal.addEventListener("change", () => {
@@ -18,18 +17,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Delegação para botão de "Limpar Carrinho"
   document.addEventListener('click', function (e) {
-    if (e.target.classList.contains('limpar-btn')) {
-      const cnpj = e.target.dataset.cnpj;
-      if (confirm(`Deseja limpar o carrinho do CNPJ ${cnpj}?`)) {
-        localStorage.removeItem(`carrinho_${cnpj}`);
-        mostrarCarrinho();
-      }
+  if (e.target.classList.contains('limpar-btn')) {
+    const cnpj = e.target.dataset.cnpj;
+    if (confirm(`Deseja limpar o carrinho do CNPJ ${cnpj}?`)) {
+      localStorage.removeItem(`carrinho_${cnpj}`);
+      mostrarCarrinho();  // ✅ Atualiza total-geral e esconde o carrinho se vazio
     }
-  });
+  }
+});
 
-  // Delegação para botão "Finalizar Compra"
   document.addEventListener('click', function (e) {
     if (e.target.classList.contains('finalizar-btn')) {
       enviarPedido();
@@ -45,7 +42,7 @@ function adicionarAoCarrinho(botao) {
   if (!produtoElement) return;
 
   const nome = produtoElement.querySelector('.card-title')?.innerText || produtoElement.querySelector('.nome-produto')?.innerText;
-  const codBarra = produtoElement.querySelector('.card-text small')?.innerText || produtoElement.querySelectorAll('td')[2]?.innerText;
+  const codBarra = produtoElement.dataset.codbarra;
   const precoText = produtoElement.querySelector('.text-dark')?.innerText || produtoElement.querySelector('.preco-produto')?.innerText;
   const quantidadeInput = produtoElement.querySelector('input[name="quantidade"]');
   const imagem = produtoElement.querySelector('img')?.src || '';
@@ -78,14 +75,12 @@ function adicionarAoCarrinho(botao) {
   localStorage.setItem(chave, JSON.stringify(carrinho));
   quantidadeInput.value = 0;
 
-  // ✅ Atualiza o total exibido no topo
   const totalCarrinho = carrinho.reduce((soma, prod) => soma + (prod.quantidade * prod.preco), 0);
   const spanTotal = document.getElementById('carrinhoLoja-total');
   if (spanTotal) spanTotal.innerHTML = `<strong>${formatarMoeda(totalCarrinho)}</strong>`;
 
   mostrarCarrinho();
 }
-
 
 function mostrarCarrinho() {
   const cnpj = sessionStorage.getItem('cliente_cnpj');
@@ -94,12 +89,17 @@ function mostrarCarrinho() {
   const chave = `carrinho_${cnpj}`;
   const carrinho = JSON.parse(localStorage.getItem(chave) || "[]");
   const container = document.getElementById('carrinhos-container');
-  const template = document.getElementById('template-carrinho-cnpj').content.cloneNode(true);
+  const template = document.getElementById('template-carrinho-logado').content.cloneNode(true);
 
   container.innerHTML = '';
 
   if (carrinho.length === 0) {
     container.style.display = 'none';
+
+    // Atualiza o total do ícone mesmo se o carrinho estiver vazio
+    const spanTotal = document.getElementById('carrinhoLoja-total');
+    if (spanTotal) spanTotal.innerHTML = `<strong>R$ 0,00</strong>`;
+    
     return;
   }
 
@@ -118,23 +118,22 @@ function mostrarCarrinho() {
   carrinho.forEach((prod, index) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-    <td><img src="${prod.imagem}" style="height: 50px;"></td>
-    <td>${prod.nome}</td>
-    <td>${formatarMoeda(prod.preco)}</td>
-    <td>
-      <div class="d-flex justify-content-center align-items-center">
-        <input type="number" class="form-control text-center" name="quantidade" 
-              value="${prod.quantidade}" min="1" style="width: 80px;"
-              onchange="atualizarQuantidadeDireta('${cnpj}', ${index}, this.value)">
-      </div>
-    </td>
-    <td id="totalProduto-${index}">${formatarMoeda(prod.total)}</td>
-    <td><button class="btn btn-sm btn-danger" onclick="removerItemPorCNPJ('${cnpj}', ${index})">Remover</button></td>
-  `;
+      <td><img src="${prod.imagem}" style="height: 50px;"></td>
+      <td>${prod.nome}</td>
+      <td>${formatarMoeda(prod.preco)}</td>
+      <td>
+        <div class="d-flex justify-content-center align-items-center">
+          <input type="number" class="form-control text-center" name="quantidade" 
+                value="${prod.quantidade}" min="1" style="width: 80px;"
+                onchange="atualizarQuantidadeDireta('${cnpj}', ${index}, this.value)">
+        </div>
+      </td>
+      <td id="totalProduto-${index}">${formatarMoeda(prod.total)}</td>
+      <td><button class="btn btn-sm btn-danger" onclick="removerItem('${cnpj}', ${index})">Remover</button></td>
+    `;
     total += prod.total;
     tabelaBody.appendChild(tr);
   });
-
 
   totalFinalSpan.textContent = formatarMoeda(total);
   container.appendChild(template);
@@ -148,6 +147,12 @@ function mostrarCarrinho() {
   prazoSelect.addEventListener('change', () => {
     localStorage.setItem(`prazo_${cnpj}`, prazoSelect.value);
   });
+
+  // ✅ Atualiza o total no ícone do carrinho
+  const spanTotal = document.getElementById('carrinhoLoja-total');
+  if (spanTotal) {
+    spanTotal.innerHTML = `<strong>${formatarMoeda(total)}</strong>`;
+  }
 }
 
 function atualizarQuantidadeDireta(cnpj, index, valor) {
@@ -162,14 +167,8 @@ function atualizarQuantidadeDireta(cnpj, index, valor) {
 
   localStorage.setItem(chave, JSON.stringify(carrinho));
 
-  // Atualiza total do produto diretamente
-  const totalCell = document.getElementById(`totalProduto-${index}`);
-  if (totalCell) totalCell.textContent = formatarMoeda(carrinho[index].total);
-
-  // Atualiza total final do carrinho
-  mostrarCarrinho();
+  mostrarCarrinho();  // isso já atualiza todos os totais
 }
-
 
 
 function enviarPedido() {
@@ -183,7 +182,6 @@ function enviarPedido() {
 
   const pedido = { cnpj, prazo, itens: carrinho };
 
-  // Enviar pedido
   fetch('/enviar-pedidos', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -193,7 +191,7 @@ function enviarPedido() {
     .then(data => {
       alert("Pedido enviado com sucesso!");
       localStorage.removeItem(chave);
-      mostrarCarrinho();  // atualiza visual
+      mostrarCarrinho();
     })
     .catch(err => {
       console.error("Erro:", err);
@@ -212,16 +210,7 @@ function removerItem(cnpj, index) {
   const carrinho = JSON.parse(localStorage.getItem(chave) || "[]");
   carrinho.splice(index, 1);
   localStorage.setItem(chave, JSON.stringify(carrinho));
-  mostrarCarrinho();
+
+  mostrarCarrinho();  // ✅ Atualiza tudo, incluindo total-geral-pedidos
 }
-
-localStorage.setItem(chave, JSON.stringify(carrinho));
-quantidadeInput.value = 0;
-
-// Atualiza total no ícone do carrinho no topo
-const totalCarrinho = carrinho.reduce((soma, prod) => soma + (prod.quantidade * prod.preco), 0);
-const spanTotal = document.getElementById('carrinhoLoja-total');
-if (spanTotal) spanTotal.innerHTML = `<strong>${formatarMoeda(totalCarrinho)}</strong>`;
-
-mostrarCarrinho();
 

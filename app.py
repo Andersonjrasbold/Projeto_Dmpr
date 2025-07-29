@@ -29,6 +29,8 @@ from functools import wraps
 from flask import session, redirect, url_for, request 
 import re
 from lista_precos import get_lista_precos_por_cliente
+from flask import Flask
+import re
 
 def login_required(f):
     @wraps(f)
@@ -52,6 +54,13 @@ def allowed_file(filename):
 
 # Rotas principais...
 
+@app.template_filter('formatar_cnpj')
+def formatar_cnpj(cnpj):
+    """Formata CNPJ no padrão 00.000.000/0000-00"""
+    cnpj = re.sub(r'\D', '', str(cnpj))  # remove tudo que não for número
+    if len(cnpj) != 14:
+        return cnpj  # retorna como está, se inválido
+    return f"{cnpj[:2]}.{cnpj[2:5]}.{cnpj[5:8]}/{cnpj[8:12]}-{cnpj[12:]}"
 
 @app.route('/')
 def index():
@@ -344,23 +353,26 @@ def loja():
     return render_template("loja.html", produtos=produtos, cliente=cliente)
 
 
+
 @app.route("/multi")
 @login_required
 def multi():
     cliente_logado = session.get("cliente_cnpj")
 
-    if not cliente_logado:
-        return redirect(url_for("login"))
-
-    cliente_logado = re.sub(r"\D", "", cliente_logado)
+    # Limpa qualquer caractere não numérico (CNPJ limpo)
+    if cliente_logado:
+        cliente_logado = re.sub(r"\D", "", cliente_logado)
 
     conn = Acesso.get_connection()
     cursor = conn.cursor()
 
-    # Obter grupo do cliente logado
-    cursor.execute("SELECT CODGRUPO_CLIENTE FROM CLIENTES WHERE REPLACE(REPLACE(REPLACE(CGC_CLIENTE, '.', ''), '-', ''), '/', '') = ?", (cliente_logado,))
+    print("cliente_logado:", cliente_logado)
+
+    cursor.execute("SELECT CODGRUPO_CLIENTE FROM CLIENTES WHERE CGC_CLIENTE = ?", (cliente_logado,))
     row = cursor.fetchone()
     grupo = row[0] if row else None
+
+    print("Grupo encontrado:", grupo)
 
     lojas = []
     if grupo:
@@ -376,12 +388,11 @@ def multi():
         """, (grupo,))
         lojas = [dict(zip([column[0] for column in cursor.description], row)) for row in cursor.fetchall()]
 
+    print("Lojas carregadas:", lojas)
+
     produtos = get_produtos()
-
-    cursor.close()
-    conn.close()
-
     return render_template("multi.html", lojas=lojas, produtos=produtos)
+
 
 
 

@@ -47,9 +47,10 @@
       <div style="padding: auto; background-color: rgb(16, 0, 87);">
         <div class="container">
           {% if session.get('cliente_nome') %}
-          <p class="text-end fs-6 text-small" style="margin-bottom: auto; color: whitesmoke;">Olá, seja bem-vindo(a)
-            {{ session['cliente_nome'] }} - CNPJ: {{ session['cliente_cnpj'] }}
+          <p class="text-end fs-6 text-small" style="margin-bottom: auto; color: whitesmoke;">
+            Olá, seja bem-vindo(a) {{ session['cliente_nome'] }} - CNPJ: {{ session['cliente_cnpj'] | formatar_cnpj }}
           </p>
+
           {% endif %}
         </div>
       </div>
@@ -161,31 +162,30 @@
             <!-- input-->
             <div class="py-2">
               <div class="container py-3">
-                <div class="row justify-content-right">
+                <div class="row align-items-center">
+
                   <!-- Campo de busca -->
-                  <div class="col-12 col-md-8 mx-auto">
+                  <div class="col-12 col-md-9">
                     <form role="search">
                       <input type="search" id="search-item" onkeyup="search()" class="form-control"
                         placeholder="Buscar...">
                     </form>
                   </div>
-                  <div class="col-md-2">
-                    <button class="btn btn-outline-dark"> <a href="/multi">Modo Multi</a> </button>
-                  </div>
-                  <!-- Carrinho de compras - 2 colunas -->
-                  <div class="col-md-2 py-2 text-end">
+                  <!-- Carrinho de compras -->
+                  <div class="col-12 col-md-3 text-md-end text-center mt-3 mt-md-0">
                     <a href="#" class="text-decoration-none position-relative">
                       <span id="carrinhoLoja-total" class="carrinhoLoja-total" style="cursor: pointer;"
                         onclick="substituirMultiplos(['card-search-list', 'photo-search-list', 'text-search-list', 'carouselExampleDark'], 'cart')">
                         <strong>R$ 0,00</strong>
                       </span>
                       <i class="bi bi-cart"></i>
-                      </span>
                     </a>
                   </div>
+
                 </div>
               </div>
             </div>
+
           </div>
         </div>
         <div class="p-2 text-bg-white">
@@ -317,7 +317,7 @@
       <div class="container visual-view" id="card-search-list" style="display: block; margin-top: 20px;">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
           {% for produto in produtos %}
-          <div class="col product">
+          <div class="product" data-codbarra="{{ produto.CODBARRA_PRODUTO }}">
             <div class="card h-100">
               <img src="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}" loading="lazy"
                 class="card-img-top" alt="Imagem do produto {{ produto.NOME_PRODUTO }}"
@@ -325,9 +325,8 @@
               <div class="card-body p-2">
                 <h5 class="card-title fs-6 mb-1">
                   {{ produto.NOME_PRODUTO }}
-                  <!--<i class="bi bi-fire text-danger">--></i>
                 </h5>
-                <p class="card-text small  mb-1 d-flex justify-content-between">
+                <p class="card-text small mb-1 d-flex justify-content-between">
                   <span>
                     <strong>{{ produto.NOME_LABORATORIO }}</strong>
                   </span>
@@ -335,13 +334,20 @@
                 </p>
                 <div class="d-flex justify-content-between small mb-1">
                   <p class="text-body-secondary mb-0">{{ produto.CODBARRA_PRODUTO }}</p>
-                  <p class="text-body-secondary mb-0">Preço R$ {{ "%.2f"|format(produto.PRVENDA) }}</p>
+                  <p class="text-body-secondary mb-0">
+                    Preço R$ {{ "{:,.2f}".format(produto.PRVENDA).replace(",", "X").replace(".", ",").replace("X", ".")
+                    }}
+                  </p>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                   <p class="text-body-secondary mb-0 small">ST R$</p>
-                  <strong class="text-dark fs-6 mb-0">Final R$ {{ "%.2f"|format(produto.PRVENDA_COM_DESC) }}</strong>
+                  <strong class="text-dark fs-6 mb-0">
+                    Final R$ {{ "{:,.2f}".format(produto.PRVENDA_COM_DESC).replace(",", "X").replace(".",
+                    ",").replace("X", ".") }}
+                  </strong>
                 </div>
               </div>
+
               <div class="card-footer d-flex justify-content-between align-items-center">
                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 w-100">
                   <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal"
@@ -391,7 +397,7 @@
             </thead>
             <tbody>
               {% for produto in produtos %}
-              <tr class="product">
+              <tr class="product" data-codbarra="{{ produto.CODBARRA_PRODUTO }}">
                 <td>
                   <img src="{{ url_for('static', filename='fotos/' ~ produto.COD_PRODUTO|string ~ '.jpg') }}"
                     class="img-fluid" alt="Imagem do produto {{ produto.NOME_PRODUTO }}"
@@ -403,9 +409,11 @@
                 <td>{{ produto.NOME_LABORATORIO }}</td>
                 <td>125</td>
                 <td>12/07/2027</td>
-                <td>R$ 10,90</td>
+                <td>R$ {{ "{:,.2f}".format(produto.PRVENDA).replace(",", "X").replace(".", ",").replace("X", ".")
+                    }}</td>
                 <td>R$ 1,00</td>
-                <td class="preco-produto">R$ {{ "%.2f"|format(produto.PRVENDA_COM_DESC) }}</td>
+                <td class="preco-produto">R$ {{ "{:,.2f}".format(produto.PRVENDA_COM_DESC).replace(",", "X").replace(".",
+                    ",").replace("X", ".") }}</td>
                 <td>
                   <div class="d-flex align-items-center gap-2">
                     <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal"
@@ -418,11 +426,11 @@
                       <button type="button" class="btn btn-sm btn-outline-dark px-2"
                         onclick="alterarQuantidade(1, this)">+</button>
                     </div>
-                    <button class="btn btn-sm btn-outline-dark" onclick="adicionarAoCarrinho(this)">Comprar</button>
+                     <button class="btn btn-sm btn-outline-dark" onclick="adicionarAoCarrinho(this)">Comprar</button>
                   </div>
                 </td>
-              </tr>
-              {% endfor %}
+                </tr>
+                {% endfor %}
             </tbody>
           </table>
         </div>
@@ -451,15 +459,17 @@
             </thead>
             <tbody>
               {% for produto in produtos %}
-              <tr class="product">
+              <tr class="product" data-codbarra="{{ produto.CODBARRA_PRODUTO }}">
                 <td>{{ produto.COD_PRODUTO }}</td>
                 <td>{{ produto.CODBARRA_PRODUTO }}</td>
                 <td class="nome-produto">{{ produto.NOME_PRODUTO }}</td>
                 <td>{{ produto.NOME_LABORATORIO }}</td>
                 <td>125</td>
-                <td>R$ 10,90</td>
+                <td>R$ {{ "{:,.2f}".format(produto.PRVENDA).replace(",", "X").replace(".", ",").replace("X", ".")
+                    }}</td>
                 <td>R$ 1,00</td>
-                <td class="preco-produto">R$ {{ "%.2f"|format(produto.PRVENDA_COM_DESC) }}</td>
+                <td class="preco-produto">R$ {{ "{:,.2f}".format(produto.PRVENDA_COM_DESC).replace(",", "X").replace(".",
+                    ",").replace("X", ".") }}</td>
                 <td>
                   <div class="d-flex align-items-center gap-2">
                     <button class="btn btn-sm btn-outline-dark text-nowrap" data-bs-toggle="modal"
@@ -472,11 +482,11 @@
                       <button type="button" class="btn btn-sm btn-outline-dark px-2"
                         onclick="alterarQuantidade(1, this)">+</button>
                     </div>
-                    <button class="btn btn-sm btn-outline-dark" onclick="adicionarAoCarrinho(this)">Comprar</button>
+                     <button class="btn btn-sm btn-outline-dark" onclick="adicionarAoCarrinho(this)">Comprar</button>
                   </div>
                 </td>
-              </tr>
-              {% endfor %}
+                </tr>
+                {% endfor %}
             </tbody>
           </table>
         </div>
@@ -506,10 +516,8 @@
     </div>
     <!--  Produtos-->
 
-    <!-- Carrinho por CNPJ -->
+    <!-- Carrinho do Cliente Logado -->
     <section id="cart" class="container" style="display: none;">
-      <!-- BLOCO ÚNICO COM RESUMO E CARRINHOS NO MESMO CONTAINER -->
-
       <!-- Resumo Geral dos Pedidos -->
       <div id="resumo-geral-pedidos" class="mb-4">
         <div class="shadow-sm p-3 bg-white rounded border">
@@ -518,7 +526,6 @@
               <h5 class="mb-2">Resumo dos Pedidos</h5>
               <strong>Total Geral: <span id="total-geral-pedidos">R$ 0,00</span></strong>
             </div>
-
             <div class="col-md-4">
               <label for="prazo-global" class="form-label mb-1"><strong>Prazo de Pagamento:</strong></label>
               <select class="form-select" id="prazo-global">
@@ -533,20 +540,18 @@
                 <option value="90">90 dias</option>
               </select>
             </div>
-
             <div class="col-md-3 text-end">
               <button class="btn btn-success mt-4" onclick="enviarPedido()">Enviar Pedido</button>
-
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Carrinhos dinâmicos por CNPJ serão inseridos aqui -->
+      <!-- Carrinho dinâmico do cliente logado -->
       <div id="carrinhos-container" class="mb-4"></div>
 
-      <!-- Template de carrinho individual por CNPJ -->
-      <template id="template-carrinho-cnpj">
+      <!-- Novo Template: Carrinho do Cliente Logado -->
+      <template id="template-carrinho-logado">
         <div class="carrinho-cnpj mb-4 border p-3 rounded bg-white shadow-sm">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0">Carrinho - CNPJ: <span class="cnpj-label"></span></h5>
@@ -596,6 +601,7 @@
     </section>
 
 
+
     <!--Page Navegation-->
     <!--footer-->
     <div class="container">
@@ -623,7 +629,7 @@
       </footer>
     </div>
     <!--footer end-->
-    
+
     <script>
       function abrirModal(botao) {
         document.getElementById("modalNome").textContent = botao.dataset.nome;
@@ -642,5 +648,9 @@
       crossorigin="anonymous"></script>
   </main>
 </body>
+<!-- Coloque isso no final da página -->
+
+
+
 
 </html>
