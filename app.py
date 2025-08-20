@@ -31,6 +31,33 @@ import re
 from lista_precos import get_lista_precos_por_cliente
 from flask import Flask
 import re
+from flask import Blueprint, request, jsonify
+import pandas as pd
+import io
+
+bp = Blueprint('importacao', __name__)
+
+@bp.route('/api/importar_pedido', methods=['POST'])
+def importar_pedido():
+    if 'arquivo' not in request.files:
+        return jsonify({'erro': 'Arquivo não enviado.'}), 400
+    f = request.files['arquivo']
+    try:
+        df = pd.read_excel(io.BytesIO(f.read()))
+        def norm(s): 
+            return str(s or '').strip().lower()
+        registros = []
+        for _, row in df.iterrows():
+            cnpj = ''.join(ch for ch in str(row.get('CNPJ', '') ) if ch.isdigit())
+            ean = str(row.get('EAN', '')).strip() or str(row.get('CODBARRA','')).strip()
+            qtd = float(str(row.get('Quantidade', row.get('QTD', 0))).replace(',','.')) if row.get('Quantidade', None) is not None else 0
+            desc = str(row.get('Descricao', row.get('Produto',''))).strip()
+            preco = float(str(row.get('Preco', row.get('Valor', 0))).replace(',','.') or 0)
+            if cnpj and ean and qtd > 0:
+                registros.append({'cnpj': cnpj, 'ean': ean, 'quantidade': qtd, 'descricao': desc, 'preco': preco})
+        return jsonify({'itens': registros})
+    except Exception as e:
+        return jsonify({'erro': f'Falha ao processar: {e}'}), 400
 
 def login_required(f):
     @wraps(f)
@@ -883,6 +910,10 @@ def add_header(response):
     if request.path.startswith('/static/fotos/'):
         response.headers['Cache-Control'] = 'public, max-age=31536000'
     return response
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
