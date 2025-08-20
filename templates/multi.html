@@ -15,7 +15,7 @@
   <script src="/static/js/carrinhoMulti.js"></script>
   <script src="/static/js/quantidadeBotoes.js"></script>
   <script src="/static/js/search.js"></script>
-  <script src="/static/js/subistituirMultiplos.js"></script>
+  <!---->
   <script src="/static/js/carrinhoResumo.js"></script>
   <style>
     .card {
@@ -90,7 +90,7 @@
                             style="display: none;">
                             0
                             <span class="visually-hidden">alteração na sua devolução</span>
-                            </span>
+                          </span>
                           <li><a class="dropdown-item" href="/chamado">Abrir chamado de Devolução</a></li>
                           <li><a class="dropdown-item" href="/acompanhar_devolucoes">Acompanhar Devoluções</a></li>
                           <li><a class="dropdown-item" href="/devolucoes">Minhas Devoluções</a></li>
@@ -187,7 +187,8 @@
 
                   <!-- Carrinho de compras à direita -->
                   <div class="col-12 col-md-3 text-md-end text-center py-2">
-                    <a href="#" class="text-decoration-none position-relative" onclick="mostrarCarrinhosPorCNPJ()">
+                    <a href="#" class="text-decoration-none position-relative"
+                      onclick="mostrarCarrinhosPorCNPJ({ navegar: true })">
                       <span id="cart-total" class="cart-total fw-bold">
                         <p>R$ 0,00</p>
                       </span>
@@ -828,14 +829,20 @@
       console.log("Lojas carregadas:", window.lojasDoGrupo);
     </script>
 
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        if (document.getElementById('template-carrinho-cnpj') && typeof mostrarCarrinhosPorCNPJ === 'function') {
+          mostrarCarrinhosPorCNPJ();
+        }
+      });
+    </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
       crossorigin="anonymous"></script>
+
 
   </main>
 </body>

@@ -34,8 +34,37 @@ import re
 from flask import Blueprint, request, jsonify
 import pandas as pd
 import io
+from flask import request, jsonify
+import os, io, csv, datetime
+from ftp_utils import upload_bytes
+from dotenv import load_dotenv
+load_dotenv()
+
 
 bp = Blueprint('importacao', __name__)
+
+def _csv_pedido_bytes(cnpj: str, prazo: str, itens: list) -> bytes:
+    """
+    Gera CSV (UTF-8 BOM) com colunas:
+    CNPJ, Prazo, EAN, Nome, Quantidade, Preco, Total
+    """
+    output = io.StringIO(newline='')
+    writer = csv.writer(output, delimiter=';', lineterminator='\n')
+    writer.writerow(["CNPJ", "Prazo", "EAN", "Nome", "Quantidade", "Preco", "Total"])
+
+    for it in itens:
+      ean  = str(it.get("codBarra") or "").strip()
+      nome = (it.get("nome") or "").strip()
+      qtd  = int(it.get("quantidade") or 0)
+      preco= float(it.get("preco") or 0.0)
+      tot  = float(it.get("total") or (qtd * preco))
+      writer.writerow([cnpj, prazo, ean, nome, qtd, f"{preco:.2f}", f"{tot:.2f}"])
+
+    # Excel-friendly: UTF-8 com BOM
+    csv_text = output.getvalue()
+    return ("\ufeff" + csv_text).encode("utf-8")
+
+
 
 @bp.route('/api/importar_pedido', methods=['POST'])
 def importar_pedido():
